@@ -14,7 +14,8 @@ from . import models, serializers as app_serializers, validators
 from doctors.models import DoctorAvailability
 from rest_framework.exceptions import NotFound
  
-# Create your views here.
+# Create your views here. 
+# testing for git
  
 class AppointmentCreateAPIView(APIView):
     def get(self, request):
