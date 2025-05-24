@@ -1,0 +1,15 @@
+.vitals{
+    background-color: #F9FAFC;
+    padding: 20px;
+}
+.nurseNote{
+    font-size: 20px;
+    color: #808080;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.status{
+    color: #23C55E;
+    background-color: #DCFCE7;
+    padding: 10px;
+}

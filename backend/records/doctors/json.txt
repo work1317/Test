@@ -1,0 +1,15 @@
+Doctor Availability
+===================
+
+{
+  "d_name": "Dr. Priya Mehta",
+  "d_department": 2,
+  "d_phn_no": "9876543210",
+  "d_email": "priya.mehta@example.com",
+  "d_ward_no": "Ward-7",
+  "d_available_days": ["Monday", "Wednesday", "Friday"],
+  "d_start_time": "09:00:00",
+  "d_end_time": "15:00:00",
+  "d_education_info": "MBBS, MD (General Medicine)",
+  "d_certifications": "Fellowship in Internal Medicine"
+}

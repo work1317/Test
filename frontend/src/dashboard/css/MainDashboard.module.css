@@ -1,0 +1,554 @@
+/* navbar */
+/* .MainContainer{
+  background-color: #f3f4f6;
+  
+} */
+.navbar {
+  display: flex;
+  background-color: #fff;
+  height: 80px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: #313131;
+}
+
+.navsearchContainer {
+  display: flex;
+  align-items: center;
+  background: #f6f6f6;
+  padding: 8px 12px;
+  height: 36px;
+  width: 287px;
+  border-radius: 10px;
+}
+
+.navsearchIcon {
+  color: #9ca3af;
+  margin-right: 5px;
+}
+
+.navsearchInput {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #545454;
+  border-radius: 10px;
+}
+
+.line{
+  width: 4px;
+  background-color: #F6F6F6;
+  height: 45px;
+  border: 1px #F6F6F6 solid;
+  border-radius: 20px;
+}
+
+
+.navrightSection {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.navbellIcon {
+  font-size: 20px;
+  color: #CFD7FD;
+  cursor: pointer;
+}
+.bellContainer {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.bellIcon {
+  color: #555;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 10px;
+  height: 10px;
+  background-color: blue;
+  border-radius: 50%;
+}
+
+.navprofile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 100px;
+  cursor: pointer;
+}
+ /* .navprofile:hover{
+  scale: 1.1;
+  cursor: pointer;
+} */
+.logoutbutton{
+  width: 100%;
+
+}
+.SearchLine{
+  display: flex;
+  gap: 28%;
+}
+
+.customToggle::after{
+    display: none !important;
+}
+.TDropdown,.dropdown-menu{
+  --bs-dropdown-link-active-bg: #F3F4F5 !important;
+  --bs-dropdown-link-active-color: black !important;
+}
+
+.RDropdown,.dropdown-menu{
+  --bs-dropdown-min-width: 0rem !important;
+  --bs-dropdown-link-active-bg: #F3F4F5 !important;
+  --bs-dropdown-link-active-color: black !important;
+}
+
+.navSection{
+  display: flex;
+}
+
+.navprofilePic {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.navprofileInfo {
+  display: flex;
+  flex-direction: column;
+  height: 30px;
+  width: 30px;
+}
+
+.navprofileName {
+  font-size: 12px;
+  font-weight: 400;
+  color: #252C58;
+}
+
+.navprofileEmail {
+  font-size: 12px;
+  font-weight: 400;
+  color: #252C58;
+}
+
+/* cards */
+
+.carcontainer {
+  padding: 24px;
+}
+
+.carheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.cartitle {
+  font-size: 24px;
+  font-weight: 500;
+  color: #313131;
+}
+
+.carsubtitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: #9a9a9a;
+}
+
+.carupdated {
+  color: #9ca3af;
+}
+
+.cargrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  width: 100%;
+}
+
+.gridcard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.cartextContainer{
+  padding: 16px;
+
+}
+
+.caricon {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  color: white;
+}
+
+.cariconSize {
+  margin-top: 20px;
+  margin-left: 20px;
+  color: white;
+
+}
+
+.carTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: #808080;
+  margin-top: 8px;
+}
+
+.carValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: #313131;
+}
+
+.carChange {
+  font-size: 16px;
+  font-weight: 400;
+  color: #1DB455;
+  margin-top: 4px;
+}
+
+.carblue { background-color: #2F71F1; }
+.cargreen { background-color: #1DB455; }
+.carpurple { background-color: #9D43F0; }
+.carred { background-color: #ED4545; }
+
+/* BelowCards */
+
+
+
+.bedashboard {
+  display: flex;
+  gap: 50px;
+  padding: 20px;
+}
+
+.becard {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.beheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.beheading {
+  font-size: 20px;
+  font-weight: 500;
+  color: #313131;
+}
+
+.beheader a {
+  text-decoration: none;
+  color: #2F71F1;
+  font-weight: 500;
+  font-size: 14px;
+}
+.bewholeleft{
+  display: flex;
+  flex-direction: column;
+}
+
+.beappointment {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.beavatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.bename {
+  font-weight: 500;
+  font-size: 14px;
+  color: #313131;
+  margin-bottom: 0;
+}
+
+.berole {
+  font-size: 14px;
+  font-weight: bold;
+  color: #155ef1;
+}
+
+.betimeStatus{
+  margin-left: auto;
+  text-align: right;
+  color: #2F71F1;
+}
+.timeText{
+  /* margin-right: auto; */
+  text-align: right;
+  float: right;
+  color: #2F71F1;
+}
+
+.betime {
+  color: #2F71F1;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.beconfirmed {
+  font-size: 14px;
+  font-weight: 400;
+  color: #1DB455;
+}
+
+.bedeptName {
+  font-weight: bold;
+}
+
+.bepatients {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+.bealert {
+  font-weight: 500;
+  font-size: 14px;
+  padding-left: 8px;
+  padding-top: 2px;
+  margin-bottom: 10px;
+  height: 26px;
+  width: 84px;
+  border-radius: 20px;
+}
+
+.alertWrapper {
+height: 35px;
+display: flex;
+align-items: center;
+}
+
+.bedepartment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.berightContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.beprogressBar {
+  width: 129px;
+  height: 8px;
+  background: #E6E7EB;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.beprogress {
+  height: 8px;
+  border-radius: 20px;
+  max-width: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+.bepertext {
+  color: #9A9A9A;
+  font-size: 14px;
+  text-align: right;
+  margin-left: 10px;
+  margin-top: -6px;
+}
+
+.modalCon{
+cursor: pointer;
+color: #2F71F1;
+}
+.betextcontainer{
+  display: flex;
+  flex-direction: row;
+}
+.bepercentage{
+  margin-top: -30px;
+}
+
+/* SearchBar */
+
+.searchContainer {
+  position: relative;
+  width: 250px;
+}
+p{
+margin-bottom: 0%;
+}
+.searchInputContainer {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.searchSuggestions {
+  position: absolute;
+  width: 30%;
+  margin-left: 17% !important;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #545454;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 1000;
+}
+
+.searchSuggestionItem {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: background 0.1s ease-in-out;
+}
+
+.searchSuggestionItem:hover,
+.activeSuggestion {
+  background: #f6f6f6 !important;
+}
+
+.customToggle::after{
+border-top-color: transparent !important;
+}
+
+.RLogout,.dropdown-toggle::after{
+display: none !important;
+}
+
+.searchSuggestions::-webkit-scrollbar {
+  display: none;
+}
+
+.appointmentsModal::-webkit-scrollbar {
+  display: none;
+}
+.carValues{
+  color: #1DB455;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+.navrightSection {
+    gap: 30px;
+}
+.navprofile {
+    margin-right: 20px;
+}
+.bedashboard {
+    gap: 20px;
+}
+}
+
+@media (max-width: 480px) {
+.navtitle {
+    font-size: 18px;
+}
+.navsearchContainer {
+    /* width: 90%; */
+    display: none;
+}
+.navprofileInfo {
+    width: auto;
+}
+.cargrid {
+    grid-template-columns: 1fr;
+}
+.bedashboard {
+    flex-direction: column;
+    gap: 20px;
+}
+}
+
+@media(max-width:375px){
+  .becard{
+    width: 100% !important;
+  }
+  .beprogress {
+    height: 8px;
+    border-radius: 15px !important;
+    max-width: 70% !important;
+    transition: width 0.3s ease-in-out;
+
+  }
+  .beprogressBar {
+    width: 100px !important;
+    height: 8px;
+    background: #E6E7EB;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+}
+
+@media (min-width:481px) and (max-width:584px){
+  .bedepartment{
+    display: flex !important;
+  }
+  .beappointment{
+    display: flex !important;
+  }
+  .bedashboard{
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+}
+
+@media  (max-width:1030px){
+  .searchSuggestions {
+    margin-left: 19% !important;
+  }
+}
+
+@media (max-width:992px){
+  .searchSuggestions {
+    margin-left: 24% !important;
+  }
+}
+
+@media (max-width:618px){
+  .searchSuggestions {
+    display: none;
+  }   
+  .navsearchContainer{
+    display: none;
+  }
+
+}

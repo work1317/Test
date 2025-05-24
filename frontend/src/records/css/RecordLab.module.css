@@ -1,0 +1,138 @@
+.buttonContent{
+    background-color: #002072;
+    border-radius: 10px;
+    color: white;
+    border: none;
+
+}
+.text{
+    color: #9A9A9A;
+    font-weight: 500;
+    font-size: 16px;
+}
+.search{
+    border: 1px #BEBEBE solid;
+    border-radius: 15px;
+ }
+ .searchbar{
+     border: none;
+     outline: none;
+ }
+ .iconCss{
+    background-color: #E5E9F1;
+    border-radius: 50%;
+
+ }
+ .textId{
+    font-weight: 400;
+    
+ }
+ .iconCss1{
+    background-color: #E5E9F1;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+
+ }
+ .button{
+    border-radius: 10px;
+ }
+ .textdata{
+    color: #000000;
+    font-weight: 600;
+    font-size: 24px;
+ }
+ /* .anchor:hover{
+   text-decoration: underline;
+ } */
+ /* .customtabs1{
+   border: 1px solid #BEBEBE;
+   background-color: #ffffff;
+   border-radius: 5px;
+ } */
+  .tabButton {
+   padding: 4px 10px;
+   margin-right: 4px;
+   border: none;
+   background: transparent;
+   display: flex;
+   align-items: center;
+   gap: 4px; /* Tighter spacing between icon and text if used */
+   font-size: 14px;
+   cursor: pointer;
+   white-space: nowrap;
+ }
+ 
+ .activeTab {
+   color:#000000;
+   border-radius: 4px;
+ }
+ 
+ .inactiveTab {
+   background-color: transparent;
+   color: #000000;
+   border-radius: 4px;
+ }
+ 
+ .customtabs1 {
+   display: flex;
+   flex-wrap: nowrap;
+   overflow-x: auto;
+   gap: 0 !important; /* override default gap if needed */
+ }
+ 
+ 
+ /* .scrollContainer {
+   max-height: 400px;
+   overflow-y: auto;
+   padding-right: 8px; 
+ }
+ 
+ 
+ .scrollContainer::-webkit-scrollbar {
+   width: 6px;
+ }
+ 
+ .scrollContainer::-webkit-scrollbar-thumb {
+   background-color: rgba(0, 0, 0, 0.2);
+   border-radius: 4px;
+ } */
+ .scrollContainer {
+   max-height: 400px; /* Adjust height as needed */
+   overflow-y: auto;
+   padding-right: 4px; 
+ }
+ 
+ .scrollContainer::-webkit-scrollbar {
+   width: 4px; 
+ }
+ 
+ .scrollContainer::-webkit-scrollbar-track {
+   background: transparent; 
+ }
+ 
+ .scrollContainer::-webkit-scrollbar-thumb {
+   background-color: rgba(0, 0, 0, 0.2);
+   border-radius: 3px;
+ }
+ 
+
+ .scrollContainer {
+   scrollbar-width: thin;
+   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+ }
+ .scrollContainer {
+   max-height: 400px;
+   overflow-y: auto;
+   padding-right: 4px;
+ 
+   
+   scrollbar-width: none; 
+   -ms-overflow-style: none;
+ }
+ 
+ .scrollContainer::-webkit-scrollbar {
+   display: none; 
+ }
+ 
+ 

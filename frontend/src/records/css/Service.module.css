@@ -1,0 +1,23 @@
+.Stethoscope{
+    background-color:#E5E9F1;
+    border-radius: 50px;
+    width: 30px;
+    height: 30px;
+    color: #262872;
+}
+.content{
+    color: #000000;
+    font-weight: 500;
+    font-size: 20px;
+}
+.completed{
+    color:#23C55E;
+    background-color:#DCFCE7;
+    border-radius: 50px;
+
+}
+.pending{
+   color: #79700D;
+    background-color:#FEF9C3;
+    border-radius: 50px;
+}

@@ -1,0 +1,45 @@
+
+
+.modalBody {
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .infoRow {
+    margin-bottom: 1rem;
+  }
+  
+  .infoCol {
+    /* background-color: #f9f9f9; */
+    border-radius: 8px;
+    padding: 12px;
+  }
+  
+  .label {
+    font-weight: 600;
+    /* color: #333; */
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .value {
+    font-size: 15px;
+    /* color: #555; */
+  }
+  
+  .modalFooter {
+    display: flex;
+    /* justify-content: space-between; */
+  }
+  
+  .cancelButton {
+    background-color: #ED4545 !important;
+    border: none !important;
+    
+  }
+  
+  .rescheduleButton {
+    background-color:#002072 !important;
+    border: none !important;
+  }
+  

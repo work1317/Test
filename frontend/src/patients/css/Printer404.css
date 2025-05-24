@@ -1,0 +1,82 @@
+.printer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.trey .top, .trey .bottom .inner {
+  background-color: #322A2A;
+  width: 100%;
+  max-width: 150px;
+  border: 2px solid #100B0C;
+  border-radius: 15px;
+  position: relative;
+}
+
+.trey .top {
+  height: 95px;
+  overflow: hidden;
+}
+
+.trey .bottom {
+  background-color: #fff;
+  padding: 0 5px;
+  width: 160px;
+  border-radius: 5px 5px 0 0;
+}
+
+.trey .bottom .inner {
+  height: 110px;
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 5px 2px #978F8B;
+}
+
+.paper1 {
+  background-color: #FBFBFB;
+  height: 150px;
+  width: 130px;
+  position: absolute;
+  left: 10px;
+  border-radius: 10px;
+  border: 2px solid #000;
+  animation: paper1 4s infinite;
+}
+
+@keyframes paper1 {
+  0% { top: -100px; }
+  100% { top: 250px; border: 0; }
+}
+
+.paper2 {
+  background-color: #FBFBFB;
+  width: 130px;
+  position: absolute;
+  left: 58px;
+  border-radius: 0 0 10px 10px;
+  border: 2px solid #000;
+  animation: paper2 4s infinite;
+}
+
+@keyframes paper2 {
+  0% { top: 175px; height: 0px; }
+  10% { top: 175px; height: 0px; }
+  80% { top: 175px; border-radius: 10px; height: 150px; }
+  100% { top: 220px; border-radius: 10px; }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .trey .top, .trey .bottom .inner {
+    width: 120px;
+  }
+
+  .paper1, .paper2 {
+    width: 100px;
+  }
+
+  .trey .bottom {
+    width: 130px;
+  }
+}

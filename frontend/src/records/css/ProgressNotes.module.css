@@ -1,0 +1,55 @@
+
+.main{
+  padding-top: 20px;
+  padding-left: 30px;
+  padding-right: 20px;
+  padding-bottom: 100px;
+}
+.radioCol {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px; 
+  padding-right: 10px; 
+}
+.radioCol {
+  margin-right: 60px;
+}
+
+.button{
+  margin-top: 3rem;
+ margin-left: 30rem;
+ background-color: #002072;
+ width:150px;
+ padding: 8px;
+ border-radius: 8px;
+ color: white;
+ margin-bottom: 5rem;
+}
+.savebutton {
+  background-color: #002072 !important;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  padding: 5px 65px;
+}
+.sumbit{
+  padding-top: 120px;
+  padding-right: 20px;
+}
+.cancel{
+  border: none;
+    background: none;
+    background-color: white;
+    color: #808080;
+}
+
+ 
+.nenu input[type = radio] {
+   border-color:  #002072 !important; 
+}
+@media (max-width: 768px) {
+  .radioCol {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

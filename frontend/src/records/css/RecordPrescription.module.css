@@ -1,0 +1,77 @@
+.prescriptioncontainer {
+    /* width: 75rem; */
+    margin: auto;
+    padding: 20px;
+    
+  }
+  
+  .prescriptioncard {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+ 
+  }
+  .secondcard{
+    background-color: #F9FAFB;
+   
+  }
+  .doctorname {
+    font-weight: bold;
+  }
+  
+  .date {
+    color: gray;
+    font-size: 14px;
+  }
+  
+  .medicinecard {
+     background-color: #F9FAFB;
+    padding: 8px;
+    border-radius: 10px;
+  }
+  
+  .medicine-name {
+    font-weight: bold;
+  }
+  
+  .detail {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .label {
+    font-size: 14px;
+    color: gray;
+  }
+  
+  .value {
+    font-weight: bold;
+  }
+  
+  .notes {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  
+  @media (max-width: 768px) {
+    .prescription-card {
+      padding: 10px;
+    }
+  
+    .detail {
+      text-align: left;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .prescription-container {
+      padding: 10px;
+    }
+  
+    .detail {
+      text-align: center;
+    }
+  }
+  

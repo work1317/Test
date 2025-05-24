@@ -1,0 +1,60 @@
+.title{
+    font-size: 18px;
+    font-weight: 600;
+    color: #313131;
+    margin-bottom: 6px;
+}
+
+.firstRow{
+    border: 1px solid #CFDCEB;
+    border-radius: 5px;
+    padding: 10px;
+    color: #808080;
+    margin-top: 8px;
+    margin: 10px;
+}
+.checkboxLarge {
+    width: 20px;
+    height: 20px;
+    accent-color: #3498DB; /* optional: matches your theme */
+    cursor: pointer;
+    margin:3px
+  }
+  .checkboxWrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px;
+    margin-right: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #F6F6F6; /* 👈 set default background for unchecked */
+
+  }
+  
+  .checkedBox {
+    border: 2px solid #3498DB;
+    background-color: #E8F6FF;
+  }
+  
+  
+  .checkboxLarge {
+    width: 20px;
+    height: 20px;
+    accent-color: #3498DB;
+    cursor: pointer;
+    margin: 3px;
+  }
+  
+  .labels {
+    font-size: 12px;
+    font-weight: 500;
+    color: #313131;
+    margin-bottom: 0;
+  }
+  .radiowrapper{
+    width: 20px;
+    height: 20px;
+    margin: 3px;
+  }
+  

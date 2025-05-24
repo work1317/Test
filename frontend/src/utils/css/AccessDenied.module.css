@@ -1,0 +1,16 @@
+.accessDeniedContainer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8d7da;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 20px auto;
+    font-size: 18px;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.accessDeniedMessage {
+    font-weight: bold;
+    margin-top: 10px;
+}

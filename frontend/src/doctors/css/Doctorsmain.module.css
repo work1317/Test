@@ -1,0 +1,50 @@
+.doctorimage{
+    height: 106px;
+    width: 100px;
+    border-radius: 8px;
+}
+.booked{
+    color:#DC2626;
+    background-color: #FEF2F2;
+    margin: 10px;
+   /* padding: 10px; */
+    text-align: center;
+    /* padding-left: 20px;
+    padding-right: 20px; */
+    
+
+}
+.txt{
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0%;
+    text-align: center;
+    line-height: 21px;
+    /* font-family: Poppins; */
+}
+.available{
+    color:#16A34A;
+    
+    background-color:#F0FDF4;
+    margin: 10px;
+    /* padding: 10px;  */
+    text-align: center;
+    /* padding-left: 20px;
+    padding-right: 20px; */
+}
+.break{
+    
+    color:#4B5563;
+    background-color: #F9FAFB;
+     margin:10px;
+    /*padding: 10px; */
+    text-align: center;
+    /* padding-left: 20px;
+    padding-right: 20px; */
+}
+.button{
+    background-color:#002072;
+}
+.button:hover{
+    background-color:#002072;
+}

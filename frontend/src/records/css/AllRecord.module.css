@@ -1,0 +1,24 @@
+.heart{
+    background-color:#E5E9F1;
+    border-radius: 50px;
+    width: 30px;
+    height: 30px;
+    color: #262872;
+}
+.microscope{
+    background-color:#E5E9F1;
+    border-radius: 50px;
+    width: 30px;
+    height: 30px;
+    color: #262872;
+}
+.text{
+    color: #000000;
+    font-weight: 500;
+    font-size: 20px;
+}
+.complete{
+    color:#23C55E;
+    background-color:#DCFCE7;
+    border-radius: 50px;
+}

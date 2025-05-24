@@ -1,0 +1,158 @@
+
+
+.container {
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #313131;
+}
+.para{
+  color: #9A9A9A;
+  font-weight: 500;
+  font-size: 16px;
+}
+.buttonclick{
+  background-color: #002072 !important;
+  font-size: 12px;
+  font-weight: 500;
+}
+.icon{
+  color: #2F71F1;
+  background-color: #EFF6FF;
+}
+.icon1{
+  color: #CA8A04;
+  background-color: #FEFCE8;
+}
+.icon2{
+  color: #16A34A;
+  background-color: #F0FDF4;
+}
+.icon3{
+  color: #ED4545;
+  background-color: #FEF2F2;
+}
+.statsCardText {
+  margin-bottom: 0.25rem;
+  color:#808080;
+  font-weight: 500;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.statsNumber {
+  font-size: 24px;
+  font-weight: 600;
+  color: #313131;
+}
+
+.statsFooter {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.appointmentSearch {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.searchInput {
+  width: 50%;
+}
+
+.statusSelect {
+  width: 25%;
+}
+
+.appointmentCard {
+  margin-bottom: 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.appointmentCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.appointmentDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.patientName {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #313131;
+  font-size: 14px;
+}
+
+.patientMeta {
+  margin-bottom: 0.25rem;
+  color: #7F7770;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.patientDate {
+  margin-bottom: 0.25rem;
+  color: #000000;
+}
+
+.patientNote {
+  margin-bottom: 0;
+  color: #9A9A9A;
+}
+
+.timeText {
+  /* color: #0d6efd;
+  font-weight: bold; */
+  color: #9A9A9A;
+  margin-bottom: 50px !important;
+}
+.calendar{
+  color: #000000;
+}
+.search{
+  border: 1px #BEBEBE solid;
+  width: 60vw;
+  border-radius: 10px;
+}
+.searchbar{
+   border: none;
+   outline: none;
+}
+.selection{
+   padding-left: 10px;
+   border-radius: 10px;
+}
+.btn:hover{
+  border: none;
+}
+.scrollContainer {
+  max-height: 500px; /* Adjust height as needed */
+  overflow-y: auto;
+  padding-right: 8px; /* Optional: adds some spacing near the scrollbar */
+}
+
+/* Optional: for smoother scrolling on webkit browsers */
+.scrollContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}

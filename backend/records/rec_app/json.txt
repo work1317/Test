@@ -1,0 +1,278 @@
+Nursing Notes
+
+create-nursing-notes
+====================
+{
+    "patient": "P001",
+    "description": "The patient shows signs of improvement, and vital signs are stable. Continue monitoring for any changes."
+}
+
+update-nursing-notes
+====================
+{
+    "patient": "P001",
+    "description": "The patient shows signs of improvement, and vital signs are stable."
+}
+
+===================================================================================================================================
+
+Progress Notes
+
+create-progress-notes
+=====================
+{
+  "patient_id": "P001",
+  "status": "critical"
+}
+
+
+update-progress-notes
+=====================
+{
+  "patient_id": "P001",
+  "status": "stable"
+}
+
+====================================================================================================================================
+
+Treatment Chart
+
+create-treatment-Chart
+======================
+{
+    "patient": "P001",
+    "medicine_name": "Amoxicillin",
+    "hrs_drops_mins": "12hrs",
+    "dose": "500mg",
+    "time": "08:00:00",
+    "medicine_details": "Antibiotic to treat bacterial infections. Take with food for better absorption."
+}
+
+update-treatment-chart
+======================
+{
+    "patient": "P001",
+    "medicine_name": "Amoxicillin",
+    "hrs_drops_mins": "12hrs",
+    "dose": "600mg",
+    "time": "08:00:00",
+    "medicine_details": "Antibiotic to treat bacterial infections. Take with food for better absorption."
+}
+====================================================================================================================================
+Pain Assessment
+
+create-pain-asssessment
+=======================
+{
+    "patient_id": "P001",
+    "pain_intensity": 7,
+    "location_of_service": "Hospital Room 101",
+    "quality_of_service": "constant",
+    "character_of_service": ["burning", "radiating"],
+    "factors_affecting_rating": "Severe muscle spasms",
+    "factors_improving_experience": ["medication"]
+}
+
+update-pain-asssessment
+=======================
+{
+  "pain_intensity": 7,
+  "location_of_service": "Lower Back",
+  "quality_of_service": "constant",
+  "character_of_service": ["burning", "radiating"],
+  "factors_affecting_rating": "Stress",
+  "factors_improving_experience": ["medication"]
+}
+
+================================================================================================================================
+
+Initial Assessment
+
+Create Initial Assessment
+=========================
+{
+  "patient_id": "P001",
+  "rating_title": "Good",
+  "relationship_to_feedback": "Self",
+  "feedback_date": "2025-03-27",
+  "duration_of_experience": "2 years",
+  "present_illness": "Hypertension",
+  "past_illness": "Diabetes",
+  "experience_feedback": "Regular check-ups and proper medication.",
+  "health_feedback": "Currently stable with occasional fatigue.",
+  "hart_feedback": "No heart issues reported.",
+  "stroke_feedback": "No history of stroke.",
+  "other_feedback": "Following a healthy diet and regular exercise."
+}
+
+
+Update Initial Assessment
+=========================
+{
+  "patient_id": "P001",
+  "rating_title": "Great",
+  "relationship_to_feedback": "Self",
+  "feedback_date": "2025-03-27",
+  "duration_of_experience": "2 years",
+  "present_illness": "Hypertension",
+  "past_illness": "Diabetes",
+  "experience_feedback": "Regular check-ups and proper medication.",
+  "health_feedback": "Currently stable with occasional fatigue.",
+  "hart_feedback": "No heart issues reported.",
+  "stroke_feedback": "No history of stroke.",
+  "other_feedback": "Following a healthy diet and regular exercise."
+}
+
+=================================================================================================================================
+
+Careplan Feedback
+
+create-careplan-feedback
+========================
+{
+    "patient": "P001",
+    "feedback_on_services": "The services provided were excellent, and the staff was very helpful in addressing the patient's needs.",
+    "provisional_feedback": "The patient is showing positive responses, but we need further monitoring to assess long-term effects.",
+    "feedback_plan": "Continue with the current care plan and monitor progress. Schedule regular check-ups to ensure effective management.",
+    "expected_outcome": "Improvement in the patient's condition with the planned care, and full recovery is expected within 6 months.",
+    "preventive_feedback_aspects": "Ensure regular exercise, balanced diet, and follow-up appointments to prevent relapse and improve recovery outcomes."
+}
+
+Update-careplan-feedback
+========================
+{
+    "patient": "P001",
+    "feedback_on_services": "The services provided were excellent, and the staff was very helpful in addressing the patient's needs.",
+    "provisional_feedback": "The patient is showing positive responses, but we need further monitoring to assess long-term effects.",
+    "feedback_plan": "Continue with the current care plan and monitor progress. Schedule regular check-ups to ensure effective management.",
+    "expected_outcome": "Improvement in the patient's condition with the planned care, and full recovery is expected within 9 months.",
+    "preventive_feedback_aspects": "Ensure regular exercise, balanced diet, and follow-up appointments to prevent relapse and improve recovery outcomes."
+}
+
+==============================================================================================================================================
+
+Risk Assessment
+
+Create-Risk-Factor
+==================
+
+{
+    "patient_id": "P001",
+    "risk_factors": [
+        {
+            "risk_factor_id": 1,
+            "minor_surgery": true,
+            "age_40_to_60_yrs": false,
+            "pregnancy_or_post_martum": true,
+            "varicose_veins": false,
+            "inflammatory_bowel_disease": true,
+            "obesity": true,
+            "combined_oral": false,
+            "contraceptives_or_HRT": true
+        },
+        {
+            "risk_factor_id": 2,
+            "age_over_60_yrs": true,
+            "malignancy": false,
+            "major_surgery": true,
+            "immmobilising_plaster_cast": false,
+            "medical_or_surgical": true,
+            "patients_confined_to": false,
+            "bed_72_hrs": true,
+            "central_venous_access": false
+        },
+        {
+            "risk_factor_id": 3,
+            "history_of_DVT_or_PE": true,
+            "myocardial_infarction": false,
+            "congestive_heart_failure": true,
+            "severe_sepsis_or_infection": false,
+            "factor_V_leiden_or_activated": true,
+            "protein_C_resistance": false,
+            "antithrombin_III_deficiency": true,
+            "proteins_C_and_S_deficiency": false,
+            "dysfibrinogenemia": true,
+            "homocysteinemia": false,
+            "prothrombin_mutation_20210A": true,
+            "lupus_anticoagulant": false,
+            "antiphospholipid_antibodies": true,
+            "myeloproliferative_disorders": false
+        },
+        {
+            "risk_factor_id": 4,
+            "elective_major_lower": true,
+            "extremity": false,
+            "arthroplasty": true,
+            "stroke_feedbackhip_pelvis_or_leg_fracture": false,
+            "stroke": true,
+            "multiple_trauma": false,
+            "acute_spinal_cord_injury": true
+        }
+    ]
+}
+
+
+
+
+Update-Risk-Factor
+==================
+
+{
+    "patient_id": "P001",
+    "risk_factors": [
+        {
+            "risk_factor_id": 1,
+            "minor_surgery": true,
+            "age_40_to_60_yrs": false,
+            "pregnancy_or_post_martum": true,
+            "varicose_veins": false,
+            "inflammatory_bowel_disease": true,
+            "obesity": true,
+            "combined_oral": false,
+            "contraceptives_or_HRT": true
+        },
+        {
+            "risk_factor_id": 2,
+            "age_over_60_yrs": true,
+            "malignancy": false,
+            "major_surgery": true,
+            "immmobilising_plaster_cast": false,
+            "medical_or_surgical": true,
+            "patients_confined_to": false,
+            "bed_72_hrs": true,
+            "central_venous_access": false
+        },
+        {
+            "risk_factor_id": 3,
+            "history_of_DVT_or_PE": true,
+            "myocardial_infarction": false,
+            "congestive_heart_failure": true,
+            "severe_sepsis_or_infection": false,
+            "factor_V_leiden_or_activated": true,
+            "protein_C_resistance": false,
+            "antithrombin_III_deficiency": true,
+            "proteins_C_and_S_deficiency": false,
+            "dysfibrinogenemia": true,
+            "homocysteinemia": false,
+            "prothrombin_mutation_20210A": true,
+            "lupus_anticoagulant": false,
+            "antiphospholipid_antibodies": true,
+            "myeloproliferative_disorders": false
+        },
+        {
+            "risk_factor_id": 4,
+            "elective_major_lower": true,
+            "extremity": false,
+            "arthroplasty": true,
+            "stroke_feedbackhip_pelvis_or_leg_fracture": false,
+            "stroke": true,
+            "multiple_trauma": false,
+            "acute_spinal_cord_injury": true
+        }
+    ]
+}
+
+
+
+
+

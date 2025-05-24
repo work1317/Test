@@ -1,0 +1,279 @@
+import React, { useState, useEffect, useRef } from "react";
+import { Outlet, useLocation, Link } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
+import { Icon } from "@iconify/react";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import SideMenuStyle from "../css/SideMenu.module.css";
+import styles from "../css/MainDashboard.module.css";
+import { useNavigate } from "react-router-dom";
+import "../css/SearchBar.css";
+
+const menuItems = [
+  { icon: "circum:grid-4-2", label: "Dashboard", link: "dashboard" },
+  { icon: "mingcute:group-line", label: "Patients", link: "patients" },
+  { icon: "hugeicons:doctor-03", label: "Doctors", link: "doctors" },
+  { icon: "uit:calender", label: "Appointments", link: "appointments" },
+  { icon: "pepicons-pencil:file", label: "Records", link: "records" },
+  { icon: "iconoir:pharmacy-cross-tag", label: "Pharmacy", link: "pharmacy" },
+  // { icon: "hugeicons:complaint", label: "Complaints", link: "complaints" },
+  { icon: "guidance:medical-laboratory", label: "Lab", link: "lab" },
+  { icon: "iconamoon:invoice-thin", label: "Invoice", link: "invoice" },
+  { icon: "tabler:logout-2", label: "Logout", link: "logout" },
+];
+
+const API = "https://mocki.io/v1/7c4677b8-fb89-40ab-9b25-705fbafae6c1";
+
+const searchSimilar = (str1, str2) => {
+  if (!str1 || !str2) return 0;
+  str1 = str1.toLowerCase();
+  str2 = str2.toLowerCase();
+  let big = str1.length > str2.length ? str1 : str2;
+  let small = str1.length > str2.length ? str2 : str1;
+  let bigLength = big.length;
+  let similar = 0;
+  for (let i = 0; i < small.length; i++) {
+    if (big.includes(small[i])) {
+      similar++;
+    }
+  }
+  return similar / bigLength;
+};
+
+const LaoutPage = () => {
+  const [selectedPage, setSelectedPage] = useState("dashboard");
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const location = useLocation();
+  const [hasNotification, setHasNotification] = useState(true);
+  const [searchInput, setSearchInput] = useState("");
+  const [suggs, setSuggs] = useState([]);
+  const [filteredSuggs, setFilteredSuggs] = useState([]);
+  const [activeItem, setActiveItem] = useState(-1);
+  const [showSuggs, setShowSuggs] = useState(false);
+  const suggRef = useRef(null);
+
+  useEffect(() => {
+    fetch(API)
+      .then((res) => res.json())
+      .then((data) => {
+        const ApiData = data.map((user) => ({
+          sno: user.sno,
+          name: user.name,
+          dept: user.dept,
+          phone: user.phone,
+        }));
+        setSuggs(ApiData);
+      })
+      .catch((err) => console.error("Error fetching data:", err));
+  }, []);
+
+  useEffect(() => {
+    if (suggRef.current && activeItem >= 0) {
+      suggRef.current.children[activeItem]?.scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, [activeItem]);
+  
+  useEffect(() => {
+    const path = location.pathname.split("/").pop();
+    const currentItem = menuItems.find((item) => item.link === path);
+    if (currentItem) {
+      setSelectedPage(currentItem.label);
+    }
+  }, [location]);
+  
+
+  const handleSearchInput = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    setShowSuggs(true);
+    setActiveItem(-1);
+
+    if (value.trim() === "") {
+      setFilteredSuggs([]);
+      return;
+    }
+    const filtered = suggs.filter(
+      (item) =>
+        item.name?.toLowerCase().includes(value.toLowerCase()) ||
+        item.dept?.toLowerCase().includes(value.toLowerCase()) ||
+        (item.phone !== undefined &&
+          item.phone !== null &&
+          item.phone.toString().includes(value)) ||
+        (item.sno !== undefined &&
+          item.sno !== null &&
+          item.sno.toString().includes(value)) ||
+        searchSimilar(value, item.name) > 0.5
+    );
+
+    setFilteredSuggs(filtered);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      setActiveItem((prev) => Math.min(prev + 1, filteredSuggs.length - 1));
+    } else if (e.key === "ArrowUp") {
+      setActiveItem((prev) => Math.max(prev - 1, 0));
+    } else if (e.key === "Enter" && activeItem !== -1) {
+      setSearchInput(filteredSuggs[activeItem].name);
+      setShowSuggs(false);
+      setActiveItem(-1);
+    }
+  };
+
+  const handleSuggs = (value) => {
+    setSearchInput(value);
+    setShowSuggs(false);
+  };
+  const handleBellClick = () => {
+    setHasNotification(!hasNotification);
+    navigation("/dashboard/notifications");
+  };
+  const [inputText, setInputText] = useState("");
+  const navigation = useNavigate();
+  const handleUser = () => {
+    if (inputText === "") {
+      return;
+    } else {
+      navigation("/user");
+    }
+  };
+  let inputHandler = (e) => {
+    var lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
+  const renderMenuItems = () => {
+    return menuItems.map((item) => {
+
+      const isActive = location.pathname === `/dashboard/${item.link}`;
+
+      // const isActive = location.pathname.includes(item.link);
+
+      return (
+        <Link
+          to={item.link}
+          key={item.label}
+          className={`d-flex align-items-center gap-2 px-3 py-3 text-decoration-none ${
+            isActive ? SideMenuStyle.menuGroup : "text-dark hover:bg-light"
+          }`}
+          onClick={() => {
+            setSelectedPage(item.label); 
+            setShowOffcanvas(false);
+          }}
+        >
+          <Icon icon={item.icon} width={24} height={24} />
+          <span>{item.label}</span>
+        </Link>
+      );
+    });
+  };
+  return (
+    <div>
+      <Container fluid style={{ backgroundColor: "#f3f4f6" }}>
+        {/* Menu Button for Mobile & Tablets */}
+        <button
+          className={`btn  d-lg-none m-3 ${SideMenuStyle.buttoncolor} `}
+          onClick={() => setShowOffcanvas(true)}
+        >
+          <Icon icon="mdi:menu" width={24} height={24} />
+        </button>
+
+        {/* Offcanvas Sidebar for Mobile & Tablets */}
+        <Offcanvas
+          show={showOffcanvas}
+          onHide={() => setShowOffcanvas(false)}
+          placement="start"
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Menu</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>{renderMenuItems()}</Offcanvas.Body>
+        </Offcanvas>
+
+        <Row>
+          {/* Sidebar for Larger Screens  */}
+          <Col lg={2} className="d-none d-lg-block mt-1">
+            <div
+              className="sidebar d-none d-lg-flex flex-column bg-white shadow-sm p-3 "
+              style={{ height: "100vh", position: "sticky", top: 0 }}
+            >
+              {renderMenuItems()}
+            </div>
+          </Col>
+
+          <Col xs={12} lg={10} className="mt-1">
+            <div className={styles.MainContainer}>
+              <nav className={styles.navbar}>
+                {/* <div className={styles.navtitle}>Dash board</div> */}
+                <div className={styles.navtitle}>{selectedPage}</div>
+
+                {/* <div className={styles.navsearchContainer}>
+                  <Icon
+                    icon="si:search-line"
+                    width="16"
+                    height="16"
+                    style={{ color: "#868686" }}
+                  />
+
+                  <input
+                    type="text"
+                    value={searchInput}
+                    className={styles.navsearchInput}
+                    onChange={handleSearchInput}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Search..."
+                  />
+                </div> */}
+
+                {/* <div className={styles.line}></div> */}
+
+                <div className={styles.navrightSection}>
+                  <div className={styles.bellContainer}>
+                    <Icon
+                      icon="f7:bell"
+                      width="24"
+                      height="24"
+                      style={{ color: "#8B8B8B" }}
+                      className={styles.bellIcon}
+                      onClick={handleBellClick}
+                    />
+                    {hasNotification && (
+                      <span className={styles.notificationBadge}></span>
+                    )}
+                  </div>
+                </div>
+              </nav>
+            </div>
+            {showSuggs && filteredSuggs.length > 0 && (
+              <ul className={styles.searchSuggestions} ref={suggRef}>
+                {filteredSuggs.map((item, index) => (
+                  <li
+                    key={item.id}
+                    className={`${styles.searchSuggestionItem} ${
+                      index === activeItem ? styles.activeSuggestion : ""
+                    }`}
+                    onMouseEnter={() => setActiveItem(index)}
+                    onMouseDown={() => handleSuggs(item.name)}
+                  >
+                    <p style={{ fontSize: "15px" }}>
+                      {item.name}{" "}
+                      <span style={{ fontSize: "10px", paddingLeft: "5px" }}>
+                        ({item.dept})
+                      </span>
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div>
+              <Outlet />
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
+};
+
+export default LaoutPage;

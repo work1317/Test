@@ -1,0 +1,615 @@
+.mainContainer {
+    width: 100%;
+    padding: 0 20px;
+}
+
+.heading {
+    color: #313131;
+    font-size: 1rem;
+    font-weight: 600;
+    
+}
+.addbutton {
+   
+   padding: 10px 25px;
+    background-color:#002072;
+    color: #FFFFFF;
+    margin-top: 40px;
+    margin-left: 30rem;
+    border: none;
+    border-radius: 5px;
+}
+.addimage{
+    width: 45px;
+    height: 40px;
+    margin-top: 45px;
+    margin-left: 25px;
+}
+
+.patientCard {
+    width: 100%;
+    max-width: 18rem;
+    height: auto;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    padding: 15px;
+}
+/* .patientCard:hover {
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+} */
+.image1, .image2, .image3, .image4 {
+    width: 50px;
+    padding: 13px;
+    border-radius: 4px;
+}
+
+
+.firstrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap:20px;
+}
+
+.searchContainer {
+    text-align: center;
+    margin: auto;
+}
+
+.searchInput {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 35px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .heading {
+        font-size: 1.8rem;
+    }
+
+    .patientCard {
+        max-width: 100%;
+    }
+   .addbutton{
+    padding: 3px 0px;
+    margin-left: 25rem;
+    height: 54px;
+   }
+}
+
+@media (max-width: 992px) {
+    .heading {
+        font-size: 1.7rem;
+    }
+
+    .addbutton {
+        width: 150px;
+        height: 50px;
+    }
+
+    .patientCard {
+        width: 100%;
+        max-width: 16rem;
+        
+    }
+    .addimage{
+        margin-top: 15px;
+    }
+    .addimage{
+        width: 35px;
+        height: 35px;
+    }
+        
+}
+
+@media (max-width: 768px) {
+    .heading {
+        font-size: 1.5rem;
+    }
+
+    .addbutton {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .patientCard {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .firstrow {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .heading {
+        font-size: 1.3rem;
+    }
+
+    .addbutton {
+        width: 100%;
+    }
+
+    .patientCard {
+        width: 100%;
+        height: auto;
+        
+    }
+  
+
+    .image {
+        width: 40px;
+    }
+
+    .firstrow {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+
+/* //3rd component */
+
+
+.searchbar {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+
+  
+  .selectPatientCard {
+    width: 90rem;
+    max-width: 48rem;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .selectImage {
+    max-width: 100%;
+    height: auto;
+    padding-bottom: 2rem;
+  }
+
+
+
+.inpatients, .outpatients,.Casuality {
+    font-size: small;
+    padding: 5px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    border: none;
+    margin-bottom: 1rem;
+    
+}
+
+.inpatients {
+    background-color: #16A34A;
+    margin-left: 1rem;
+    padding: 6px 19px;
+   
+}
+
+.outpatients {
+    background-color: #9333EA;
+    margin-left: 1rem;
+}
+
+.Casuality {
+    background-color: #BB3A40;
+    margin-left: 1rem;
+}
+.searchpatient {
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.searchInput {
+    width: 18rem;
+    padding: 5px;
+    border-radius: 6px;
+    padding-left: 35px;
+    border: 1px solid #BEBEBE;
+    margin-left: 2rem;
+}
+
+.card1 {
+    width: 100%;
+    /* max-width: 350px; */
+    margin: auto;
+    height: auto;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding-bottom: 2rem;
+}
+
+.searchicon {
+    position: absolute;
+    left: 43px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: gray;
+}
+
+.patientCard {
+    width: 100%;
+    max-width: 280px;
+    margin: auto;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.Subtitle {
+    color: #9A9A9A;
+    margin-top: 10px;
+    margin-bottom: 50px;
+  
+}
+
+.cardDetails {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    color: #9A9A9A;
+}
+
+.statusLink {
+    text-decoration: none;
+    color: #16A34A;
+}
+.iconcolor{
+  color:#2563EB; 
+}
+.iconcolor1{
+  color:#16A34A !important; 
+}
+.iconcolor2{
+  color:#9333EA; 
+}
+.iconcolor3{
+  color:#E12626; 
+}
+.inpatientLink, .outpatientLink {
+    border-radius: 4px;
+    padding: 5px;
+    text-decoration: none;
+}
+.status1 {
+    color: blue !important;
+    font-weight: bold;
+  }
+  
+  .statusStable {
+    color: green !important;
+    font-weight: bold;
+  }
+
+.inpatientLink {
+    background-color: #DDFFE8;
+    color: #16A34A;
+}
+.casualityLink {
+  background-color: #e3c7c7;
+  color: #BB3A40;
+  text-decoration: none;
+  padding: 5px 18px;
+  border-radius: 4px;
+  border: none;
+}
+
+.outpatientLink {
+    background-color: #F0E0FF;
+    color: #9333EA;
+}
+
+.textpurple{
+  color:#9333EA;
+}
+.appointment-type {
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* sroll bar section */
+
+.scrollableList {
+  max-height: 350px; 
+  overflow-y: auto; 
+  padding-right: 5px; 
+}
+
+.scrollableList::-webkit-scrollbar {
+  width: 8px; 
+}
+
+.scrollableList::-webkit-scrollbar-thumb {
+  background: #ccc; 
+  border-radius: 4px;
+}
+
+/* .scrollableList::-webkit-scrollbar-thumb:hover {
+  background: #888;
+} */
+
+.patientCard {
+  margin-bottom: 10px;
+  cursor: pointer;
+  /* transition: transform 0.2s ease-in-out; */
+}
+
+/* .patientCard:hover {
+  transform: scale(1.02);
+} */
+
+
+
+@media (min-width: 320px) and  (max-width: 600px)  {
+    .searchInput, .selectPatientCard {
+        width: 100%;
+    }
+
+    .searchInput {
+        padding-left: 35px;
+    }
+
+    .inoutpatient {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 5px 11px;
+        gap: 20px;
+    }
+
+    .inpatients, .outpatients {
+        width: 100%;
+        margin-bottom: 10px;
+
+    }
+
+    .selectImage {
+        width: 50%;
+    }
+    .selectPatientCard {
+        width: 100%;
+        margin-left: 30px; 
+    }
+}
+
+@media (min-width: 1235px) and (max-width: 1475px) {
+  .searchInput{
+    width: 14rem;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1235px) {
+  .searchInput{
+    width: 12rem;
+    margin-left: 5px;
+  }
+  .searchicon {
+    left: 20px !important;
+  }
+}
+
+@media (min-width: 790px) and (max-width: 1024px) {
+  .searchInput{
+    margin-left: 10rem!important;
+  }
+  .searchicon {
+    left: 11rem !important;
+  }
+}
+
+@media (min-width: 550px) and (max-width: 790px) {
+  .searchInput{
+    margin-left: 6rem!important;
+  }
+  .searchicon {
+    left: 7rem !important;
+  }
+}
+@media (max-width: 768px) {
+    .searchpatient {
+        width: 100%;
+    }
+
+    .inoutpatient {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 5px 11px;
+        gap: 20px;
+        margin-bottom: 10px;
+    }
+
+    .selectPatientCard {
+        width: 100%;
+        margin-left: 6rem;
+        
+    }
+
+    .selectImage {
+        width: 10%;
+    }
+}
+@media (max-width:380px){
+  .searchInput {
+    margin-left: 0rem;
+  }
+}
+
+@media(max-width:509px){
+  .inpatients, .outpatients,.Casuality {
+   display: none;
+}
+}
+/* Medium Screens */
+@media (max-width: 1024px) {
+    .Secondcomponent {
+        display: flex;
+        flex-direction: column;
+        
+    }
+
+    .selectPatientCard {
+        width: 90%;
+    }
+    .maincard {
+        display: flex;
+        flex-direction: row;
+        margin: auto;
+        padding: 20px;
+      }
+    .card1{
+      width: 100%;
+    }
+}
+
+@media (min-width:768px) and (max-width:1024px){
+  .card1{
+    width: 75vw !important;
+    margin: auto !important;
+    height: auto !important;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding-bottom: 2rem !important;
+  }
+  .maincard {
+    width: 85vw !important;
+  }
+}
+
+/* Large Screens */
+@media (max-width: 1025px) and (min-width: 768px) {
+    .selectPatientCard {
+        width: 73vw !important;
+    }
+}
+@media (max-width: 1484px) and (min-width: 1025px) {
+  .selectPatientCard {
+      width: 50vw !important;
+  }
+
+}
+
+
+@media (max-width: 1200px) {
+    .heading {
+      font-size: 1.8rem;
+    }
+    .patientCard {
+      max-width: 100%;
+    }
+    .addbutton {
+      width: 180px;
+      height: 50px;
+      margin-left: 20rem;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .heading {
+      font-size: 1.7rem;
+    }
+    .addbutton {
+      width: 150px;
+      height: 48px;
+      margin-left: 15rem;
+    }
+    .addimage {
+      width: 35px;
+      height: 35px;
+      margin-top: 15px;
+    }
+    .patientCard {
+      max-width: 16rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .heading {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .addbutton {
+      width: 100%;
+      margin: 10px 0;
+    }
+    .patientCard {
+      width: 100%;
+      max-width: 100%;
+      text-align: center;
+    }
+    .firstrow {
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .selectPatientCard {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .heading {
+      font-size: 1.3rem;
+    }
+    .addbutton {
+      width: 100%;
+    }
+    .firstrow {
+      flex-direction: column;
+      align-items: center;
+    }
+    .image {
+      width: 40px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .selectPatientCard {
+      width: 100%;
+      padding: 15px;
+    }
+    .searchInput {
+      width: 100%;
+      max-width: 250px;
+    }
+    .inpatients,
+    .outpatients {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 320px) {
+    .heading {
+      font-size: 1.1rem;
+    }
+    .addbutton {
+      font-size: 0.9rem;
+      height: 40px;
+    }
+  }
+  

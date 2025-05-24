@@ -1,0 +1,295 @@
+/* Labtest.module.css */
+ 
+
+#lab {
+
+  padding: 1rem;
+
+}
+ 
+.Navbar {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 1rem;
+
+  flex-wrap: wrap;
+
+  background-color: white;
+
+  padding: 1rem;
+
+}
+ 
+.border {
+
+  height: 3rem;
+
+  font-weight: bold;
+
+  border-color: lightgray;
+
+}
+ 
+.profile {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 1rem;
+
+}
+ 
+.profile img {
+
+  width: 3rem;
+
+  height: 3rem;
+
+  border-radius: 50%;
+
+}
+ 
+/* Responsive styles (media queries remain unchanged) */
+
+@media (max-width: 768px) {
+
+  .Navbar {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+  }
+ 
+  .InputGroup {
+
+    width: 100% !important;
+
+    margin-top: 0.5rem;
+
+  }
+ 
+  .border {
+
+    display: none;
+
+  }
+ 
+  .profile {
+
+    width: 100%;
+
+    justify-content: flex-start;
+
+  }
+ 
+  .profile img {
+
+    width: 2.5rem;
+
+    height: 2.5rem;
+
+  }
+
+}
+ 
+/* More responsive rules omitted for brevity — keep them as they are */
+
+/* Now lab test specific styles: */
+ 
+.Tab {
+
+  padding: 1rem;
+
+  margin-top: 2rem;
+
+}
+ 
+.tabContainer {
+
+  display: flex;
+
+  background-color: rgba(162, 170, 169, 0.37);
+
+  padding: 0.5rem;
+
+  width: 17rem;
+
+}
+ 
+.tab {
+
+  width: 7rem;
+
+  height: 3rem;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  cursor: pointer;
+
+  color: gray;
+
+  font-weight: 500;
+
+  transition: all 0.2s ease-in-out;
+
+  margin-left: 0.5rem;
+
+}
+ 
+.tabActive {
+
+  background-color: white;
+
+  color: #333;
+
+  font-weight: 600;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+}
+ 
+/* Button styles */
+ 
+.AddNote {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-top: 2rem;
+
+}
+ 
+.AddNoteButton {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background-color: #002072;
+
+  color: white;
+
+  outline: none;
+
+  border: none;
+
+  padding: 0.7rem;
+
+  width: 13rem;
+
+  font-size: 1.1rem;
+
+}
+ 
+.fa {
+
+  font-size: 1.5rem;
+
+  margin-right: 1rem;
+ 
+
+}
+ 
+/* Table */
+ 
+.tableList {
+
+  margin-top: 2rem;
+
+}
+ 
+.th {
+
+  color: rgb(156, 153, 153);
+
+  font-weight: 500;
+
+  font-size: 1.1rem;
+
+}
+ 
+.tbody {
+
+  padding: 1rem;
+
+  margin-top: 1rem;
+
+}
+ 
+.tr {
+
+  padding: 1rem;
+
+}
+ 
+.td {
+
+  font-size: 1.1rem;
+
+  padding: 0.8rem;
+
+  font-weight: 500;
+
+}
+ 
+.btns {
+
+  padding: 0.3rem;
+
+  width: 7rem;
+
+  font-size: 1.1rem;
+
+}
+
+
+.tabContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: transparent #EAEAF3;  /* no background by default */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+  color: #333;
+}
+
+/* .tab:hover {
+  background-color: transparent; } */
+
+.active {
+  background-color: white;      
+  /* color: #0d47a1; */
+  font-weight: bold;
+  /* border-color: #90caf9; */
+}
+.notebtn{
+  background-color: #002072;
+  color: white;
+  border: none;
+  width: 200px;
+  border-radius: 10px;
+}

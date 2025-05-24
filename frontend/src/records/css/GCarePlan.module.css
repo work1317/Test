@@ -1,0 +1,22 @@
+.title{
+    font-size: 18px;
+    font-weight: 600;
+    color: #313131;
+    margin-bottom: 6px;
+}
+.labels{
+    size: 12px;
+    font-weight: 400;
+    color: #313131;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+.data{
+    border: 1px solid #CFDCEB;
+    border-radius: 5px;
+    padding: 10px;
+    color: #808080;
+    border-color: #CFDCEB;
+    margin-top: 8px;
+    height: 130px;
+}

@@ -1,0 +1,218 @@
+ .container {
+    margin: auto;
+    padding: 20px;
+    width: 100%;
+}
+.title{
+  font-size: 32px;
+  font-weight: 600;
+  color: #313131;
+
+}
+
+.closeIcon{
+  position: relative;
+  top: 0.6rem;
+
+}
+
+.HeadCon{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid #D9D9D9 ;
+  padding-bottom: 2%;
+  margin-bottom: 4%;
+
+}
+
+.dropdownContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10%;
+    margin-bottom: 5%;
+}
+
+.inputGroup {
+    width: 48%;
+}
+.inputPosition{
+  width: 200%;
+  resize: none;
+  margin-bottom: 2%;
+}
+.HeadText{
+  font-weight: 500;
+  font-size: 16px ;
+  color: #313131;
+  /* color: #808080; */
+  margin-bottom: 3%;
+}
+.vitalText{
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 1%;
+  color: #313131;
+}
+.dropdown-toggle::after{
+  display: none !important;
+}
+
+.categoryIn{
+  width: 100% !important;
+  height: 38px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding: 5% !important;
+  margin-bottom: 5%;
+
+}
+
+.categoryIn:focus{
+  border: none !important;
+}
+
+.categoryIn::placeholder{
+  font-size: 14px;
+  font-weight: 400;
+  color: #808080;
+}
+
+.prescriptionInputs{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.prescriptionInputs .inputGroup input {
+  width: 100% !important;
+  height: 38px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding: 5% !important;
+  margin-bottom: 5%;
+}
+.prescriptionInputs .inputGroup input::placeholder{
+  font-size: 12px;
+  font-weight: 400;
+  color: #808080;
+}
+.labInputs .inputGroup input::placeholder{
+  font-size: 12px;
+  font-weight: 400;
+  color: #9A9A9A;
+}
+.medInput{
+  width: 100%;
+}
+.presDesInput::placeholder{
+  font-size: 12px;
+  font-weight: 400;
+  color: #9A9A9A;
+}
+.labInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.vInput{
+  width: 100% !important;
+}
+.presInput{
+  width: 100% !important;
+}
+.medInput{
+  width: 200% !important;
+}
+.presDesInput{
+  width: 200% !important;
+  resize: none;
+}
+
+.rDropdown button {
+  width: 100% !important;
+  height: 38px !important; 
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid #ccc !important;
+  text-align: start !important;
+  font-size: small !important;
+}
+
+.fileUpload {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.browseButton {
+  background-color:#002072 ;
+  height: 40px !important;
+  width: 164px !important;
+  border-color:#002072 ;
+  font-size:14px !important;
+  font-weight: 400 !important;
+  border-radius: 12px !important;
+}
+
+.prisWrap{
+  display: flex;
+  flex-direction: row;
+  gap: 10%;
+}
+.presText{
+  font-size: 12px ;
+  font-weight: 400;
+  margin-bottom: 1%;
+  color: black;
+}
+.RdropdownItem{
+  font-size: 0.8rem;
+}
+
+.RdropdownItem:focus{
+  background-color: #002072 !important;
+  border-radius: 10px !important;
+}
+
+
+@media (max-width: 768px) {
+    .dropdownContainer {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .inputGroup {
+        width: 100%;
+    }
+
+    .buttonGroup {
+        justify-content: center;
+    }
+    .presInput{
+      width: 100% !important;
+    }
+    .medInput{
+      width: 100% !important;
+    }
+    .presDesInput{
+      width: 100% !important;
+      resize: none;
+    }
+    .inputPosition{
+      width: 100% !important;
+    }
+    .buttonGroup {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+  }
+}

@@ -1,0 +1,17 @@
+Patient Creation
+=================
+{
+  "patient_name": "Alice Thomas",
+  "doctor_name": "Dr. Rajesh Khanna",
+  "date": "2025-04-25",
+  "time": "09:00:00",
+  "age": 28,
+  "appointment_type": "inpatient",
+  "notes": "Complains of persistent cough and fatigue.",
+  "gender": "female",
+  "phno": "9876543210",
+  "email": "alice.thomas@example.com",
+  "blood_group": "B+",
+  "ward_no": "Ward-3",
+  "diagnosis": "Suspected respiratory infection"
+}

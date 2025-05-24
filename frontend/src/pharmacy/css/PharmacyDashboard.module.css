@@ -1,0 +1,109 @@
+.main {
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+  background-color: #F6F6F6;
+}
+.card{
+  box-shadow: 0px 0px 5px rgba(245, 237, 237, 0.1);
+  height: 200px;
+}
+.addmedica{
+  background-color: #002072 !important;
+  
+}
+
+.part2{
+  margin: auto;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 0.1) ;
+  background-color: #FFFFFF;
+
+}
+
+
+.searchInput {
+  /* width: 100%; */
+  /* max-width: 700px; */
+  width: 650px !important;
+  padding: 5px;
+  border-radius: 6px;
+  padding-left: 25px;
+  border: 1px solid #BEBEBE;
+}
+.searchbar {
+  margin-left: 23px;
+  
+}
+.searchicon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: gray;
+}
+.tabContainer{
+  padding: 20px;
+  background-color: #FFFFFF;
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+.sectionDivider {
+  border-bottom: 1px solid #dcdcdc;
+  margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 426px) {
+  .main {
+    width: 100%;
+    padding: 10px;
+
+  }
+  .card {
+    width: 100%;
+  }
+  .pharmacyInvoice{
+    margin-bottom: 8px;
+  }
+  .searchInput{
+    width: 100%;
+  }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+  .main {
+    width: 90%;
+  }
+  .searchInput{
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main {
+    width: 85%;
+  }
+  .searchInput{
+    width: 100%;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .container {
+    width: 80%;
+  }
+  .searchInput{
+    width: 100%;
+  }
+}
+
+@media (min-width: 1441px) {
+  .container {
+    width: 75%;
+  }
+  .searchInput{
+    width: 100%;
+  }
+}

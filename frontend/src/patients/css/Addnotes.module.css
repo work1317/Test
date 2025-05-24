@@ -1,0 +1,33 @@
+.notecontainer {
+   max-width: 100%;
+   padding: 6rem;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+ }
+ .content {
+   border: 1px solid #BEBEBE;
+   padding: 2rem;
+   border-radius: 4px;
+   text-align: center;
+   background: white;
+   width: 100%;
+ }
+ 
+ @media (max-width: 450px) {
+  .notecontainer {
+    padding: 3px;
+  }
+  .content {
+    padding: 2px;
+  }
+}
+ 
+
+
+
+
+
+
+
+

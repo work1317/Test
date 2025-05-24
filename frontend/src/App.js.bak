@@ -1,0 +1,43 @@
+import { Layout } from 'lucide-react';
+import "./App.css"
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PatientManagement from "./patients/components/PatientManagement";
+import RecordLab from "./records/components/RecordLab";
+import Notifications from "./Notifications/components/Notifications";
+// import MainDashBoard from './dashboard/components/MainDashBoard';
+import LaoutPage from './dashboard/components/LaoutPage';
+import DoctorsPage from './doctors/DoctorsPage';
+import DashBoardPage from './dashboard/DashboardPage';
+import AppointmentPage from './Appointment/componnets/Appointment'
+import LabsPage from './Labs/components/Labtest.jsx'
+import PharmacyDashboard from './pharmacy/components/PharmacyDashboard.js';
+// import LocalApiFetch from './dashboard/components/apifetch.jsx';
+// import ApiFetch from './dashboard/components/apifetch.jsx';
+
+
+const App = () => {
+  return (
+    <Router>
+    <Routes>
+      <Route path="/dashboard" element={<LaoutPage />}>
+        <Route index element={<DashBoardPage />} />
+        <Route path="dashboard" element={<DashBoardPage />} />
+        <Route path="doctors" element={<DoctorsPage />} />
+        <Route path="patients" element={<PatientManagement />} />
+        <Route path="records" element={<RecordLab /> } />
+        <Route path="notifications" element={<Notifications />} />
+        <Route path="appointments" element={<AppointmentPage />} />
+        <Route path="lab" element={<LabsPage />} />
+        <Route path="pharmacy" element={<PharmacyDashboard/>}/>
+      </Route>
+    </Routes>
+  </Router>
+  )
+}
+
+export default App
+
+
+
+

@@ -1,0 +1,21 @@
+.search1{
+    border: 1px #808080 solid;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: 400;
+ }
+ .searchbar1{
+     border: none;
+     outline: none;
+ }
+ .labelfield{
+    color: #313131;
+    font-weight: 500;
+    font-size: 14px;
+ }
+ .buttonContent{
+    background-color: #002072;
+    border-radius: 10px;
+    color: white;
+    border: none;
+}

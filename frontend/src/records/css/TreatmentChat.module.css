@@ -1,0 +1,43 @@
+.treatmentchat{
+    padding-top: 60px;
+    padding-bottom: 20px;
+    margin-left: 177px;
+    color: #313131;
+    size: 16px;
+    font-weight: 600;
+}
+
+.descriptiontext{
+    color: #313131;
+    size: 12px;
+    font-weight: 400;
+}
+.textbox{
+    border-color:#CFDCEB;
+    border-radius: 0;
+  }
+ 
+  .savebutton {
+    background-color: #002072 !important;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 5px 65px;
+  }
+  .sumbit{
+    padding-top: 10px;
+    padding-bottom: 50px;
+  }
+  .cancel{
+    border: none;
+    background: none;
+    background-color: white;
+    color: #808080;
+  }
+ .addbutton{
+  border-radius: 4px;
+  background-color: #2563EB;
+  color: white;
+  border-color: #2563EB ;
+  padding: 5px;
+ }

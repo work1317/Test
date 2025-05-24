@@ -1,0 +1,544 @@
+.modalOverlay {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 999;
+
+}
+ 
+.modalContent {
+
+  background: #fff;
+
+  height: 100vmin;
+
+  padding: 30px;
+
+  border-radius: 12px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+}
+ 
+.models {
+
+  display: flex;
+
+  justify-content: space-around;
+
+  align-items: center;
+
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  margin-bottom:90px;
+  height: 650px;
+
+  /* padding: 1rem; */
+
+}
+ 
+.mod {
+
+  display: flex;
+
+  justify-content: space-evenly;
+
+  align-items: center;
+  flex-wrap: wrap;
+
+}
+ 
+.label1 {
+
+  font-size: 1.1rem;
+
+  margin-top: 1rem;
+
+}
+ 
+.label {
+
+  font-size: 1.1rem;
+
+  margin-top: 0.2rem;
+
+}
+ 
+.field {
+
+  width: 14rem;
+
+  margin-top: 0.2rem;
+
+}
+ 
+.select {
+
+  width: 7rem;
+
+  margin-top: 0.2rem;
+
+}
+ 
+.modelButton {
+
+  font-size: 2rem;
+
+  cursor: pointer;
+
+}
+ 
+.modelButton button {
+
+  outline: none;
+
+  border: none;
+
+  font-size: 2rem;
+
+  text-align: center;
+
+}
+ 
+.forms {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 2rem;
+
+}
+ 
+.formsCon {
+
+  width: 18rem;
+
+  height: 3rem;
+
+}
+ 
+.formsCon1 {
+
+  height: 3rem;
+
+}
+ 
+.save {
+
+  padding: 1rem;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  float: right;
+
+  gap: 1rem;
+
+}
+ 
+.save span {
+
+  font-size: 1.1rem;
+
+  cursor: pointer;
+
+  margin-right: 1rem;
+
+}
+ 
+.save button {
+
+  width: 6rem;
+
+}
+
+.resultCard {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 700px;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.subtitle {
+  color: #a0a0a0;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.criticalText {
+  color: red;
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.uploadBtn {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+}
+.container {
+  display: flex;
+  justify-content: space-evenly;
+  
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #fff;
+  padding: 1.5rem;
+  width: 37rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.subheading {
+  color: gray;
+}
+
+.label {
+  width: 40%;
+  font-weight: 500;
+}
+
+.input {
+  width: 55%;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: lightgray;
+  font-size: 1.3rem;
+  margin-bottom: 1.7rem;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.criticalText {
+  font-size: 0.95rem;
+  color: #d9534f;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.uploadBtn {
+  border-style: dashed;
+}
+.fl1{
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+.fl{
+  font-size: 1.1rem;
+  margin-top: 0.2rem;
+}
+.fc{
+  width: 14rem;
+  margin-top: 0.2rem;
+}
+.fs{
+  width: 7rem;
+  margin-top: 0.2rem;
+}
+.formscon{
+  width: 12rem;
+}
+.uploadWrapper {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-top: 10px;
+}
+
+.fileNameTag {
+background-color: #f1f1f1;
+padding: 4px 10px;
+border-radius: 8px;
+font-size: 0.9rem;
+color: #333;
+}
+.uploadWrapper {
+display: flex;
+gap: 12px;
+
+}
+
+.uploadBtn {
+width: 120px; /* Adjust as needed */
+height: 50px; /* Adjust size */
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: #f0f0f0;
+border-radius: 8px;
+border: 2px solid #ccc;
+color: #333;
+text-align: center;
+font-size: 1rem;
+margin: 10px;
+}
+
+.uploadBtn:hover {
+background-color: #e0e0e0;
+}
+.uploadWrapper {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.fileName {
+font-size: 0.95rem;
+color: #444;
+margin-top: 8px;
+}
+
+.previewImage {
+margin-top: 10px;
+max-width: 50px;
+max-height: 50px;
+border-radius: 8px;
+border: 1px solid #ccc;
+}
+
+.previewSection {
+display: flex;
+flex-direction: column;
+}
+
+/* Base styles: already defined above */
+.resultCard { /* ... */ }
+/* other styles ... */
+
+/* Responsive: ≤ 768px */
+@media (max-width: 768px) {
+.resultCard {
+  padding: 20px;
+}
+
+.card {
+  width: 100%;
+  padding: 1rem;
+}
+
+.bottomRow,
+.actions,
+.toggleLabel {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.uploadBtn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.previewImage {
+  max-width: 100%;
+  max-height: 100px;
+}
+
+.title {
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+}
+
+.fl1 {
+  font-size: 1rem;
+}
+}
+
+/* ✅ Custom: ≤ 600px */
+@media (max-width: 600px) {
+.title {
+  font-size: 1.4rem;
+}
+
+.uploadBtn {
+  font-size: 0.95rem;
+}
+
+.input {
+  width: 100%;
+}
+}
+
+/* ✅ Custom: ≤ 500px */
+@media (max-width: 500px) {
+.title {
+  font-size: 1.3rem;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+}
+
+.label {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+}
+
+.uploadBtn {
+  font-size: 0.9rem;
+}
+}
+
+/* ✅ Custom: ≤ 400px */
+@media (max-width: 400px) {
+.title {
+  font-size: 1.2rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+}
+
+.uploadBtn {
+  font-size: 0.85rem;
+  padding: 10px;
+}
+
+.fl1 {
+  font-size: 0.95rem;
+}
+}
+
+/* ✅ Custom: ≤ 300px */
+@media (max-width: 300px) {
+.title {
+  font-size: 1.1rem;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+}
+
+.uploadBtn {
+  font-size: 0.8rem;
+  padding: 8px;
+}
+}
+
+/* ✅ Custom: ≤ 200px */
+@media (max-width: 200px) {
+.title {
+  font-size: 1rem;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+}
+
+.uploadBtn {
+  font-size: 0.75rem;
+  padding: 6px;
+}
+
+.previewImage {
+  max-height: 60px;
+}
+}
+
+
+.toggleLabel :global(.form-check-input[type="checkbox"]) {
+width: 2.6rem;
+height: 1.1rem;
+cursor: pointer;
+}
+.hiddenInput {
+display: none;
+}
+
+.uploadButton {
+padding: 0.4rem 1.5rem;
+background-color: #007bff;
+color: white;
+font-size: 1rem;
+border: none;
+border-radius: 0.4rem;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.uploadButton:hover {
+background-color: #0056b3;
+}
+.actions{
+margin-top: 0.6rem;
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center; 
+}

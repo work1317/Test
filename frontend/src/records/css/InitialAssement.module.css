@@ -1,0 +1,29 @@
+.main{
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 10px;
+  padding-bottom: 40px;
+}
+.title{
+  color: #313131;
+  font-size: 20px;
+  font-weight: 600;
+}
+.savebutton {
+    background-color: #002072 !important;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 5px 65px;
+  }
+   .sumbit{
+    padding-top: 35px;
+    padding-bottom: 50px;
+  }
+  .cancel{
+    border: none;
+      background: none;
+      background-color: white;
+      color: #808080;
+  }
+  

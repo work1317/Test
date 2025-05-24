@@ -1,0 +1,62 @@
+
+.totalScore{
+    margin-bottom: 30px;
+    /* border: 1px solid #CFDCEB; */
+    padding: 10px;
+    box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+    background-color: #FFFFFF;
+padding-left: 20px;}
+.main{
+    padding-left: 140px;
+    padding-right: 140px;
+    padding-top: 50px;
+    margin-bottom: 5px;
+}
+.factor1{
+    border: 1px solid #CFDCEB;
+    padding-left:50px ;
+    padding-bottom: 50px;
+    padding-top: 10px;
+    border-radius: 4px;
+    margin-bottom: 50px;
+    margin-left: 20px;
+}
+.riskfactortext{
+    text-align: center;
+    color: #313131;
+    font-size: 16px;
+    font-weight: 500;
+    padding-bottom: 20px;
+}
+.sumbit{
+    padding-top: 35px;
+    padding-bottom: 50px;
+  }
+  .cancel{
+    border: none;
+      background: none;
+      background-color: white;
+      color: #808080;
+  }
+  .riskfactor{
+    text-align: center;
+    color: #313131;
+    font-size: 16px;
+    font-weight: 500;
+    padding-bottom: 20px;
+  }
+  
+
+ 
+.items{
+  margin-left: 80px;
+}
+.checkCon input[type = checkbox] {
+  border: 2px solid black!important;
+}
+
+@media (max-width: 320px){
+    .main{
+      width: 100%;
+    }
+}

@@ -1,0 +1,40 @@
+.container{
+    background-color: #F6F6F6;
+
+}
+.Details{
+    /* border: 1px solid  #2E2929; */
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1) ;
+}
+.trasactionStyle{
+    background-color:#FFFFFF ;
+    border-radius: 8px;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1) ;
+    padding: 20px;
+}
+
+.button{
+    background-color: #002072;
+}
+.clearbutton{
+    background-color: #002072;
+    margin-top: 31px;
+}
+.transactionScroll {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .solidClearBtn {
+    background-color: #002072;
+    color: white;
+  }
+  .solidClearBtn:hover,
+.solidClearBtn:focus,
+.solidClearBtn:active {
+  background-color: #002072;
+  color: white;
+  border: none;
+}
+

@@ -1,0 +1,16 @@
+.medicine{
+background-color: #F9FAFB;
+border-radius: 8px;
+box-shadow: 0px 0px 0px 1px rgba(0, 0,0,0.1);
+}
+.cancel{
+    background-color: #FFFFFF !important;
+    border: none;
+}
+.complete{
+    background-color: #002072;
+    color: #FFFFFF;
+    border:none;
+    padding: 8px;
+    border-radius: 4px;
+}

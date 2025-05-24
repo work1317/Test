@@ -1,0 +1,33 @@
+.modal-content {
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background-color: #002072;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+}
+.cancelbutton{
+ margin-top: 30px;
+}
+
+.submitbutton{
+background-color: #002072 !important;
+color: white !important;
+}
+
+

@@ -1,0 +1,88 @@
+.searchpatient{
+  width: 300px;
+}
+.searchInput {
+    /* width: 100%; */
+    /* max-width: 700px; */
+    width: 350px !important;
+    padding: 5px;
+    border-radius: 6px;
+    padding-left: 25px;
+    border: 1px solid #BEBEBE;
+  }
+ 
+  .searchicon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: gray;
+  }
+  .addsuppler{
+    color: #ffffff;
+    border-radius: 4px;
+    border: none;
+    background-color:#002072;
+    padding: 6px 10px;
+    font-size: 15px;
+  }
+  .viewDetails{
+    border:1px solid black;
+    border-radius: 4px;
+    /* color: gray; */
+    padding: 3px;
+    background-color: #ffffff !important;
+  }
+  .totalbalance{
+    box-shadow: 0px 0px 0px 1px rgba(0, 0,0, 0.1);
+    padding: 10px 20px;
+    border-radius: 3px;
+  }
+  .tableScroll {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+    background-color: #fff;
+  }
+  
+
+
+
+  .responsiveTable {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  @media (min-width: 320px) and (max-width:426px){
+    .responsiveTable table {
+      font-size: 12px;
+    }
+  
+    .responsiveTable thead {
+      display: none;
+    }
+  
+    .responsiveTable tbody td {
+      display: block;
+      width: 100%;
+      text-align: center;
+      /* padding-left: 50%; */
+      position: relative;
+    }
+  
+    .responsiveTable tbody td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 0;
+      width: 50%;
+      padding-left: 15px;
+      font-weight: bold;
+      text-align: left;
+    }
+    .addsuppler{
+      width: 100%;
+      margin-top: 20px;
+    }
+  }
+  
