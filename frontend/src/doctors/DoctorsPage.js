@@ -14,7 +14,7 @@ import AddDoctor from "./components/AddDoctor";
 import { Container, Row, Col, Card, Image } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import Vector from "../assets/images/Vector.svg";
-import api from "../utils/axiosInstance";
+import axios from "axios";
 
 const DoctorsPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,8 +34,8 @@ const DoctorsPage = () => {
     const getDoctors = async () => {
       setLoading(true);
       try {
-        const { data } = await api.get(
-          "/doctors/doctors/"
+        const { data } = await axios.get(
+          "http://127.0.0.1:8000/doctors/doctors/"
         );
         if (data.success) {
           setDoctors(data.data);
@@ -51,6 +51,15 @@ const DoctorsPage = () => {
       setLoading(false);
     };
     getDoctors();
+    const handleRefresh = () => {
+      getDoctors();
+    };
+
+    window.addEventListener("refreshAddDoctor", handleRefresh);
+
+    return () => {
+      window.removeEventListener("refreshAddDoctor", handleRefresh);
+    };
   }, []);
 
   const handleSearch = (e) => setQuery(e.target.value);
@@ -77,6 +86,10 @@ const DoctorsPage = () => {
     setShowModal(true);
   };
 
+  const handleClose = () => [
+    setShowModal2(true)
+  ]
+
   return (
     <Container fluid>
       <Row>
@@ -87,14 +100,14 @@ const DoctorsPage = () => {
           <div>
             <button
               className={`${Doctorstyle.buttonContent} mt-2 p-2 pe-3`}
-              onClick={() => setShowModal2(true)}
+              onClick={handleClose}
             >
               <CirclePlus className="me-2" />
               Add Staff
             </button>
             <AddDoctor
               show={showModal2}
-              handlerClose={() => setShowModal2(false)}
+              handleClose={() => setShowModal2(false)}
             />
           </div>
         </Col>
@@ -245,7 +258,7 @@ const DoctorsPage = () => {
                 <Card.Footer className="d-flex justify-content-between">
                   <div className="d-flex align-items-center">
                     <GoPeople size={30} className="text-muted" />
-                    <p className="ms-2">{doctor.d_available_slots.length}</p>
+                    <p className="ms-2">{totalPatients}</p>
                   </div>
                   <div className="d-flex align-items-center">
                     <CiCalendar size={30} className="text-muted" />

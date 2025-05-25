@@ -702,7 +702,8 @@ const MainDashBoard = () => {
     return <div className={styles.MainContainer}>No data available.</div>;
   }
  
-  const { patients, doctors, todays_appointments, critical_cases,urgent_appointments,cardiology,ent,dermatology,neurology,dentistry,ophthalmology} = data.stats;
+  const { patients,increased_patients, doctors,increased_doctors, todays_appointments, critical_cases,urgent_appointments,cardiology,ent,dermatology,neurology,dentistry,ophthalmology} = data.stats;
+
  
   const statistics = [
     {
@@ -710,14 +711,14 @@ const MainDashBoard = () => {
       value: patients,
       icon: "mingcute:group-line",
       color: styles.carblue,
-      values:"+12% this month",
+      values:"+"+increased_patients+"% this month",
     },
     {
       title: "Doctors",
       value: doctors,
       icon: "fluent-mdl2:group",
       color: styles.cargreen,
-      values:"+2 this week",
+      values:"+"+increased_doctors+" this week",
     },
     {
       title: "Today's Appointment",

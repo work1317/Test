@@ -1,4 +1,4 @@
-import api from "../../utils/axiosInstance";
+import axios from "axios";
 import React, { useState } from "react";
 import { Button, Form, Modal, Row, Col, Dropdown,Alert } from "react-bootstrap";
 
@@ -14,11 +14,13 @@ const AddDoctor = ({ show, handleClose }) => {
     d_end_time: "",
     d_education_info: "",
     d_certifications: "",
+    is_guest: false,
   });
 
   const [errors, setErrors] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [close, setClose] = useState(true)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,32 +44,23 @@ const AddDoctor = ({ show, handleClose }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  // const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // if (!validateForm()) return;
-  
-    // const sanitizedFormData = {
-    //   ...formData,
-    //   d_education_info: formData.d_education_info || null,
-    //   d_certifications: formData.d_certifications || null,
-    //   d_available_days: formData.d_available_days.length > 0 ? formData.d_available_days : null,
-    // };
-    // console.log("Submitting form data:", sanitizedFormData );
-    
     const handleSubmit = async (e) => {
       e.preventDefault();
     
       try {
-        const response = await api.post('/doctors/doctors/create/', formData);
+        const response = await axios.post('http://127.0.0.1:8000/doctors/doctors/create/', formData);
         console.log('Doctor created:', response.data);
+        window.dispatchEvent(new Event('refreshAddDoctor'))
+        alert("Doctor added")
         // Do success handling like closing modal or resetting form
         handleClose(); 
+
       } 
       catch (error) {
         if (error.response) {
           console.error('Error data:', error.response.data);
-        } else {
+        }
+       else {
           console.error('Error creating doctor:', error);
         }
       }
@@ -82,11 +75,14 @@ const AddDoctor = ({ show, handleClose }) => {
 
     setFormData({ ...formData, d_available_days: updatedDays });
   };
+
   return (
-    <Modal show={show} onHide={handleClose} size="lg" centered>
-      <Modal.Header closeButton>
+    
+    <Modal show={show} onHide={handleClose} size="lg" centered>  
+       <Modal.Header closeButton >
         <Modal.Title>Add Doctor</Modal.Title>
-      </Modal.Header>
+      </Modal.Header> 
+
       <Modal.Body>
         {successMessage && (
       <Alert variant="success" onClose={() => setSuccessMessage("")} dismissible>
@@ -247,10 +243,25 @@ const AddDoctor = ({ show, handleClose }) => {
               isInvalid={!!errors.d_certifications}
             />
             <Form.Control.Feedback type="invalid">{errors.d_certifications}</Form.Control.Feedback>
+              <Form.Group className="mb-3 d-flex flex-row">
+           <Form.Label style={{padding:"10px"}}> Guest...? </Form.Label>
+            <Form.Check
+              type="checkbox"
+              name="is_guest"
+              style={{paddingTop:"12px"}}
+              checked={formData.is_guest || false}
+              onChange={(e) =>
+                setFormData({ ...formData, is_guest: e.target.checked })
+              }
+            />
+
+       
+          </Form.Group>
           </Form.Group>
 
-          <div className="text-center">
-            <Button variant="primary" type="submit" className="w-50">
+          <div className="d-flex flex-row justify-content-end">
+            <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+            <Button variant="primary" type="submit" className="ms-2">
               Submit Details
             </Button>
             

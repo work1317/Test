@@ -37,13 +37,13 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
               <span className="rating">
                 <IoStarOutline size={25} style={{ color: "#CA8A04" }} />
                 &nbsp;&nbsp; 4.8
-                <span style={{ color: "#979797" }}> (1500 patients)</span>
+                <span style={{ color: "#979797" }}> ({doctor.patient_count} Patients)</span>
               </span>
             </div>
           </div>
           <div className={`col-md-4`}>
             <p className={`mt-4 w-25`} style={{ color: "#979797" }}>
-              1500 patients
+              {doctor.patient_count} Patients
             </p>
           </div>
         </div>
@@ -84,39 +84,38 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
           </div>
         </div>
         <h5>Today's Schedule</h5>
-        <div className="row d-flex justify-content-evenly">
-          {doctor.d_available_slots.map((slot, index) => (
-            <div
-              key={index}
-              className={`
-                    ${
-                      slot.status === "Available"
-                        ? doctorstyle.available
-                        : slot.status === "Booked"
-                        ? doctorstyle.booked
-                        : doctorstyle.break
-                    } 
-                    d-flex flex-column justify-content-center col-4 col-md-3
-                `}
-            >
-              <div className={doctorstyle.txt}>
-                <span>{slot.time}</span>
-              </div>
-              <div className={doctorstyle.txt}>
-                <span>{slot.status}</span>
-              </div>
+         {doctor.d_available_slots && doctor.d_available_slots.length > 0 ? (
+            <div className="row d-flex justify-content-evenly">
+              {doctor.d_available_slots.map((slot, index) => (
+                <div
+                  key={index}
+                  className={`
+          ${
+            slot.status === "Available"
+              ? doctorstyle.available
+              : slot.status === "Scheduled"
+              ? doctorstyle.booked
+              : doctorstyle.break
+          }
+          d-flex flex-column justify-content-center col-4 col-md-3
+        `}
+                >
+                  <div className={doctorstyle.txt}>
+                    <span>{slot.time}</span>
+                  </div>
+                  <div className={doctorstyle.txt}>
+                    <span>{slot.status}</span>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          ) : (
+            <p className="text-muted text-center mt-3">Doctor is not available today</p>
+          )}
         <div className={`row`}>
           <div className={`col-md-6`}>
             <h5 className="mt-4">Education & Certifications</h5>
             <h5 style={{ color: "#484848" }}>Education</h5>
-            {/* <div style={{ color: "#979797" }}>
-              <span>. MD, Harvard Medical School</span>
-              <span>. Cardiology Fellowship, Mayo Clinic</span>
-              <span>. Board Certified Cardiovascular Disease</span>
-            </div> */} 
             {doctor.d_education_info}
           </div>
 
@@ -124,9 +123,6 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
           <div className={`col-md-6 mt-5`}>
             <h5 style={{ color: "#484848" }}>Certifications</h5>
             <div style={{ color: "#979797" }}>
-              {/* <span>. American Board of Internal Medicine</span>
-              <span>. Advanced Cardiac Life Support</span>
-              <span>. Fellow of the American College of Cardiology</span> */}
               {doctor.d_certifications}
             </div>
           </div>
