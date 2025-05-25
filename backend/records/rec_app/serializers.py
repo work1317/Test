@@ -10,38 +10,23 @@ from .validators import validate_character_of_service,validate_factors_improving
 
 class VitalsSerializer(serializers.ModelSerializer):
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False) 
-    doctor_name = serializers.CharField(source='patient.doctor_name', read_only=True)
+    doctor_name = serializers.CharField(source='patient.doctor.d_name', read_only=True)
 
     class Meta:
         model = Vitals
         fields = ['patient', 'doctor_name','blood_pressure', 'bmi', 'grbs','cns','cvs', 'respiratory_rate', 'weight', 'height','category','summary','report','created_at','last_updated_at']
 
-# class LabResultSerializer(serializers.ModelSerializer):
-#     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False) 
-#     doctor_name = serializers.CharField(source='patient.doctor_name', read_only=True)
-#     class Meta:
-#         model = LabResult
-#         fields = '__all__'
-
-# class ImagingSerializer(serializers.ModelSerializer):
-#     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False) 
-#     doctor_name = serializers.CharField(source='patient.doctor_name', read_only=True)
-
-#     class Meta:
-#         model = Imaging
-#         fields = ['patient','doctor_name','sacn_type','category','summary','report','created_at','last_updated_at']
 
 class PrescriptionSerializer(serializers.ModelSerializer):
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False) 
-    doctor_name = serializers.CharField(source='patient.doctor_name', read_only=True)
-    patient_name = serializers.CharField(source='patient.patient_name')
+    doctor_name = serializers.CharField(source='patient.doctor.d_name', read_only=True)
     class Meta:
         model = Prescription
-        fields = ['patient','patient_name','doctor_name','medication_name','dosage','quantity','status','duration','category','summary','report','created_at','last_updated_at']
+        fields = ['patient','doctor_name','medication_name','dosage','quantity','status','duration','category','summary','report','created_at','last_updated_at']
 
 class ServiceProcedureSerializer(serializers.ModelSerializer):
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False) 
-    doctor_name = serializers.CharField(source='patient.doctor_name', read_only=True)
+    doctor_name = serializers.CharField(source='patient.doctor.d_name', read_only=True)
     class Meta:
         model = ServiceProcedure
         fields = ['patient','doctor_name','title','category','summary','report','created_at','last_updated_at']
@@ -49,8 +34,6 @@ class ServiceProcedureSerializer(serializers.ModelSerializer):
 def get_serializer_class(record_type):
     serializer_mapping = {
         "vitals": VitalsSerializer,
-        # "lab_results": LabResultSerializer,
-        # "imaging":ImagingSerializer,
         "prescription":PrescriptionSerializer,
         "serviceprocedure":ServiceProcedureSerializer
     }
@@ -147,13 +130,13 @@ class PainAssessmentSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        patient_id = validated_data.pop('patient')['patient_id']
-        patient = Patient.objects.get(patient_id=patient_id)
+        patient = validated_data.pop('patient')
+        # patient = Patient.objects.get(patient_id=patient_id)
         return PainAssessment.objects.create(patient=patient, **validated_data)
 
     def update(self, instance, validated_data):
         if 'patient' in validated_data:
-            patient_id = validated_data.pop('patient')['patient_id']
+            patient_id = validated_data.pop('patient')
             instance.patient = Patient.objects.get(patient_id=patient_id)
         
         for attr, value in validated_data.items():

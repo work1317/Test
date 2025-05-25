@@ -37,52 +37,6 @@ class Vitals(MedicalRecord):
     report = models.FileField(upload_to='reports/',null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
-
-# class LabResult(MedicalRecord):
-#     PRIORITY_CHOICES = [
-#         ('Urgent', 'Urgent'),
-#         ('Normal', 'Normal'),     
-#     ]
-
-#     STATUS_CHOICES = [
-#         ('Pending', 'Pending'),
-#         ('inprogress', 'In Progress'),
-#         ('Completed', 'Completed'),
-#     ]
-
-#     patient_id = models.CharField(max_length=100)
-#     patient_name = models.CharField(max_length=255)
-#     requested_test = models.CharField(max_length=255)
-#     requested_by = models.CharField(max_length=255)
-#     request_date = models.DateField()
-#     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='pending')
-#     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending')
-#     notes = models.TextField(blank=True, null=True)
-
-#     user_id = models.CharField(max_length=10)  
-#     username = models.CharField(max_length=150)
-
-#     test_date = models.DateField(blank=True, null=True)
-#     test_time = models.TimeField(blank=True, null=True)
-#     summary = models.TextField(blank=True, null=True)
-#     test_type = models.CharField(max_length=100, blank=True, null=True)
-#     flag = models.BooleanField(default=False)
-
-#     report = models.FileField(upload_to='reports/', blank=True, null=True)
-
-#     def __str__(self):
-#         return f"LabTest for {self.patient_name} ({self.requested_test})"
-
-
-
-# class Imaging(MedicalRecord):
-#     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='imaging_records')
-#     # doctor = models.ForeignKey(DoctorAvailability, on_delete=models.CASCADE, related_name="imaging")
-#     scan_type = models.CharField(max_length=100)
-#     category = models.CharField(max_length=255,blank=True)
-#     summary = models.TextField(blank=True)
-#     report = models.FileField(upload_to='reports/',null=True,blank=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
     
 
 class Prescription(MedicalRecord):
@@ -92,7 +46,6 @@ class Prescription(MedicalRecord):
         ('pending','Pending')
     ]
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='prescriptions')
-    # doctor = models.ForeignKey(DoctorAvailability, on_delete=models.CASCADE, related_name="prescriptions")
     medication_name = models.CharField(max_length=100)
     dosage = models.CharField(max_length=50)
     quantity = models.IntegerField(null=True, blank=True)

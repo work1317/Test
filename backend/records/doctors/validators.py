@@ -101,3 +101,5 @@ class DoctorValidators(serializers.Serializer):
             "max_length": _("Certifications cannot exceed 200 characters."),
         }
     )
+
+    is_guest = serializers.BooleanField(required=False, default=False)

@@ -10,6 +10,7 @@ from decimal import Decimal
 class Medication(models.Model):
     medication_name = models.CharField(max_length=100)
     category = models.CharField(max_length=100)
+    batch_no = models.CharField(max_length=50, null=True, blank=True)
     manufacturer = models.CharField(max_length=100)
     strength = models.CharField(max_length=100)
     stock_quantity = models.PositiveIntegerField(null=True,blank=True)

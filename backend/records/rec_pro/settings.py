@@ -44,7 +44,11 @@ INSTALLED_APPS = [
     'pharmacy',
     'labs',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'notifications',
+    'invoice',
+    'p_invoice',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

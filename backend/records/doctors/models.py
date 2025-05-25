@@ -39,6 +39,7 @@ class DoctorAvailability(models.Model):
     d_end_time = models.TimeField()
     d_education_info = models.TextField(max_length=200 ,blank=True,null=True)
     d_certifications = models.TextField(max_length=200, blank=True, null=True)
+    is_guest = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def save(self, *args, **kwargs):

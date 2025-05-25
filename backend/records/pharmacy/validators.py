@@ -27,6 +27,7 @@ class MedicationValidator(serializers.Serializer):
     mrp = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
     expiry_date = serializers.DateField(required=False, allow_null=True,default=None)
     description = serializers.CharField(required=False, allow_blank=True)
+    batch_no = serializers.CharField(required=False, allow_blank=True, max_length=50) 
 
 phone_no_validator=[
     MinLengthValidator(10, message = "Phone number must be 10 digits."),

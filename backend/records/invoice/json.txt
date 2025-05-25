@@ -1,0 +1,36 @@
+{
+  "patient": "P001",
+  "due_on_receipt": "yes",
+  "payment_method": "cash",
+  "notes": "Patient is responding well to treatment.",
+  "concession": "100.00",
+  "service_charges": [
+    {
+      "service_name": "Room Charges",
+      "days": 3,
+      "amount": "1500.00"
+    },
+    {
+      "service_name": "Nursing Charges",
+      "days": 3,
+      "amount": "500.00"
+    }
+  ],
+  "investigation_charges": {
+    "from_date": "2025-05-20",
+    "to_date": "2025-05-21",
+    "amount": "2000.00"
+  },
+  "pharmacy_charges": {
+    "from_date": "2025-05-20",
+    "to_date": "2025-05-22",
+    "amount": "1200.00"
+  },
+  "consultation_charges": {
+    "no_of_visits": 2,
+    "amount_per_visit": "500.00"
+  }
+}
+
+
+

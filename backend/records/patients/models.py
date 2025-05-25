@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models import Max
 from django.utils import timezone
 from datetime import timedelta
+from doctors.models import DoctorAvailability
 
 
 # Create your models here.
@@ -30,7 +31,7 @@ class Patient(models.Model):
 
     patient_id = models.CharField(max_length=10,unique=True,editable=False)
     patient_name = models.CharField(max_length=100)
-    doctor_name = models.CharField(max_length=100)
+    doctor = models.ForeignKey(DoctorAvailability, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     age = models.IntegerField()

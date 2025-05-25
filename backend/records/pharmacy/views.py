@@ -43,6 +43,7 @@ class MedicationCreateAPIView(APIView):
                 mrp=req_params.get('mrp'),
                 expiry_date=req_params.get('expiry_date'),
                 description=req_params.get('description'),
+                batch_no=req_params.get('batch_no'),
             )
             serialized = serializers.MedicationSeralizer(medication,context={"request": request})
             context["data"] = serialized.data

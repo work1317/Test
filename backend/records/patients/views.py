@@ -29,9 +29,12 @@ class PatientAPIView(APIView):
                 raise SerializerError(validator.errors)
             req_params = validator.validated_data
 
+            doctor = models.DoctorAvailability.objects.filter(d_name__iexact=req_params["doctor"], is_guest=False).first()
+
+
             patient = models.Patient(
                 patient_name = req_params['patient_name'],
-                doctor_name = req_params['doctor_name'],  
+                doctor = doctor,  
                 date = req_params['date'],
                 time = req_params['time'],
                 age = req_params['age'],
@@ -213,7 +216,7 @@ class PatientUpdateAPIView(APIView):
                 "casualty": total_casualty
             }
 
-            cache.clear()
+            # cache.clear()
         except models.Patient.DoesNotExist:
             context['success'] = 0
             context['message'] = "Patient Not Found"

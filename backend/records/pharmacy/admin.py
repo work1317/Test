@@ -7,7 +7,7 @@ from rangefilter.filters import DateRangeFilter
 
 @admin.register(Medication)
 class MedicationAdmin(admin.ModelAdmin):
-    list_display = ('medication_name','category','manufacturer','strength','stock_quantity','unit_price','mrp','expiry_date',)
+    list_display = ('medication_name','category','batch_no','manufacturer','strength','stock_quantity','unit_price','mrp','expiry_date',)
     
     search_fields = ('medication_name','manufacturer','category',)
 

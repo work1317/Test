@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from django.utils.timezone import now
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
+from django.utils import timezone
+from datetime import datetime
 from rest_framework import status
 from doctors.models import Department
 
@@ -40,7 +42,20 @@ class DashboardAPIView(APIView):
                 start_date = end_date - relativedelta(years=1)
 
             # Total stats (not filtered)
+            current = datetime.now()
+            this = timezone.now()
+            # Get the start of the current week (Monday)
+            start_of_week = this - timedelta(days=this.weekday())
+
+            # Filter and count doctors added since the start of the week
+            increased_doctors = DoctorAvailability.objects.filter(created_at__gte=start_of_week).count()
+
             patients = Patient.objects.count()
+            patients_this_month = Patient.objects.filter(created_at__year=current.year, created_at__month=current.month).count()
+            if patients>0:
+                increased_patients = round((patients_this_month * 100)/patients)
+            else:
+                increased_patients = 0 
             doctors = DoctorAvailability.objects.count()
             todays_appointments = Appointment.objects.filter(date=now().date()).count()
             critical_cases = ProgressNote.objects.filter(status="critical").count()
@@ -72,7 +87,9 @@ class DashboardAPIView(APIView):
                 "appointments": serializer.data,
                 "stats": {
                     "patients": patients,
+                    "increased_patients":increased_patients,
                     "doctors": doctors,
+                    "increased_doctors":increased_doctors,
                     "todays_appointments": todays_appointments,
                     "critical_cases": critical_cases,
                     "urgent_appointments":urgent_appointments,

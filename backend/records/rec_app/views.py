@@ -40,6 +40,7 @@ def get_serializer_class(record_type):
     return serializer_classes.get(record_type)
 
 
+
 class MedicalRecordRetrieveAPIView(APIView):
     def get(self, request):
         patient_id = request.query_params.get("patient_id")
@@ -52,7 +53,7 @@ class MedicalRecordRetrieveAPIView(APIView):
         if patient_id:
             filters["patient__patient_id"] = patient_id
         if phone_number:
-            filters["patient__phone_number"] = phone_number
+            filters["patient__phno__icontains"] = phone_number
         if patient_name:
             filters["patient__name__icontains"] = patient_name
         if record_id:
@@ -68,13 +69,26 @@ class MedicalRecordRetrieveAPIView(APIView):
                     return Response({"success": 0, "message": "Invalid record type"})
                 records = serializer_class.Meta.model.objects.filter(**filters)
             else:
-                records = MedicalRecord.objects.filter(**filters)  # Default model
+                # When no record_type, search across all concrete models and combine results
+                combined_data = []
+                for serializer_class in [VitalsSerializer, PrescriptionSerializer, ServiceProcedureSerializer]:
+                    model = serializer_class.Meta.model
+                    queryset = model.objects.filter(**filters)
+                    if queryset.exists():
+                        serializer = serializer_class(queryset, many=True)
+                        combined_data.extend(serializer.data)
+
+                if not combined_data:
+                    return Response({"success": 0, "message": "No records found"})
+
+                return Response({"success": 1, "data": combined_data})
 
             if not records.exists():
                 return Response({"success": 0, "message": "No records found"})
 
             serializer = serializer_class(records, many=True)
             return Response({"success": 1, "data": serializer.data})
+
         except Exception as e:
             return Response({"success": 0, "message": str(e)})
 
@@ -256,7 +270,7 @@ class PrescriptionListAPIView(APIView):
                 data = {
                     "patient_id": pres.patient.patient_id,
                     "patient_name": pres.patient.patient_name,
-                    "doctor_name": pres.patient.doctor_name,
+                    "doctor_name": pres.patient.doctor.d_name,
                     "medication_name": pres.medication_name,
                     "dosage": pres.dosage,
                     "summary": pres.summary,
@@ -276,6 +290,7 @@ class PrescriptionListAPIView(APIView):
 
         return Response(context, status=status.HTTP_200_OK)
     
+import re
 
 class PrescriptionDetailView(APIView):
     def get(self, request, patient_id):
@@ -287,7 +302,7 @@ class PrescriptionDetailView(APIView):
 
         try:
             patient = Patient.objects.get(patient_id=patient_id)
-            prescriptions = Prescription.objects.filter(patient=patient)
+            prescriptions = Prescription.objects.filter(patient=patient).distinct()
 
             serialized = []
             for pres in prescriptions:
@@ -312,7 +327,7 @@ class PrescriptionDetailView(APIView):
                     "created_at": pres.created_at,
                     "last_updated_at": pres.last_updated_at,
                     "stock_quantity": stock_quantity,
-                    "doctor_name":pres.patient.doctor_name
+                    "doctor_name":pres.patient.doctor.d_name
                 })
 
             context["data"] = serialized
@@ -329,22 +344,22 @@ class PrescriptionDetailView(APIView):
             "message": messages.DATA_UPDATED,
             "data": []
         }
- 
+
         try:
             patient = Patient.objects.get(patient_id=patient_id)
             data = request.data
- 
+
             prescriptions_data = data if isinstance(data, list) else [data]
- 
+
             with transaction.atomic():
                 updated_prescriptions = []
- 
+
                 for item in prescriptions_data:
                     medication_name = item.get("medication_name")
- 
+
                     if not medication_name:
                         raise ValidationError("Each prescription must include 'medication_name'.")
- 
+
                     try:
                         prescription = Prescription.objects.get(
                             patient=patient,
@@ -352,43 +367,51 @@ class PrescriptionDetailView(APIView):
                         )
                     except Prescription.DoesNotExist:
                         raise ValidationError(f"Prescription for '{medication_name}' not found.")
- 
-                    new_quantity = int(item.get("quantity", prescription.quantity or 0))
- 
-                    try:
-                        medication = Medication.objects.get(medication_name__iexact=medication_name)
- 
-                        if medication.stock_quantity is None or medication.stock_quantity == 0:
+
+                    new_quantity_raw = item.get("quantity", None)
+
+                    if new_quantity_raw is not None:
+                        # User entered a new quantity
+                        new_quantity = int(new_quantity_raw)
+                        try:
+                            medication = Medication.objects.get(medication_name__iexact=medication_name)
+
+                            if medication.stock_quantity is None or medication.stock_quantity == 0:
+                                item['status'] = 'pending'
+
+                            elif new_quantity > medication.stock_quantity:
+                                item['status'] = 'pending'
+
+                            else:
+                                # Sufficient stock, proceed and deduct
+                                medication.stock_quantity -= new_quantity
+                                item['status'] = 'completed'
+                                medication.save()
+
+                        except Medication.DoesNotExist:
                             item['status'] = 'pending'
- 
-                        elif new_quantity > medication.stock_quantity:
-                            item['status'] = 'pending'
- 
-                        else:
-                            # Sufficient stock, proceed and deduct
-                            medication.stock_quantity -= new_quantity
-                            item['status'] = 'completed'
-                            medication.save()
- 
-                    except Medication.DoesNotExist:
-                        item['status'] = 'pending'
- 
-                    # Update prescription regardless of status
+                    else:
+                        # No new quantity submitted; do not deduct stock
+                        item['status'] = prescription.status or 'pending'
+                        item.pop('quantity', None)  # Prevent overwriting with None
+
+                    # Update prescription regardless of stock deduction
                     serializer = PrescriptionSerializer(prescription, data=item, partial=True)
                     if not serializer.is_valid():
                         raise ValidationError(serializer.errors)
- 
+
                     updated = serializer.save()
                     updated_prescriptions.append(PrescriptionSerializer(updated).data)
- 
+
                 context["data"] = updated_prescriptions[0] if isinstance(data, dict) else updated_prescriptions
                 return Response(context, status=status.HTTP_200_OK)
- 
+
         except Exception as e:
             context["success"] = 0
             context["message"] = str(e)
             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        
 
 # Add Notes
 
@@ -697,73 +720,6 @@ class ProgressNoteDetailView(APIView):
 
 
 # Treatment Chart
-
-# class TreatmentChartAPIView(APIView):
-#     def get(self, request):
-#         return Response({"message": "Use POST to create a treatment chart"}, status=status.HTTP_200_OK)
-
-#     def post(self, request):
-#         context = {
-#             "success": 1,
-#             "message": messages.DATA_SAVED,
-#             "data": {}
-#         }
-#         try:
-#             validator = validators.TreatmentChartValidator(data=request.data)
-#             if not validator.is_valid():
-#                 raise SerializerError(validator.errors)
-
-#             req_params = validator.validated_data
-
-#             # Debugging: Print received patient ID
-#             print("Received Patient ID:", req_params['patient'])
-
-#             # Check if patient exists
-#             try:
-#                 patient = Patient.objects.get(patient_id=req_params['patient'])
-#             except Patient.DoesNotExist:
-#                 return Response(
-#                     {
-#                         "success": 0,
-#                         "message": f"No patient found with ID {req_params['patient']}. Please check and try again.",
-#                         "data": {}
-#                     },
-#                     status=status.HTTP_400_BAD_REQUEST
-#                 )
-
-#             # Ensure only one TreatmentChart entry per patient
-#             treatment_chart, created = models.TreatmentChart.objects.get_or_create(
-#                 patient=patient,
-#                 defaults={
-#                     'medicine_name': req_params['medicine_name'],
-#                     'hrs_drops_mins': req_params['hrs_drops_mins'],
-#                     'dose': req_params['dose'],
-#                     'time': req_params['time'],
-#                     'medicine_details': req_params['medicine_details'],
-#                 }
-#             )
-
-#             if not created:
-#                 treatment_chart.medicine_name = req_params['medicine_name']
-#                 treatment_chart.hrs_drops_mins = req_params['hrs_drops_mins']
-#                 treatment_chart.dose = req_params['dose']
-#                 treatment_chart.time = req_params['time']
-#                 treatment_chart.medicine_details = req_params['medicine_details']
-#                 treatment_chart.save()
-
-#             serializer = TreatmentChartSerializer(treatment_chart, context={"request": request})
-#             context['data'] = {"treatment_chart_details": serializer.data}
-
-#         except SerializerError as e:
-#             context['success'] = 0
-#             context['message'] = str(e)
-#         except Exception as e:
-#             context['success'] = 0
-#             context['message'] = str(e)
-
-#         return Response(context, status=status.HTTP_201_CREATED if context["success"] else status.HTTP_400_BAD_REQUEST)
-
-
 
 class TreatmentChartAPIView(APIView):
     def get(self, request):
@@ -1547,6 +1503,9 @@ class RetrieveMultipleRiskFactorsAPIView(APIView):
             # Dictionary to store risk factor data
             risk_factors_data = {}
 
+            # Total score across all risk factors
+            combined_total_score = 0
+
             # Define boolean fields for each risk factor
             risk_factor_boolean_fields = {
                 1: ['minor_surgery', 'age_40_to_60_yrs', 'pregnancy_or_post_martum',
@@ -1588,6 +1547,8 @@ class RetrieveMultipleRiskFactorsAPIView(APIView):
                     # Adjusted total_score calculation based on risk_factor_id
                     data['total_score'] = sum(weight for field in risk_factor_boolean_fields[risk_factor_id] if data.get(field, False))
 
+                    combined_total_score += data["total_score"]
+
                     serialized_data.append(data)
 
                 if serialized_data:
@@ -1595,6 +1556,7 @@ class RetrieveMultipleRiskFactorsAPIView(APIView):
 
             if risk_factors_data:
                 context['data'] = risk_factors_data
+                context['data']['combined_total_score'] = combined_total_score
             else:
                 context['success'] = 0
                 context['message'] = f"No risk factor data found for this patient ID {patient_id}."
