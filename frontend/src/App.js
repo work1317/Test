@@ -13,6 +13,7 @@ import ForgotPasswordPage from './LoginPage/ForgotPasswordPage';
 import AppointmentPage from './Appointment/componnets/Appointment'
 import LabsPage from './Labs/components/Labtest.jsx'
 import PharmacyDashboard from './pharmacy/components/PharmacyDashboard.js';
+import Invoice from './Invoice/components/InvoiceGenerator.jsx'
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
             <Route path="appointments" element={<AppointmentPage />} />
             <Route path="lab" element={<LabsPage />} />
             <Route path="pharmacy" element={<PharmacyDashboard/>}/>
+            <Route path="invoice" element={<Invoice/>}/>
           </Route>
         </Routes>
       </AuthProvider>

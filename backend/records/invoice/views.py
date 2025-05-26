@@ -103,6 +103,7 @@ class InvoiceAPIView(APIView):
             context["data"] = {
                 "invoice": {
                     "id": invoice.id,
+                    "patient_id":invoice.invoice_id,
                     "patient": patient.patient_id,
                     "due_on_receipt": invoice.due_on_receipt,
                     "payment_method": invoice.payment_method,
@@ -178,6 +179,7 @@ class InvoiceDetailAPIView(APIView):
                 "data": {
                     "invoice": {
                         "id": invoice.id,
+                        "patient_id":invoice.invoice_id,
                         "patient": patient.patient_id,
                         "due_on_receipt": invoice.due_on_receipt,
                         "payment_method": invoice.payment_method,
@@ -285,6 +287,7 @@ class AllInvoiceListAPIView(APIView):
             invoice_data = {
                 "invoice": {
                     "id": invoice.id,
+                    "patient_id":invoice.invoice_id,
                     "patient": patient.patient_id,
                     "due_on_receipt": invoice.due_on_receipt,
                     "payment_method": invoice.payment_method,

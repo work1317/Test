@@ -8,6 +8,7 @@ import DoctorsPage from '../doctors/DoctorsPage';
 import AppointmentPage from '../Appointment/componnets/Appointment';
 import LabsPage from '../Labs/components/Labtest'
 import PharmacyDashboard from '../pharmacy/components/PharmacyDashboard';
+import Invoice from '../Invoice/components/InvoiceGenerator'
 
 const DashBoardPage = () => {
   const [selectedPage, setSelectedPage] = useState("dashboard");
@@ -21,15 +22,17 @@ const DashBoardPage = () => {
       case "patients":
         return <PatientManagement />;
       case "records":
-          return <RecordLab />;
+        return <RecordLab />;
       case "notifications":
-          return <Notifications />;
-          case "appointments":
-            return <AppointmentPage/>;
-            case "lab":
-            return <LabsPage/>;
-            case "pharmacy":
-              return <PharmacyDashboard/>;
+        return <Notifications />;
+      case "appointments":
+        return <AppointmentPage/>;
+      case "lab":
+        return <LabsPage/>;
+      case "pharmacy":
+        return <PharmacyDashboard/>;
+      case "invoice":
+        return <Invoice />
       default:
         return <h2>Welcome to the Dashboard</h2>;
     }

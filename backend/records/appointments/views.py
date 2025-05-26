@@ -14,7 +14,7 @@ from . import models, serializers as app_serializers, validators
 from doctors.models import DoctorAvailability
 from rest_framework.exceptions import NotFound
 from patients.models import Patient
-from datetime import datetime
+from datetime import datetime, date
 from rec_app.models import ProgressNote
 from datetime import datetime, time
 import calendar
@@ -52,6 +52,10 @@ class AppointmentCreateAPIView(APIView):
                 appointment_date = datetime.strptime(req_params["date"], "%Y-%m-%d").date()
             else:
                 appointment_date = req_params["date"]
+
+            # Check for past date
+            if appointment_date < date.today():
+                raise Exception("Cannot book an appointment for a past date")
 
             # Convert time string to datetime.time object if needed
             if isinstance(req_params["time"], str):

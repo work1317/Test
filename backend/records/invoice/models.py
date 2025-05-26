@@ -1,5 +1,6 @@
 from django.db import models
 from patients.models import Patient
+from django.db.models import Max
 
 # Create your models here.
 
@@ -35,8 +36,11 @@ class Invoice(models.Model):
         ('cash', 'Cash'),
         ('upi', 'UPI'),
         ('debit/credit', 'Debit/Credit'),
-        ('multiple (cash+card), (cash+upi)', 'Multiple (Cash+Card), (Cash+UPI)')
+        ('multiple (cash+card), (cash+upi)', 'Multiple (Cash+Card), (Cash+UPI)'),
+        ('insurance', 'Insurance'),
+        ('government schemes', 'Government Schemes')
     ]
+    invoice_id = models.CharField(max_length=20, unique=True, editable=False)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     service_charges = models.ManyToManyField(ServiceCharge, through='InvoiceServiceCharge')
     investigation_charges = models.ForeignKey(InvestigationCharge, on_delete=models.CASCADE, related_name='invoices')
@@ -47,6 +51,13 @@ class Invoice(models.Model):
     notes = models.TextField(max_length=100)
     concession = models.DecimalField(max_digits=7, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.invoice_id:
+            last_invoice = Invoice.objects.aggregate(max_id =Max('id'))
+            last_id = last_invoice['max_id'] if last_invoice['max_id'] else 0
+            self.invoice_id = f'INV{last_id + 1:03}'
+        super().save(*args, **kwargs)
 
 
 class InvoiceServiceCharge(models.Model):
