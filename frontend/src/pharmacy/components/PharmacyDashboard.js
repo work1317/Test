@@ -10,7 +10,7 @@ import Inventory from './Inventary';
 import PharmacyPrescription from './PharmacyPrescription';
 import ViewAllSuppliers from './ViewAllSuppliers';
 import SupplierDetails from './SupplierDetails';
-// import PharmacyInvoice from './PharmacyInvoice';
+import PharmacyInvoice from './PharmacyInvoice';
 
 import styles from '../css/PharmacyDashboard.module.css';
 import { GoPlus } from "react-icons/go";
@@ -36,6 +36,16 @@ function PharmacyDashboard() {
   useEffect(() => {
     fetchStats();
   }, []);
+
+  // const hasFetched = useRef(false);
+
+  // useEffect(() => {
+  //   if (!hasFetched.current) {
+  //     fetchStats();
+  //     hasFetched.current = true;
+  //   }
+  // }, []);
+
 
   const fetchStats = async () => {
     try {
@@ -129,7 +139,7 @@ function PharmacyDashboard() {
   return (
     <div className={styles.main}>
       {pharmacyInvoice ? (
-        {/* <PharmacyInvoice onBack={() => setPharmacyInvoice(false)} /> */}
+        <PharmacyInvoice onBack={() => setPharmacyInvoice(false)} />
       ) : selectedSupplierId ? (
         <SupplierDetails
           supplierId={selectedSupplierId}

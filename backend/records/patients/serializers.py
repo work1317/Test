@@ -15,6 +15,7 @@ class PatientUpdateSerializer(serializers.ModelSerializer):
 
         
 class PatientSerializer(serializers.ModelSerializer):
+    doctor_name = serializers.CharField(source='doctor.d_name', read_only=True)
     class Meta:
         model = Patient
         fields = '__all__'

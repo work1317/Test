@@ -15,6 +15,7 @@ import { Container, Row, Col, Card, Image } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import Vector from "../assets/images/Vector.svg";
 import axios from "axios";
+import api from "../utils/axiosInstance";
 
 const DoctorsPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,8 +35,8 @@ const DoctorsPage = () => {
     const getDoctors = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(
-          "http://127.0.0.1:8000/doctors/doctors/"
+        const { data } = await api.get(
+          "doctors/doctors/"
         );
         if (data.success) {
           setDoctors(data.data);

@@ -6,6 +6,7 @@ import Recentinvoice from "./Recentinvoice";
 import { Icon } from "@iconify/react";
 import InvoicePrint from "./InvoicePrint";
 import axios from "axios"; // Add axios for API call
+import api from "../../utils/axiosInstance";
 
  export default function InvoiceGenerator() {
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -38,9 +39,9 @@ import axios from "axios"; // Add axios for API call
   // Fetch patient data when   changes
   useEffect(() => {
     if (patientId) {
-      axios
+      api
         .get(
-          `http://127.0.0.1:8000/invoice/create-invoice/?patient_id=${patientId}`
+          `invoice/create-invoice/?patient_id=${patientId}`
         )
         .then((response) => {
           console.log("get patient details", response);
@@ -93,8 +94,8 @@ import axios from "axios"; // Add axios for API call
   };
 
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/invoice/create-invoice/",
+    const response = await api.post(
+      "invoice/create-invoice/",
       payload
     );
 

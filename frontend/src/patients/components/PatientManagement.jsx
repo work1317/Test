@@ -35,6 +35,7 @@ function PatientManagement() {
       if (data.success) {
         setPatients(data.data.patients || []);
         setCounts(data.data.total_counts || {});
+        console.log("Response : ", data)
       }
     } catch (error) {
       console.error("Error fetching patients", error);

@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.core.cache import cache
 from django.db import transaction
 from rec_app.models import ProgressNote
+from .models import Patient
 
 # Create your views here.
 
@@ -125,6 +126,7 @@ class GetPatientAPIView(APIView):
             total_casualty = models.Patient.objects.filter(appointment_type='casualty').count()
             total_patients = models.Patient.objects.all().count()
             critical_cases = ProgressNote.objects.filter(status="critical").count()
+            
 
 
             if appointment_type and not any([search, gender, date, doctor_name, patient_id]):
@@ -149,6 +151,7 @@ class GetPatientAPIView(APIView):
             context['success'] = 0
             context['message'] = str(e)
         return Response(context)
+
 
 class PatientUpdateAPIView(APIView):
     def get(self, request, patient_id):

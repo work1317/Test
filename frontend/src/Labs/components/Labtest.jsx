@@ -22,6 +22,7 @@ import { LuCirclePlus } from "react-icons/lu";
 import axios from "axios";
 import LabViewresult from "./LabViewresult";
 import InvoiceViewresult from "./InvocieViewresult";
+import api from "../../utils/axiosInstance";
 
 export const forms = createContext();
 function Labtest() {
@@ -68,8 +69,8 @@ function Labtest() {
   useEffect(() => {
     const patientData = async () => {
       try {
-        const { data } = await axios.get(
-          "http://127.0.0.1:8000/patients/patients/"
+        const { data } = await api.get(
+          "patients/patients/"
         );
         if (data.success) {
           setPatients(data.data.patients || []);
@@ -87,7 +88,7 @@ function Labtest() {
   const handlershow = async (action) => {
     setShowes(true);
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/labs/lab_tests/${action}/`
+      const response = await api.get(`labs/lab_tests/${action}/`
       );
       if (response.data && response.data.success === 1) {
         // console.log("Fetched Data:", response.data.data);
@@ -125,7 +126,7 @@ function Labtest() {
 
   const fetchingData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/labs/lab_tests/");
+      const response = await api.get("labs/lab_tests/");
       setFormObj(response.data.data);
     } catch (error) {
       console.log("Error fetching lab tests:", error);
@@ -177,8 +178,8 @@ function Labtest() {
 
         console.log("Sending formData:", [...formData.entries()]);
 
-        const response = await axios.post(
-          "http://127.0.0.1:8000/labs/create_lab_test/",
+        const response = await api.post(
+          "labs/create_lab_test/",
           formData
         );
         await fetchingData()
@@ -213,8 +214,8 @@ function Labtest() {
 
   // this is ivoice getting data
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/labs/invoice_lists/")
+    api
+      .get("labs/invoice_lists/")
       .then((res) => {
         setFormObj1(res.data.data);
         // console.log("response:",res.data.data);
@@ -237,7 +238,7 @@ function Labtest() {
       alert("Enter invoice dettails");
     } else {
       try {
-       const response =  await axios.post('http://127.0.0.1:8000/labs/create_lab_invoice/', formsData1);
+       const response =  await api.post('labs/create_lab_invoice/', formsData1);
         const saveData = response.data.data;
         console.log(saveData);
         setFormObj1([...formObj1, formsData1]);

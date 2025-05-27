@@ -45,9 +45,9 @@ INSTALLED_APPS = [
     'labs',
     'rest_framework',
     'corsheaders',
-    'notifications',
+    # 'notifications',
     'invoice',
-    'p_invoice',
+    # 'p_invoice',
     'dashboard',
 ]
 
@@ -191,9 +191,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',  # <== force auth by default
-    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # <== force auth by default
+    ),
 }
 
 

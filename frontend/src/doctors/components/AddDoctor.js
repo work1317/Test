@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Button, Form, Modal, Row, Col, Dropdown,Alert } from "react-bootstrap";
+import api from "../../utils/axiosInstance";
 
 const AddDoctor = ({ show, handleClose }) => {
   const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ const AddDoctor = ({ show, handleClose }) => {
       e.preventDefault();
     
       try {
-        const response = await axios.post('http://127.0.0.1:8000/doctors/doctors/create/', formData);
+        const response = await api.post('doctors/doctors/create/', formData);
         console.log('Doctor created:', response.data);
         window.dispatchEvent(new Event('refreshAddDoctor'))
         alert("Doctor added")

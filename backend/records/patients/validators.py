@@ -18,16 +18,16 @@ def email_com_validator(value):
 
 class PatientValidator(serializers.Serializer):
     patient_name = serializers.CharField(max_length=100)
-    # doctor = serializers.CharField(
-    #     max_length=100, 
-    #     required=True, 
-    #     allow_blank=False, 
-    #     error_messages={
-    #         "required": "Doctor name is a required field.",
-    #         "blank": "Doctor name cannot be empty.",
-    #         "max_length": "Doctor name cannot exceed 100 characters."
-    #     }
-    # )
+    doctor = serializers.CharField(
+        max_length=100, 
+        required=True, 
+        allow_blank=False, 
+        error_messages={
+            "required": "Doctor name is a required field.",
+            "blank": "Doctor name cannot be empty.",
+            "max_length": "Doctor name cannot exceed 100 characters."
+        }
+    )
     date = serializers.DateField()
     time = serializers.TimeField()
     age = serializers.IntegerField()

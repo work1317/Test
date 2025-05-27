@@ -4,9 +4,9 @@ import env from "../config/env-config";
 // Create Axios instance
 const api = axios.create({
   baseURL: env.apiBaseUrl,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
 });
 
 // Request Interceptor – attach token

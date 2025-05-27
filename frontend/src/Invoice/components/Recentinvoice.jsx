@@ -3,6 +3,7 @@ import { Row, Col, Form, Table, Button } from 'react-bootstrap';
 import axios from 'axios';
 import styles from '../css/Recentinvoice.module.css'; // Assuming you have custom styles
 import { Icon } from '@iconify/react';
+import api from '../../utils/axiosInstance';
 
 function Recentinvoice({ back }) {
     const [invoiceData, setInvoiceData] = useState([]);
@@ -19,7 +20,7 @@ function Recentinvoice({ back }) {
         // Fetch invoice data from the new API (assuming it's available at localhost:8000/invoice/invoices/)
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/invoice/invoices/');  // Replace with API URL
+                const response = await api.get('invoice/invoices/');  // Replace with API URL
                 setInvoiceData(response.data.data);  // Invoice data is inside the 'data' field
                 setFilteredData(response.data.data);
                 console.log("Get the recent Invoice", response);

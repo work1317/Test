@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import axios from "axios";
 import { doctors } from "./RecordLab";
+import api from "../../utils/axiosInstance";
 function LabResult({ transformData }) {
   const { selectedPatient } = useContext(doctors);
   const [showModal, setShowModal] = useState(false);
@@ -23,8 +24,8 @@ function LabResult({ transformData }) {
     );
     if (patinentExit) {
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/labs/lab_tests/${action}/`
+        const response = await api.get(
+          `labs/lab_tests/${action}/`
         );
         console.log(response.data.data);
         setUser(response.data.data);

@@ -4,10 +4,11 @@ import { Button, Row, Col } from "react-bootstrap";
 import { FaDownload, FaMicroscope } from "react-icons/fa";
 import { LuCircleX } from "react-icons/lu";
 import { forms } from "./Labtest";
+import api from "../../utils/axiosInstance";
 
 function LabViewresult({ handlerClose, selectedResult, selectForm }) {
   const handleDownload = async () => {
-    const url = `http://127.0.0.1:8000/labs/labtests_download/${selectForm.action}/`;
+    const url = api.get(`labs/labtests_download/${selectForm.action}/`);
     console.log(url);
     const link = document.createElement('a');
     link.href = url;

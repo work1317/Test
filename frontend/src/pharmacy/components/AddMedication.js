@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import styles from "../css/AddMedication.module.css";
+import api from "../../utils/axiosInstance";
 
 const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
   const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
     };
   
     try {
-      const response = await axios.post("http://127.0.0.1:8000/pharmacy/add_medicine/", payload, {
+      const response = await api.post("pharmacy/add_medicine/", payload, {
         headers: {
           'Content-Type': 'application/json',
         },

@@ -14,10 +14,10 @@ import PatientRegister from "../css/PatientRegistration.module.css";
 const PatientRegistration = ({ show, handleClose }) => {
   const [formData, setFormData] = useState({
     patient_name: "",
+    doctor:"",
     age: "",
     gender: "",
     email: "",
-    doctor_name: "",
     date: "",
     time: "",
     phno: "",
@@ -38,7 +38,7 @@ const PatientRegistration = ({ show, handleClose }) => {
     if (!formData.age.trim() || isNaN(formData.age) || formData.age <= 0) newErrors.age = "Valid age is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.email.match(/^\S+@\S+\.\S+$/)) newErrors.email = "Enter a valid email address";
-    if (!formData.doctor_name.trim()) newErrors.doctor_name = "Doctor name is required";
+    if (!formData.doctor.trim()) newErrors.doctor = "Doctor name is required";
     if (!formData.date) newErrors.date = "Select an appointment date";
     if (!formData.time) newErrors.time = "Select an appointment time";
     if (!formData.phno.match(/^\d{10}$/)) newErrors.phno = "Enter a valid 10-digit mobile number";
@@ -124,10 +124,10 @@ const PatientRegistration = ({ show, handleClose }) => {
       // Reset form and close modal
       setFormData({
         patient_name: "",
+        doctor:"",
         age: "",
         gender: "",
         email: "",
-        doctor_name: "",
         date: "",
         time: "",
         phno: "",
@@ -180,12 +180,12 @@ const PatientRegistration = ({ show, handleClose }) => {
                   <Form.Label>Doctor</Form.Label>
                   <Form.Control
                     type="text"
-                    name="doctor_name"
-                    value={formData.doctor_name}
+                    name="doctor"
+                    value={formData.doctor}
                     onChange={handleChange}
-                    isInvalid={!!error.doctor_name}
+                    isInvalid={!!error.doctor}
                   />
-                <Form.Control.Feedback type="invalid">{error.doctor_name}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">{error.doctor}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
@@ -275,7 +275,7 @@ const PatientRegistration = ({ show, handleClose }) => {
                     <option value="">Select Type</option>
                     <option value="inpatient">In-Patient</option>
                     <option value="outpatient">Out-Patient</option>
-                    <option value="casuality">Casualty</option>
+                    <option value="casuality">Casuality</option>
                   </Form.Select>
                 <Form.Control.Feedback type="invalid">{error.appointment_type}</Form.Control.Feedback>
                 </Form.Group>
