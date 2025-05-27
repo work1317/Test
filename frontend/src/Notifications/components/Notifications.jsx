@@ -1,173 +1,253 @@
-
-import React, { useState } from "react";
-import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import {Container,Row,Col,Button,Card,Pagination,} from "react-bootstrap";
 import Notificationstyle from "../css/Notiification.module.css";
 import { CiSearch } from "react-icons/ci";
-import { PiPercent } from "react-icons/pi";
-import { AiOutlinePlus } from "react-icons/ai";
-import { Icon } from "@iconify/react";
-import { MdLocalHospital } from "react-icons/md";
+//import { FaPlus } from "react-icons/fa";
+import { MdDateRange } from "react-icons/md";
+import { FaMicroscope } from "react-icons/fa";
+import { BsCurrencyDollar } from "react-icons/bs";
+import { FaPercent } from "react-icons/fa";
+import { GiMedicalPack } from "react-icons/gi";
+import { AiOutlinePlus,AiOutlineUser,AiOutlineNotification, } from "react-icons/ai";
+// import { MdLocalHospital } from "react-icons/md";
+import axios from "axios";
+import PendingApprovals from "./PendingApprovals";
 
+ 
+ 
 function Notifications() {
   const [activeTab, setActiveTab] = useState("all");
-  const [query, setQuery] = useState('');
-   const [visibleCount, setVisibleCount] = useState({
-      all: 3,
-      patients: 3,
-      invoices: 3,
-      discounts: 3,
-      user: 3,
-      sales: 3,         
-      pharmacy: 3,
-      labs: 3,
-    });
-  const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
+  const [query, setQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [counts, setCounts] = useState({
+  total_unread: 0,
+  new_patients_today: 0,
+  pharmacy_sales: 0,
+
+  });
+  const [showPatientModal, setShowPatientModal] = useState(false); // ✅ Modal state
+ 
+  const notificationsPerPage = 15;
+ 
+  // const [visibleCount, setVisibleCount] = useState({
+  //   all: 3,
+  //   patients: 3,
+  //   invoices: 3,
+  //   discounts: 3,
+  //   user: 3,
+  //   sales: 3,
+  //   pharmacy: 3,
+  //   labs: 3,
+  // });
+  const [pendingApprovals, setPendingApprovals] = useState([]);
+  const [allnotifications, setNotifications] = useState([]);
+  const getNotificationTitle = (type, originalTitle) => {
+  switch (type) {
+    case "patients":
+      return "New Patient";
+    case "lab_invoice":
+      return "New Lab Invoice";
+    case "discounts":
+      return "New Discount";
+    case "user":
+      return "User Preference Updated";
+    case "sales":
+      return "New Sale";
+    case "medication_add":
+      return "New Pharmacy Notification";
+    case "labs":
+      return "New Lab Result";
+    default:
+      return originalTitle || "Notification";
+  }
+};
+useEffect(() => {
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/notifications/list/");
+      const data =  response.data.data
+      console.log(response.data.data)
+      setCounts(response.data)
+      
+      const readIds = JSON.parse(localStorage.getItem("readNotificationIds") || "[]");
+  const notifications = response.data.data
+  .filter((note) => note.id && note.created_at) // only include valid notifications
+  .map((note) => {
+    const isRead = readIds.includes(note.id);
+    const category = note.notification_type || "others";
+
+    const iconMap = {
+      patient: <AiOutlinePlus className={Notificationstyle.patients} />,
+      lab_invoice:<FaMicroscope className={Notificationstyle.labInvoice} />,
+      discounts: <FaPercent className={Notificationstyle.discounts} />,
+      user: <AiOutlineUser className={Notificationstyle.user} />,
+      sales: <BsCurrencyDollar className={Notificationstyle.sales} />,
+      medication_add: <GiMedicalPack className={Notificationstyle.pharmacy} />,
+      expiry: <GiMedicalPack className={Notificationstyle.pharmacy} />,
+      invoice: <BsCurrencyDollar className={Notificationstyle.invoices} />,
+      others: <AiOutlineNotification className={Notificationstyle.others} />,
+      doctor: <AiOutlinePlus className={Notificationstyle.patients} />
+    };
+
+    return {
+      id: note.id,
+      category,
+      title: getNotificationTitle(category, note.title),
+      description1: note.message || "",
+      description2: "",
+      time: new Date(note.created_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+      icon: iconMap[category] || iconMap["others"],
+      bgColor: isRead ? "#FFFFFF" : "#D5DEF5",
+      isRead,
+    };
+  });
+
+
+      const unreadCount = notifications.filter((n) => !n.isRead).length;
+      const [countsData] = data;
+      setCounts({
+        ...countsData,
+        total_unread: unreadCount,
+      });
+      setNotifications(notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
   };
-   const [allnotifications, setNotifications] = useState([
-    {
-      id: 1,
-      category: "patients",
-      title: "New Patient Registration",
-      description1: "James Wilson (ID: P-10045) has been registered as a new patient.",
-      description2:"Assigned to: Dr. Lisa Chen Department: Cardiology.",
-      time: "2 minutes ago",
-      icon: <AiOutlinePlus className= {Notificationstyle.patients}/>,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    {
-      id: 2,
-      category: "invoices",
-      title: "New Invoice Generated",
-      description1: "Invoice #INV-2035-0348 for $1,258.75 has been generated for patient Sarah Johnson.",
-      description2:" Generated by: Front Desk Services: Consultation.",
-      time: "2 minutes ago",
-      icon: <Icon icon="heroicons:currency-dollar-solid" width="32" height="34"   style={{color:" #16A34A"}}  />,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    {
-      id: 3,
-      category: "discounts",
-      title: "Discount Approval Required",
-      description1: "Dr. Robert has requested 15% discount for patient Emily Parker (ID: P-7632).",
-      description2:" Invoice: #NV-2025-0342 Amount: $425.50.",
-      time: "2 minutes ago",
-      icon: <PiPercent  className={Notificationstyle.percent}/>,
-      bgColor: "",
-      isRead: false,
-    },
-    {
-      id: 4,
-      category: "pharmacy",
-      title: "Pharmacy Sale Completed",
-      description1: "Pharmacy sale #Ph-5487 for $175.25 has been completed for patient David Brown. ",
-      description2:"Items: 3 medications. Payment: Credit Card.",
-      time: "2 minutes ago",
-      icon: <MdLocalHospital  className={Notificationstyle.hospital}/>,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    {
-      id: 5,
-      category: "labs",
-      title: "Lab Invoice Generated",
-      description1: "Invoice #INV-2035-0348 for $1,258.75 has been generated for patient Sarah Johnson.",
-      description2:"Generated by: Lab_1 Services: Lab Tests.",
-      time: "2 minutes ago",
-      icon: <Icon icon="guidance:medical-laboratory" className={Notificationstyle.labs}  />,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    {
-      id: 6,
-      category: "pharmacy",
-      title: "Pharmacy Sale Completed",
-      description1: "Pharmacy sale #Ph-5487 for $175.25 has been completed for patient David Brown. ",
-      description2:"Items: 3 medications. Payment: Credit Card.",
-      time: "2 minutes ago",
-      icon: <MdLocalHospital  className={Notificationstyle.hospital}/>,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    {
-      id: 7,
-      category: "pharmacy",
-      title: "Pharmacy Sale Completed",
-      description1: "Pharmacy sale #Ph-5487 for $175.25 has been completed for patient David Brown. ",
-      description2:"Items: 3 medications. Payment: Credit Card.",
-      time: "2 minutes ago",
-      icon: <MdLocalHospital  className={Notificationstyle.hospital}/>,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    {
-      id: 7,
-      category: "pharmacy",
-      title: "Pharmacy Sale Completed",
-      description1: "Pharmacy sale #Ph-5487 for $175.25 has been completed for patient David Brown. ",
-      description2:"Items: 3 medications. Payment: Credit Card.",
-      time: "2 minutes ago",
-      icon: <MdLocalHospital  className={Notificationstyle.hospital}/>,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    {
-      id: 8,
-      category: "pharmacy",
-      title: "Pharmacy Sale Completed",
-      description1: "Pharmacy sale #Ph-5487 for $175.25 has been completed for patient David Brown. ",
-      description2:"Items: 3 medications. Payment: Credit Card.",
-      time: "2 minutes ago",
-      icon: <MdLocalHospital  className={Notificationstyle.hospital}/>,
-      bgColor: "#D5DEF5",
-      isRead: false,
-    },
-    
-  ]);
-  //for single notification
-  const handleNotificationClick = (id) => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((note) =>
-        note.id === id ? { ...note, isRead: true, bgColor: "#FFFFFF" } : note
+
+  fetchNotifications();
+}, []);
+
+  const handleNotificationClick = async(id) => {
+  const readIds = JSON.parse(localStorage.getItem("readNotificationIds") || "[]");
+  if (!readIds.includes(id)) {
+    const updatedReadIds = [...readIds, id];
+    localStorage.setItem("readNotificationIds", JSON.stringify(updatedReadIds));
+   
+
+    setCounts((prevCounts) => ({
+      ...prevCounts,
+      total_unread: Math.max(0, prevCounts.total_unread - 1),
+    }));
+
+    console.log(counts)
+  }
+
+
+ 
+  setNotifications((prevNotifications) =>
+    prevNotifications.map((note) =>
+      note.id === id ? { ...note, isRead: true, bgColor: "#FFFFFF" } : note
+    )
+  );
+};
+
+ 
+  // const loadMoreNotifications = () => {
+  //   setVisibleCount((prevCounts) => ({
+  //     ...prevCounts,
+  //     [activeTab]: prevCounts[activeTab] + 3,
+  //   }));
+  // };
+ 
+ 
+// const filteredNotifications = allnotifications.filter((note) => {
+//   const matchesTab = activeTab === "all" || note.category === activeTab;
+//   const matchesSearch =
+//     query === "" ||
+//     note.title.toLowerCase().includes(query.toLowerCase()) ||
+//     note.description1.toLowerCase().includes(query.toLowerCase()) ||
+//     note.description2.toLowerCase().includes(query.toLowerCase());
+
+//   return matchesTab && matchesSearch;
+// });
+
+
+const filteredNotifications = allnotifications.filter((note) => {
+  const matchesTab =
+    activeTab === "all" ||
+    (Array.isArray(activeTab)
+      ? activeTab.includes(note.category)
+      : note.category === activeTab);
+
+  const matchesSearch =
+    query === "" ||
+    note.title.toLowerCase().includes(query.toLowerCase()) ||
+    note.description1.toLowerCase().includes(query.toLowerCase()) ||
+    note.description2.toLowerCase().includes(query.toLowerCase());
+
+  return matchesTab && matchesSearch;
+});
+
+
+
+
+const tabs = [
+  { key: "all", label: "All Notifications" },
+  { key: "patient", label: "Patients" },
+  { key: "invoice", label: "Invoices" },
+  { key: "discounts", label: "Discounts" },
+  { key: "user", label: "User Preference" },
+  { key: "sales", label: "Sales" },
+  { key: ["medication_add", "expiry","low_stock",'stagant'], label: "Pharmacy" },
+  { key: "lab_invoice", label: "Labs" },
+];
+
+useEffect(() => {
+  setCurrentPage(1);
+}, [activeTab, query]);
+
+ 
+  const totalPages = Math.ceil(filteredNotifications.length / notificationsPerPage);
+  const paginatedNotifications = filteredNotifications.slice(
+    (currentPage - 1) * notificationsPerPage,
+    currentPage * notificationsPerPage
+  );
+ 
+  const handleApprove = (id) => {
+    setPendingApprovals((prev) =>
+      prev.map((approval) =>
+        approval.id === id ? { ...approval, status: "Approved" } : approval
       )
     );
   };
-  //for mark all as read
-  const markAllAsRead = () => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((note) => ({ ...note, isRead: true, bgColor: "#FFFFFF" }))
+  const handleTabClick = (key) => {
+  setActiveTab(key);
+};
+ 
+  const handleReject = (id) => {
+    setPendingApprovals((prev) =>
+      prev.map((approval) =>
+        approval.id === id ? { ...approval, status: "Rejected" } : approval
+      )
     );
   };
-    //Load more notifications
-    const loadMoreNotifications = () => {
-      setVisibleCount((prevCounts) => ({
-        ...prevCounts,
-        [activeTab]: prevCounts[activeTab] + 3,
-      }));
-    };
-
+ 
   return (
     <Container>
       <Row>
         <Col>
-          <h1 className="text-center text-md-start fs-2">Notifications</h1>
+          {/* ✅ Updated Header with Button */}
+          <div className="d-flex justify-content-between align-items-center flex-wrap">
+            <h1 className="fs-2">Notifications</h1>
+           
+          </div>
         </Col>
       </Row>
+ 
       <div className={Notificationstyle.container}>
-      <Row className="g-3">
-        {[
-          { title: "Total Unread", count: 0 },
-          { title: "New Patients Today", count: 8 },
-          { title: "Invoices Generated", count: 16 },
-          { title: "Pharmacy Sales", count: 16 },
+        <Row className="g-3">
+          {[
+          { title: "Total Unread", count: counts.total_unread },
+          { title: "New Patients Today", count: counts.new_patients_today },
+          { title: "Invoices Generated", count: counts.invoices_today },
+          { title: "Pharmacy Sales", count: counts.pharmacy_sales },
         ].map((item, index) => (
           <Col key={index} xs={12} sm={6} md={4} lg={3}>
             <Card className={Notificationstyle.firstcard}>
               <Card.Body>
                 <Card.Subtitle className="mb-3 text-muted">{item.title}</Card.Subtitle>
-                <Card.Text className="fw-bold fs-3 ">{item.count}</Card.Text>
+                <Card.Text className="fw-bold fs-3">{item.count}</Card.Text>
                 <p>
                   <span className="text-success text-start">+12%</span> &nbsp;from yesterday
                 </p>
@@ -175,100 +255,145 @@ function Notifications() {
             </Card>
           </Col>
         ))}
-      </Row>
-    </div>
-    <div className={Notificationstyle.fixedHeader}>
-    <Row className="mt-5 mb-5">
-        <Col className={`d-flex flex-wrap justify-content-around gap-4 ${Notificationstyle.buttonContainer}`}>
-          {[
-            { key: "all", label: "All Notifications" },
-            { key: "patients", label: "Patients" },
-            { key: "invoices", label: "Invoices" },
-            { key: "discounts", label: "Discounts" },
-            { key: "user", label: "User Preference" },
-            { key: "sales", label: "Sales" },
-            { key: "pharmacy", label: "Pharmacy" },
-            { key: "labs", label: "Labs" },
-          ].map((tab) => (
-            <Button
-              key={tab.key}
-              className={Notificationstyle.customButton}
-              style={{
-                backgroundColor: activeTab === tab.key ? "#002072" : "transparent",
-                color: activeTab === tab.key ? "white" : "#808080",
-                border: "1px solid #CFDCEB",
-              }}
-              onClick={() => handleTabClick(tab.key)}
-            >
-              {tab.label}
-            </Button>
-          ))}
-        </Col>
-      </Row>
-      <Row className="mb-3">
-        <Col>
-           <div className={Notificationstyle.searchbar}>
-              <label style={{ position: 'relative' }}>
-                  <CiSearch className={Notificationstyle.searchicon} />
-                  <input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Search Patients"
-                      className={Notificationstyle.searchInput}
-                  />
-              </label></div>
-        </Col>
-        <Col xs="auto">     
-          <Button variant="light" onClick={markAllAsRead}>Mark all as Read</Button>
-        </Col>
-      </Row>
+
+        </Row>
       </div>
-      {/* Filtered Notifications */}
-      <div className={Notificationstyle.notificationList}>
-      {allnotifications
-        .filter((note) => activeTab === "all" || note.category === activeTab)
-        .slice(0, visibleCount[activeTab]) 
-        .map((note) => (
-          <div
-            key={note.id}
-            className={`p-4 mb-1  shadow-sm ${Notificationstyle .cards}`}
-            style={{ backgroundColor: note.isRead ? "#FFFFFF" : note.bgColor,  }}
-            onClick={() => handleNotificationClick(note.id)}
+ 
+      <div className={Notificationstyle.fixedHeader}>
+        <Row className="m-3 ms-3">
+          <Col
+            className={`d-flex flex-wrap justify-content-start gap-3 ${Notificationstyle.buttonContainer}`}
           >
-           <Row>
-              <Col xs="auto" className={`fs-4 mt-4 ${Notificationstyle.icon}`}>
-                {note.icon}
-              </Col>
-              <Col>
-              <div className={`d-flex justify-content-between ${Notificationstyle.titi}`}>
-                <h6 className={` ${Notificationstyle.title}`}>{note.title}</h6>
-                <div>
-                  <small className={`pe-4 ${Notificationstyle.time}`}>{note.time}</small>
-                  {!note.isRead && <span className={Notificationstyle.bullet}>●</span>}
-                </div>
-              </div>
-                <p className="mb-1 text-muted">{note.description1}</p>
-                <p className="mb-1 text-muted">{note.description2}</p>
-              </Col>
-            </Row>  
-          </div>
-        ))}   
-        </div>  
-         {/* Load More Button */}
-        {visibleCount [activeTab]< allnotifications.filter((note) => activeTab === "all" || note.category === activeTab).length && (
-          <Row className="mt-3 text-center">
-            <Col>
-              <p 
-                className={Notificationstyle.load} 
-                onClick={loadMoreNotifications} 
-                style={{ cursor: "pointer" }}>
-                Load more notifications
-              </p>
-            </Col>
-          </Row>
-  )}
+          {tabs.map((tab,idx) => (
+          <Button
+            // key={tab.key}
+             key={idx}
+            onClick={() => setActiveTab(tab.key)}
+            className={`p-2 ${Notificationstyle.customButton}`}
+            style={{
+              backgroundColor: activeTab === tab.key ? "#002072" : "transparent",
+              color: activeTab === tab.key ? "white" : "#808080",
+              border: "1px solid #CFDCEB",
+            }}
+            // onClick={() => handleTabClick(tab.key)}
+          >
+            {tab.label}
+          </Button>
+  ))}
+          </Col>
+           
+        </Row>
+ 
+        <Row className="mb-3">
+          <Col>
+            <div className={`ms-2 ${Notificationstyle.searchbar}`}>
+              <label style={{ position: "relative" }}>
+                <CiSearch className={Notificationstyle.searchicon} />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search Notifications"
+                  className={Notificationstyle.searchInput}
+                />
+              </label>
+            </div>
+          </Col>
+        </Row>
+         {activeTab === "user" && <PendingApprovals />}
+      </div>
+ 
+      <div className={`${Notificationstyle.notificationList}`}>
+        {paginatedNotifications
+          
+          .map((note) => (
+            <div
+              key={note.id}
+              className={`p-4 mb-1 shadow-sm ${Notificationstyle.cards}`}
+              style={{
+                backgroundColor: note.isRead ? "#FFFFFF" : note.bgColor,
+              }}
+              onClick={() => handleNotificationClick(note.id)}
+            >
+              <Row>
+                <Col xs="auto" className={`fs-4 mt-4 ${Notificationstyle.icon}`}>
+                  {note.icon}
+                </Col>
+                <Col>
+                  <div
+                    className={`d-flex justify-content-between ${Notificationstyle.titi}`}
+                  >
+                    <h6 className={Notificationstyle.title}>{note.title}</h6>
+                    <div>
+                      <small className={`pe-4 ${Notificationstyle.time}`}>
+                        {note.time}
+                      </small>
+                      {!note.isRead && (
+                        <span className={`${Notificationstyle.bullet}`}>●</span>
+                      )}
+                    </div>
+                  </div>
+                  <p className="mb-1 text-muted">{note.description1}</p>
+                  <p className="mb-1 text-muted">{note.description2}</p>
+                </Col>
+              </Row>
+            </div>
+          ))}
+      </div>
+ 
+      {/* {visibleCount[activeTab] < filteredNotifications.length && (
+        <Row className="mt-3 text-center">
+          <Col>
+            <p
+              className={Notificationstyle.load}
+              onClick={loadMoreNotifications}
+              style={{ cursor: "pointer" }}
+            >
+              Load more notifications
+            </p>
+          </Col>
+        </Row>
+      )} */}
+ 
+      {/* {totalPages > 1 && (
+        <Pagination className="mt-3 justify-content-center">
+          {[...Array(totalPages).keys()].map((number) => (
+            <Pagination.Item
+              key={number + 1}
+              active={number + 1 === currentPage}
+              onClick={() => setCurrentPage(number + 1)}
+            >
+              {number + 1}
+            </Pagination.Item>
+          ))}
+        </Pagination>
+      )} */}
+       {/* Pagination */}
+      {totalPages > 1 && (
+        <Pagination className="mt-3 justify-content-center">
+          <Pagination.Prev
+            onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+          />
+          {[...Array(totalPages)].map((_, idx) => (
+            <Pagination.Item
+              key={idx + 1}
+              active={currentPage === idx + 1}
+              onClick={() => setCurrentPage(idx + 1)}
+            >
+              {idx + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      )}
+ 
+      {/* ✅ Patient Registration Modal */}
+     
     </Container>
   );
 }
-
+ 
 export default Notifications;

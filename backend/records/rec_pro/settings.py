@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'labs',
     'rest_framework',
     'corsheaders',
-    'notifications',
+    'notifications.apps.NotificationsConfig',
     'invoice',
     'p_invoice',
     'dashboard',
@@ -190,9 +190,9 @@ CORS_ALLOWED_ORIGINS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    )
     # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',  # <== force auth by default
+        # 'rest_framework.permissions.IsAuthenticated',  # <== force auth by default
     # ),
 }
 

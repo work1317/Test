@@ -17,7 +17,7 @@ const PatientRegistration = ({ show, handleClose }) => {
     age: "",
     gender: "",
     email: "",
-    doctor_name: "",
+    doctor: "",
     date: "",
     time: "",
     phno: "",
@@ -38,7 +38,7 @@ const PatientRegistration = ({ show, handleClose }) => {
     if (!formData.age.trim() || isNaN(formData.age) || formData.age <= 0) newErrors.age = "Valid age is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.email.match(/^\S+@\S+\.\S+$/)) newErrors.email = "Enter a valid email address";
-    if (!formData.doctor_name.trim()) newErrors.doctor_name = "Doctor name is required";
+    if (!formData.doctor.trim()) newErrors.doctor = "Doctor name is required";
     if (!formData.date) newErrors.date = "Select an appointment date";
     if (!formData.time) newErrors.time = "Select an appointment time";
     if (!formData.phno.match(/^\d{10}$/)) newErrors.phno = "Enter a valid 10-digit mobile number";
@@ -127,7 +127,7 @@ const PatientRegistration = ({ show, handleClose }) => {
         age: "",
         gender: "",
         email: "",
-        doctor_name: "",
+        doctor: "",
         date: "",
         time: "",
         phno: "",
@@ -180,8 +180,8 @@ const PatientRegistration = ({ show, handleClose }) => {
                   <Form.Label>Doctor</Form.Label>
                   <Form.Control
                     type="text"
-                    name="doctor_name"
-                    value={formData.doctor_name}
+                    name="doctor"
+                    value={formData.doctor}
                     onChange={handleChange}
                     isInvalid={!!error.doctor_name}
                   />
