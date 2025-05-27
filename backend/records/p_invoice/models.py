@@ -19,7 +19,7 @@ class PharmacyInvoice(models.Model):
         max_length=10,
         choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')]
     )
-    doctor_name = models.CharField(max_length=100)
+    doctor = models.CharField(max_length=100)
 
     TYPE_CHOICES = [
         ("Cash", "Cash"),
@@ -59,8 +59,8 @@ class PharmacyInvoice(models.Model):
             self.appointment_type = "outpatient"
             if not self.patient_name:
                 raise ValidationError("patient_name is required for guest.")
-            if not self.doctor_name:
-                raise ValidationError("doctor_name is required for guest.")
+            if not self.doctor:
+                raise ValidationError("doctor is required for guest.")
         else:
             if not self.patient_id:
                 raise ValidationError("patient_id is required for registered patients.")
@@ -69,7 +69,7 @@ class PharmacyInvoice(models.Model):
                 self.patient_name = patient.patient_name
                 self.age = patient.age
                 self.gender = patient.gender
-                self.doctor_name = patient.doctor_name
+                self.doctor = patient.doctor
                 self.appointment_type = patient.appointment_type
             except Patient.DoesNotExist:
                 raise ValidationError(f"No patient found with ID: {self.patient_id}")
@@ -83,7 +83,7 @@ class PharmacyInvoice(models.Model):
         super().save(*args, **kwargs)
 
     def finalize_invoice(self):
-        if self.is_finalized:
+        if self.is_finalized or not self.items.exists():
             return
 
         self.paid_amount = self.items.aggregate(

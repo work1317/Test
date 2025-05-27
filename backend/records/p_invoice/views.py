@@ -18,6 +18,9 @@ from p_invoice.serializers import (
 )
 from pharmacy.models import Medication
 from django.db.models import Q, Sum
+from notifications.models import Notification
+from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework.exceptions import ValidationError as DRFValidationError
 
 
 
@@ -44,12 +47,19 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "data": PharmacyInvoiceSerializer(invoice).data
             }, status=status.HTTP_201_CREATED)
 
-        except ValidationError as ve:
+        except DjangoValidationError as ve:
             return Response({
                 "success": 0,
                 "message": f"Validation error: {ve.message}",
                 "data": {}
             }, status=status.HTTP_400_BAD_REQUEST)
+        
+        except DRFValidationError as ve:
+            return Response({
+                "success": 0,
+                "message": f"Validation error: {ve.detail}",
+                "data": {}
+            }, status=status.HTTP_400_BAD_REQUEST)      
 
         except Exception as e:
             traceback.print_exc()
@@ -61,7 +71,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
 
     def create_invoice_notification(self, invoice):
         # Skip if already notified
-        if getattr(invoice, 'notification_created', False):
+        if invoice.notification_created:
             return
 
         item_count = invoice.items.count()
@@ -136,7 +146,7 @@ class PharmacyInvoiceListAPIView(APIView):
                     "appointment_type": invoice.appointment_type,
                     "age": invoice.age,
                     "gender": invoice.gender,
-                    "doctor_name": invoice.doctor_name,
+                    "doctor": invoice.doctor,
                     "typeof_transaction": invoice.typeof_transaction,
                     "description": invoice.description,
                     "paid_amount": float(invoice.paid_amount),
@@ -200,7 +210,7 @@ class PharmacyInvoiceDetailAPIView(APIView):
                 "patient_name": invoice.patient_name,
                 "age": invoice.age,
                 "gender": invoice.gender,
-                "doctor_name": invoice.doctor_name,
+                "doctor": invoice.doctor,
                 "typeof_transaction": invoice.typeof_transaction,
                 "description": invoice.description,
                 "paid_amount": float(invoice.paid_amount),
@@ -273,8 +283,8 @@ class InvoiceDownloadAPIView(APIView):
         p.setFont("Helvetica", 12)
         p.drawString(50, 770, f"Invoice No: {invoice.Bill_No}")
         p.drawString(50, 750, f"Date: {invoice.Bill_Date}")
-        p.drawString(50, 730, f"Patient: {invoice.Patient_name}")
-        p.drawString(50, 710, f"Doctor: {invoice.Doctor_name}")
+        p.drawString(50, 730, f"Patient: {invoice.patient_name}")
+        p.drawString(50, 710, f"Doctor: {invoice.doctor}")
         p.drawString(50, 690, f"Transaction Type: {invoice.typeof_transaction}")
         y = 660
         p.setFont("Helvetica-Bold", 12)
@@ -312,60 +322,6 @@ class InvoiceDownloadAPIView(APIView):
         return FileResponse(buffer, as_attachment=True, filename=f"Invoice_{invoice.Bill_No}.pdf")
  
 # -------------------- RECENT ----------------------------------------
- 
-# class RecentPharmacyInvoicesAPIView(APIView):
-#     def get(self, request, *args, **kwargs):
-#         try:
-#             invoices_qs = PharmacyInvoice.objects.all()
-#             cond= ""
- 
-#             # Optional filters
-#             start_date = request.query_params.get('start_date')
-#             end_date = request.query_params.get('end_date')
-#             appointment_type = request.query_params.get('appointment_type')
-#             payment_status = request.query_params.get('payment_status')
- 
-#             if start_date:
-#                 invoices_qs = invoices_qs.filter(Bill_Date__gte=start_date)
-#             if end_date:
-#                 invoices_qs = invoices_qs.filter(Bill_Date__lte=end_date)
-#             if appointment_type:
-#                 invoices_qs = invoices_qs.filter(appointment_type=appointment_type)
-#             if payment_status:
-#                 invoices_qs = invoices_qs.filter(typeof_transaction=payment_status)
- 
-#             invoices_qs = invoices_qs.order_by('-id')
- 
-#             # Aggregate invoice-level and item-level data
-#             total_paid_amount = invoices_qs.aggregate(total=Sum('paid_amount'))['total'] or 0
- 
-#             item_aggregates = PharmacyInvoiceItem.objects.filter(invoice__in=invoices_qs).aggregate(
-#                 total_final_amount=Sum('final_amount'),
-#                 total_discount_amount=Sum('discount_amount'),
-#                 total_net_amount=Sum('net_amount'),
-#             )
- 
-#             serializer = PharmacyInvoiceSerializer(invoices_qs, many=True)
- 
-#             return Response({
-#                 "success": 1,
-#                 "message": "Filtered invoices fetched successfully",
-#                 "data": serializer.data,
-#                 "totals": {
-#                     "total_amount": item_aggregates.get('total_final_amount') or 0,
-#                     "total_discount_amount": item_aggregates.get('total_discount_amount') or 0,
-#                     "total_after_discount_amount": total_paid_amount,
-#                     "total_net_amount": item_aggregates.get('total_net_amount') or 0,
-#                 }
-#             }, status=status.HTTP_200_OK)
- 
-#         except Exception as e:
-#             return Response({
-#                 "success": 0,
-#                 "message": f"An error occurred: {str(e)}",
-#                 "data": []
-#             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- 
 
 class RecentPharmacyInvoicesAPIView(APIView):
     def get(self, request, *args, **kwargs):
