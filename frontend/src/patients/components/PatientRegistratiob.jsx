@@ -63,45 +63,6 @@ const PatientRegistration = ({ show, handleClose }) => {
     setLoading(true);
     setError({});
   
-  //   try {
-  //     const response = await api.post("/patients/create/", formData);
-  
-  //     if (response.status === 201) {
-  //       setUserDetails({
-  //         patient_id: response.data.patient_id,
-  //         patient_name: response.data.patient_name,
-  //         age: response.data.age,
-  //       });
-  
-  //       // Reset form
-  //       setFormData({
-  //         patient_name: "",
-  //         age: "",
-  //         gender: "",
-  //         email: "",
-  //         doctor_name: "",
-  //         date: "",
-  //         time: "",
-  //         phno: "",
-  //         appointment_type: "",
-  //         blood_group: "",
-  //         notes: "",
-  //       });
-  
-  //       // ✅ Immediately close the registration modal
-  //       handleClose();
-  
-  //       // ✅ Optional: show the confirmation modal right after
-  //       setShowUserModal(true);
-  //     } else {
-  //       throw new Error("Something went wrong. Please try again.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   try {
     const response = await api.post(
       "/patients/create/",
