@@ -10,7 +10,7 @@ import { forms } from "./Labtest";
  
 import { FaArrowLeft } from "react-icons/fa";
  
-function Addform({ handlerClose, saveForms }) {
+function Addform({ handlerClose, saveForms,patients }) {
   const { formsData, setFormsData } = useContext(forms);
   const fileInputRef = useRef(null);
  
@@ -37,16 +37,45 @@ function Addform({ handlerClose, saveForms }) {
     }
   };
  
+  // const formsChanges = (e) => {
+  //   const { name, type, checked, value, files } = e.target;
+ 
+  //   const newValue = type === "checkbox" || type === "switch" ? checked : value;
+ 
+  //   setFormsData((prevState) => ({
+  //     ...prevState,
+  //     [name]: files ? files[0] : newValue,
+  //   }));
+    
+  // };
+
   const formsChanges = (e) => {
-    const { name, type, checked, value, files } = e.target;
- 
-    const newValue = type === "checkbox" || type === "switch" ? checked : value;
- 
-    setFormsData((prevState) => ({
+  const { name, type, checked, value, files } = e.target;
+  const newValue = type === "checkbox" || type === "switch" ? checked : value;
+
+  setFormsData((prevState) => {
+    const updatedData = {
       ...prevState,
       [name]: files ? files[0] : newValue,
-    }));
-  };
+    };
+
+    // Auto-fill patient details when patient ID is entered
+    if (name === "patient") {
+      const selectedPatient = patients.find(
+        (p) => p.patient_id?.toLowerCase() === value.toLowerCase()
+      );
+
+      if (selectedPatient) {
+        updatedData.patient_name = selectedPatient.patient_name;
+        updatedData.requested_by =  selectedPatient.doctor
+      }
+    }
+
+    return updatedData;
+  });
+};
+
+
  
   return (
     <div style={{ padding: "1rem" }}>
@@ -76,8 +105,8 @@ function Addform({ handlerClose, saveForms }) {
                 <Form.Control
                   className={styles.field}
                   type="text"
-                  name="patient_id"
-                  value={formsData.patient_id}
+                  name="patient"
+                  value={formsData.patient}
                   onChange={formsChanges}
                   placeholder="Enter your ID"
                 />
@@ -92,6 +121,7 @@ function Addform({ handlerClose, saveForms }) {
                   value={formsData.patient_name}
                   onChange={formsChanges}
                   placeholder="Enter your Name"
+                  readOnly
                 />
               </Form.Group>
  
@@ -116,6 +146,7 @@ function Addform({ handlerClose, saveForms }) {
                   name="requested_by"
                   value={formsData.requested_by}
                   onChange={formsChanges}
+                  readOnly
                 />
               </Form.Group>
  
@@ -199,8 +230,8 @@ function Addform({ handlerClose, saveForms }) {
                     <Form.Group>
                       <Form.Label className={styles.fl1}>User Name</Form.Label>
                       <Form.Control
-                        name="username"
-                        value={formsData.username}
+                        name="user_name"
+                        value={formsData.user_name}
                         onChange={formsChanges}
                         className={styles.formscon}
                         type="text"
@@ -249,22 +280,12 @@ function Addform({ handlerClose, saveForms }) {
  
                 <Form.Group className="mb-3">
                   <Form.Label className={styles.fl1}>Test Type</Form.Label>
-                  <Form.Select
+                  <Form.Control
                     name="test_type"
                     value={formsData.test_type} // Controlled value
-                    onChange={(e) =>
-                      setFormsData({ ...formsData, test_type: e.target.value })
-                    }
+                     onChange={formsChanges}
                   >
-                    {/* Dropdown options */}
-                    <option value="Pathology">Pathology</option>
-                    <option value="Thyroid Panel">Thyroid Panel</option>
-                    <option value="Blood Test">Blood Test</option>
-                    <option value="Coagulation Panel">Coagulation Panel</option>
-                    <option value="Electrolyte Panel">Electrolyte Panel</option>
-                    <option value="COVID-19 PCR">COVID-19 PCR</option>
-                    <option value="Urinalysis">Urinalysis</option>
-                  </Form.Select>
+                  </Form.Control>
                 </Form.Group>
  
                 <div className={styles.bottomRow}>

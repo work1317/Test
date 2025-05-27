@@ -7,7 +7,7 @@ import { forms } from "./Labtest";
 
 function LabViewresult({ handlerClose, selectedResult, selectForm }) {
   const handleDownload = async () => {
-    const url = `/labs/labtests_download/${selectForm.action}/`;
+    const url = `http://127.0.0.1:8000/labs/labtests_download/${selectForm.action}/`;
     console.log(url);
     const link = document.createElement('a');
     link.href = url;
@@ -41,9 +41,9 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className="mb-0">{selectForm.requested_test}</h5>
+                  <h5 className="mb-0">{selectedResult.test_type}</h5>
                   <small className="text-muted">
-                    Lab Result - {selectForm.test_date}
+                    Lab Result - {selectForm.date}
                   </small>
                 </div>
               </div>
@@ -56,7 +56,7 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
           <Row className="mb-3">
             <Col md={6}>
               <h5>Doctor</h5>
-              <p style={{ fontSize: "1.1rem" }}>Dr. {selectedResult.doctor}</p>
+              <p style={{ fontSize: "1.1rem" }}>{selectedResult.doctor}</p>
             </Col>
             <Col md={6}>
               <h5>Test Type</h5>
@@ -89,7 +89,7 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
                     />
                   )}
                   <span className="me-2">
-                    {selectedResult.result}
+                    {selectedResult.result_filename}
                   </span>
                   <small className="text-muted">(2.4 MB)</small>
                 </div>

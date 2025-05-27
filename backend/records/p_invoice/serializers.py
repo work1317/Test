@@ -30,7 +30,7 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
     patient_name = serializers.CharField(required=False, allow_blank=True)
     age = serializers.IntegerField(required=False)
     gender = serializers.CharField(required=False, allow_blank=True)
-    doctor_name = serializers.CharField(required=False, allow_blank=True)
+    doctor = serializers.CharField(required=False, allow_blank=True)
     patient_id = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
@@ -41,7 +41,7 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
         guest = attrs.get('guest', False)
 
         if guest:
-            required_fields = ['patient_name', 'age', 'gender', 'doctor_name']
+            required_fields = ['patient_name', 'age', 'gender', 'doctor']
             for field in required_fields:
                 if not attrs.get(field):
                     raise serializers.ValidationError({field: f"{field} is required for guests."})
@@ -55,7 +55,7 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
                 attrs['patient_name'] = patient.patient_name
                 attrs['age'] = patient.age
                 attrs['gender'] = patient.gender
-                attrs['doctor_name'] = patient.doctor_name
+                attrs['doctor'] = patient.doctor
                 attrs['appointment_type'] = patient.appointment_type
             except Patient.DoesNotExist:
                 raise serializers.ValidationError({'patient_id': 'No patient found with this ID.'})
@@ -81,6 +81,7 @@ class RecentPharmacyInvoicesSerializer(serializers.ModelSerializer):
     Amount = serializers.SerializerMethodField()
     DiscountAmt = serializers.SerializerMethodField()
     AfterDiscount = serializers.SerializerMethodField()
+    NetAmount = serializers.SerializerMethodField()
  
     class Meta:
         model = PharmacyInvoice
@@ -90,12 +91,15 @@ class RecentPharmacyInvoicesSerializer(serializers.ModelSerializer):
         ]
  
     def get_Amount(self, obj):
-        return sum([item.amount for item in obj.items.all()])
+        return obj.paid_amount or 0
  
     def get_DiscountAmt(self, obj):
         return sum([item.discount_amount for item in obj.items.all()])
  
     def get_AfterDiscount(self, obj):
-        return self.get_Amount(obj) - self.get_DiscountAmt(obj)
+        return sum(item.net_amount for item in obj.items.all())
+    
+    def get_NetAmount(self, obj):
+        return self.get_AfterDiscount(obj)
  
  
