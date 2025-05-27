@@ -3,7 +3,7 @@ import { Modal, Button, Row, Col, Form } from 'react-bootstrap';
 import axios from 'axios';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import logo from '../../assets/Images/sitelogo.svg';
+import logo from '../../assets/images/sitelogo.svg';
 import styles from '../css/InvoicePrint.module.css';
 
 const InvoicePrint = ({ show, handlePrintClose, patientId }) => {

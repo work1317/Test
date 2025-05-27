@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import api from "../../utils/axiosInstance";
+import axios from "axios";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import styles from "../css/AddMedication.module.css";
 
@@ -9,6 +9,7 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
     category: "",
     manufacturer: "",
     strength: "",
+    batch_no:"",
     stock_quantity: "",
     unit_price: "",
     mrp: "",
@@ -36,7 +37,7 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
     };
   
     try {
-      const response = await api.post("/pharmacy/add_medicine/", payload, {
+      const response = await axios.post("http://127.0.0.1:8000/pharmacy/add_medicine/", payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -51,6 +52,7 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
           category: "",
           manufacturer: "",
           strength: "",
+          batch_no:"",
           stock_quantity: "",
           unit_price: "",
           mrp: "",
@@ -126,13 +128,24 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
                 />
               </Form.Group>
             </Col>
-            <Col md={6}>
+            <Col md={3}>
               <Form.Group>
                 <Form.Label>Strength</Form.Label>
                 <Form.Control
                   name="strength"
                   value={formData.strength}
                   placeholder="e.g., 500mg"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Batch No</Form.Label>
+                <Form.Control
+                  name="batch_no"
+                  value={formData.batch_no}
+                  placeholder="Batch No"
                   onChange={handleChange}
                 />
               </Form.Group>
