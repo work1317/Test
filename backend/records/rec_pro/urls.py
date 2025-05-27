@@ -35,7 +35,7 @@ urlpatterns = [
     path('dashboard/',include('dashboard.urls')),
     path('pharmacy/',include('pharmacy.urls')),
     path('p_invoice/',include('p_invoice.urls')),
-    # path('labs/',include('labs.urls')),
+    path('labs/',include('labs.urls')),
     path('notifications/',include('notifications.urls')),
     path('invoice/',include('invoice.urls')),
 ]

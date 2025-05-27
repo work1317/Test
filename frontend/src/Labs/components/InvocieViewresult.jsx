@@ -27,7 +27,7 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
                 </div>
               </div>
               <div>
-                <h5 className="mb-0">{inSelectForm.test_name}</h5>
+                <h5 className="mb-0">{inSelectForm.testname}</h5>
                 <small className="text-muted">
                   Lab Result - {inSelectForm.date}
                 </small>
@@ -43,11 +43,11 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
           <Row className="mb-3">
             <Col md={6}>
               <h5>Patient Name</h5>
-              <p>{inSelectForm.patient_name}</p>
+              <p>{inSelectForm.patient}</p>
             </Col>
             <Col md={6}>
               <h5>Test Type</h5>
-              <p>{inSelectForm.test_name}</p>
+              <p>{inSelectForm.testname}</p>
             </Col>
           </Row>
 

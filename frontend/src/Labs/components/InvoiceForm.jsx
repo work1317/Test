@@ -4,54 +4,54 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { forms } from './Labtest';
 import { LuCircleX } from "react-icons/lu";
 import styles from '../css/Invoice.module.css';
- 
+
 function InvoiceForm({ handlerClose, saveButtons }) {
   const { formsData1, setFormsData1 } = useContext(forms);
- 
+
   const handlerForms = (e) => {
     setFormsData1({ ...formsData1, [e.target.name]: e.target.value });
   };
- 
+
   return (
     <div className={styles.modalOverlay}>
-<div className={styles.modalContent}>
-<div className={styles.model}>
-<h2>Add New Invoice</h2>
-<div className={styles.butMod} onClick={handlerClose}>
-<LuCircleX />
-</div>
-</div>
- 
+      <div className={styles.modalContent}>
+        <div className={styles.model}>
+          <h2>Add New Invoice</h2>
+          <div className={styles.butMod} onClick={handlerClose}>
+            <LuCircleX />
+          </div>
+        </div>
+
         <div className={styles.forms}>
-<Form>
-<div className="row">
-<div className="col-md-6 mb-3">
-<Form.Label>Patient Name</Form.Label>
-<Form.Control
+          <Form>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <Form.Label>Patient Name</Form.Label>
+                <Form.Control
                   className={styles.formsCon}
                   type="text"
-                  name="patient_name"
+                  name="patient"
                   placeholder="Patient Name"
-                  value={formsData1.patient_name}
+                  value={formsData1.patient}
                   onChange={handlerForms}
                   required
                 />
-</div>
-<div className="col-md-6 mb-3">
-<Form.Label>Test Name</Form.Label>
-<Form.Control
+              </div>
+              <div className="col-md-6 mb-3">
+                <Form.Label>Test Name</Form.Label>
+                <Form.Control
                   className={styles.formsCon}
                   type="text"
-                  name="test_name"
+                  name="testname"
                   placeholder="Test Name"
-                  value={formsData1.test_name}
+                  value={formsData1.testname}
                   onChange={handlerForms}
                   required
                 />
-</div>
-<div className="col-md-6 mb-3">
-<Form.Label>Amount</Form.Label>
-<Form.Control
+              </div>
+              <div className="col-md-6 mb-3">
+                <Form.Label>Amount</Form.Label>
+                <Form.Control
                   className={styles.formsCon}
                   type="number"
                   name="amount"
@@ -60,10 +60,10 @@ function InvoiceForm({ handlerClose, saveButtons }) {
                   onChange={handlerForms}
                   required
                 />
-</div>
-<div className="col-md-6 mb-3">
-<Form.Label>Status</Form.Label>
-<Form.Control
+              </div>
+              <div className="col-md-6 mb-3">
+                <Form.Label>Status</Form.Label>
+                <Form.Control
                   className={styles.formsCon}
                   name="status"
                   type="text"
@@ -72,10 +72,10 @@ function InvoiceForm({ handlerClose, saveButtons }) {
                   onChange={handlerForms}
                   required
                 />
-</div>
-<div className="col-12 mb-3">
-<Form.Label>Date</Form.Label>
-<Form.Control
+              </div>
+              <div className="col-12 mb-3">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
                   className={styles.formsCon1}
                   type="date"
                   name="date"
@@ -83,19 +83,19 @@ function InvoiceForm({ handlerClose, saveButtons }) {
                   onChange={handlerForms}
                   required
                 />
-</div>
-</div>
-<div className={styles.save1}>
-<span onClick={handlerClose}>Cancel</span>
-<Button variant="primary" onClick={saveButtons}>
+              </div>
+            </div>
+            <div className={styles.save1}>
+              <span onClick={handlerClose}>Cancel</span>
+              <Button variant="primary" onClick={saveButtons}>
                 Add Invoice
-</Button>
-</div>
-</Form>
-</div>
-</div>
-</div>
+              </Button>
+            </div>
+          </Form>
+        </div>
+      </div>
+    </div>
   );
 }
- 
+
 export default InvoiceForm;

@@ -19,10 +19,10 @@ import styles from "../css/Labtest.module.css";
 import Addform from "./Addform";
 import InvoiceForm from "./InvoiceForm";
 import { LuCirclePlus } from "react-icons/lu";
-import api from "../../utils/axiosInstance";
+import axios from "axios";
 import LabViewresult from "./LabViewresult";
 import InvoiceViewresult from "./InvocieViewresult";
- 
+
 export const forms = createContext();
 function Labtest() {
   const [page, setPage] = useState("labtest");
@@ -36,7 +36,7 @@ function Labtest() {
   const [patients, setPatients] = useState([]);
   const [formsData, setFormsData] = useState({
     id: 40,
-    patient_id: "",
+    patient: "",
     patient_name: "",
     requested_test: "",
     requested_by: "",
@@ -44,40 +44,37 @@ function Labtest() {
     priority: "Urgent",
     status: "Pending",
     notes: "",
-    user_id: "",
-    username: "",
     test_date: "",
-    test_time: "",
     summary: "",
-    test_type: "Pathology",
+    test_type: "",
     flag: false,
     upload: null,
   });
   const [formObj, setFormObj] = useState([]);
   const [search, setSearch] = useState();
- 
+
   const [formsData1, setFormsData1] = useState({
-    patient_name: "",
-    test_name: "",
+    patient: "",
+    testname: "",
     amount: "",
     status: "",
     date: "",
   });
- 
+
   // console.log(patients)
   const [formObj1, setFormObj1] = useState([]);
- 
+
   // patient Api
   useEffect(() => {
     const patientData = async () => {
       try {
-        const { data } = await api.get(
-          "/patients/patients/"
+        const { data } = await axios.get(
+          "http://127.0.0.1:8000/patients/patients/"
         );
         if (data.success) {
           setPatients(data.data.patients || []);
           console.log(data.data)
-         
+
         }
       } catch (error) {
         console.log("error");
@@ -85,20 +82,19 @@ function Labtest() {
     };
     patientData();
   }, []);
- 
+
   // labtest viewResult
   const handlershow = async (action) => {
-   
+    setShowes(true);
     try {
-      const response = await api.get(
-        `/labs/lab_tests/${action}/`
+      const response = await axios.get(`http://127.0.0.1:8000/labs/lab_tests/${action}/`
       );
       if (response.data && response.data.success === 1) {
         // console.log("Fetched Data:", response.data.data);
         const NewsData = response.data.data;
         setSelectResult(NewsData);
-        setShowes(true);
- 
+        
+
         // console.log("Data set to state:", selectedResult);
       }
     } catch (err) {
@@ -110,7 +106,7 @@ function Labtest() {
       // console.log("Data set to state:", selectedResult);
     }
   }, [selectedResult]);
- 
+
   const handlershows = () => {
     setOpens(true);
   };
@@ -119,87 +115,55 @@ function Labtest() {
     setOpens(false);
     setTab(false);
   };
- 
+
   // iNVOICE VIEW DETAILS
   const invocieResult = async () => {
     setTab(true);
   };
- 
+
   // this is lab test getting data
- 
+
   const fetchingData = async () => {
     try {
-      const response = await api.get("/labs/lab_tests/");
+      const response = await axios.get("http://127.0.0.1:8000/labs/lab_tests/");
       setFormObj(response.data.data);
     } catch (error) {
       console.log("Error fetching lab tests:", error);
     }
   };
   useEffect(() => {
-   
- 
+
+
     fetchingData()
- 
- 
+
+
   }, []);
+
+  const handlerShows = () => {
+    setShowes(true)
+  }
   // lab test form
   const saveForms = async (e) => {
     e.preventDefault();
     if (
-      formsData.patient_id === "" ||
-      formsData.patient_name === "" ||
+      formsData.patient.trim() === "" ||
+      formsData.patient_name.trim() === "" ||
       formsData.requested_by === "" ||
-      formsData.requested_test === "" ||
-      formsData.requested_test === "" ||
-      formsData.notes === "" ||
-      formsData.user_id === "" ||
-      formsData.username === "" ||
-      formsData.summary === "" ||
-      formsData.test_date === "" ||
-      formsData.test_time === "" ||
+      formsData.requested_test.trim() === "" ||
+      formsData.requested_test.trim() === "" ||
+      formsData.notes.trim() === "" ||
+      formsData.summary.trim() === "" ||
       !formsData.upload
     ) {
       alert("Complet your form");
     } else {
       // patient id form id match
-      const patientExists = patients.some(
-        (patient) => patient.patient_id === formsData.patient_id
-      );
-      if (!patientExists) {
-        alert("Your patient ID does not match any existing patient.");
-        return;
-      }
- 
+   
+
       // patient name exit code
-      const patientNameExists = patients.find(
-        (patient) => patient.patient_name === formsData.patient_name
-      );
-      if (!patientNameExists) {
-        alert("patient not found");
-        return;
-      }
- 
+   
+
       // patients Doctor name
- 
-      const doctorFindName = patients.find(
-        (patient) => patient.doctor_name === formsData.requested_by
-      );
- 
-      if (!doctorFindName) {
-        alert("doctors not found");
-        return;
-      }
- 
-      // patient already exist in labtest
-      const patientIDFind = formObj.find(
-        (forms) => forms.patient_id === formsData.patient_id
-      );
- 
-      if (patientIDFind) {
-        alert("This patient already exists in Lab Test.");
-        return;
-      }
- 
       try {
         const formData = new FormData();
         Object.keys(formsData).forEach((key) => {
@@ -210,19 +174,19 @@ function Labtest() {
             formData.append(key, value);
           }
         });
- 
+
         console.log("Sending formData:", [...formData.entries()]);
- 
-        const response = await api.post(
-          "/labs/create_lab_test/",
+
+        const response = await axios.post(
+          "http://127.0.0.1:8000/labs/create_lab_test/",
           formData
         );
         await fetchingData()
- 
+
         // console.log("Full response:", response.data);
- 
+
         const newData = response.data.data;
-       
+
         setFormsData({
           patient_id: "",
           patient_name: "",
@@ -239,33 +203,33 @@ function Labtest() {
         });
         handlerClose();
       } catch (error) {
-        console.error(
+        alert(
           "Submission error:",
           error.response?.data || error.message
         );
       }
     }
   };
- 
+
   // this is ivoice getting data
   useEffect(() => {
-    api
-      .get("/labs/invoice_lists/")
+    axios
+      .get("http://127.0.0.1:8000/labs/invoice_lists/")
       .then((res) => {
         setFormObj1(res.data.data);
         // console.log("response:",res.data.data);
       })
       .catch((err) => console.log("error", err));
   }, []);
- 
+
   //serch in Invastaory
- 
+
   // this is ivoice post data
   const saveButtons = async (e) => {
     e.preventDefault();
     if (
-      formsData1.patient_name.trim() === "" ||
-      formsData1.test_name.trim() === "" ||
+      formsData1.patient.trim() === "" ||
+      formsData1.testname.trim() === "" ||
       formsData1.amount.trim() === "" ||
       formsData1.status.trim() === "" ||
       formsData1.date.trim() === ""
@@ -273,12 +237,9 @@ function Labtest() {
       alert("Enter invoice dettails");
     } else {
       try {
-        const response = await api.post(
-          "/labs/create_lab_invoice/",
-          formsData1
-        );
+       const response =  await axios.post('http://127.0.0.1:8000/labs/create_lab_invoice/', formsData1);
         const saveData = response.data.data;
-        // console.log(saveData);
+        console.log(saveData);
         setFormObj1([...formObj1, formsData1]);
         setFormsData1({
           patient_name: "",
@@ -287,10 +248,10 @@ function Labtest() {
           status: "",
           date: "",
         });
- 
+
         handlerClose();
       } catch (error) {
-        alert("Error  data not added");
+        alert("Patient don't not exited");
       }
     }
   };
@@ -300,23 +261,21 @@ function Labtest() {
         {/* tab button */}
         {opens ? (
           <forms.Provider value={{ formsData, setFormsData }}>
-            <Addform handlerClose={handlerClose} saveForms={saveForms} />
+            <Addform handlerClose={handlerClose} patients={patients} saveForms={saveForms} />
           </forms.Provider>
         ) : (
           <div className={styles.Tab}>
             <div className={styles.tabContainer}>
               <div
-                className={`${styles.tab} ${
-                  page === "labtest" ? styles.active : ""
-                }`}
+                className={`${styles.tab} ${page === "labtest" ? styles.active : ""
+                  }`}
                 onClick={() => setPage("labtest")}
               >
                 Lab Test
               </div>
               <div
-                className={`${styles.tab} ${
-                  page === "invoice" ? styles.active : ""
-                }`}
+                className={`${styles.tab} ${page === "invoice" ? styles.active : ""
+                  }`}
                 onClick={() => setPage("invoice")}
               >
                 Invoice
@@ -334,14 +293,12 @@ function Labtest() {
                     className={`p-2 ${styles.notebtn}`}
                   >
                     <LuCirclePlus className="fa me-1" />
-                    Add To Note
+                    Add Test
                   </button>
                 </div>
- 
+
                 <div className="table-list">
                   <Table
-                    hover
-                    responsive
                     className="shodow-sm rounded"
                     id="table"
                   >
@@ -358,13 +315,14 @@ function Labtest() {
                       {formObj.map((form, index) => (
                         <tr key={index} id="tr">
                           <td id="td">{form.patient_name}</td>
-                          <td id="td">{form.requested_test}</td>
-                          <td id="td">{form.test_date}</td>
+                          <td id="td">{form.test_name}</td>
+                          <td id="td">{form.date}</td>
                           <td id="td">{form.status}</td>
                           <td id="td">
                             <Button
                               onClick={() => {
                                 handlershow(form.action);
+                                console.log(form.action)
                                 setSelectForms(form);
                               }}
                               id="btns"
@@ -399,13 +357,13 @@ function Labtest() {
                 >
                   <h3>InVoice</h3>
                   <button
-                    onClick={() => handlershow()}
+                    onClick={handlerShows}
                     className={`p-2 ${styles.notebtn}`}
                   >
-                    <LuCirclePlus className="fa me-1" /> Add To Note
+                    <LuCirclePlus className="fa me-1" /> Add Invoice
                   </button>
                 </div>
- 
+
                 {showes && (
                   <forms.Provider value={{ formsData1, setFormsData1 }}>
                     <InvoiceForm
@@ -416,8 +374,6 @@ function Labtest() {
                 )}
                 <div className="table-list">
                   <Table
-                    hover
-                    responsive
                     className="shodow-sm rounded"
                     id="table"
                   >
@@ -434,8 +390,8 @@ function Labtest() {
                     <tbody className="t-body">
                       {formObj1.map((form, index) => (
                         <tr className="tr" key={index}>
-                          <td id="td">{form.patient_name}</td>
-                          <td id="td">{form.test_name}</td>
+                          <td id="td">{form.patient}</td>
+                          <td id="td">{form.testname}</td>
                           <td id="td">{Number(form.amount).toFixed(2)}</td>
                           <td id="td">{form.date}</td>
                           <td id="td">{form.status}</td>
@@ -472,5 +428,5 @@ function Labtest() {
     </div>
   );
 }
- 
+
 export default Labtest;

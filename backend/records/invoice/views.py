@@ -10,9 +10,27 @@ from django.db import transaction
 from .serializers import *
 from django.db.models import Q
 from doctors.models import DoctorAvailability
-from rest_framework.validators import ValidationError
+from rest_framework.exceptions import ErrorDetail
+from core.exceptions import SerializerError
+from rest_framework.exceptions import ValidationError
 
 # Create your views here.
+
+def get_first_error_message(errors):
+    """
+    Recursively extract the first error message from nested serializer errors.
+    """
+    if isinstance(errors, dict):
+        for key in errors:
+            return get_first_error_message(errors[key])
+    elif isinstance(errors, list):
+        for item in errors:
+            return get_first_error_message(item)
+    elif isinstance(errors, ErrorDetail):
+        return str(errors)
+    else:
+        return str(errors)
+
 
 class InvoiceAPIView(APIView):
 
@@ -104,7 +122,7 @@ class InvoiceAPIView(APIView):
             context["data"] = {
                 "invoice": {
                     "id": invoice.id,
-                    "patient_id":invoice.invoice_id,
+                    "invoice_id":invoice.invoice_id,
                     "patient": patient.patient_id,
                     "due_on_receipt": invoice.due_on_receipt,
                     "payment_method": invoice.payment_method,
@@ -127,6 +145,14 @@ class InvoiceAPIView(APIView):
                     "final_total": round(final_total, 2)
                 }
             }
+
+
+
+            
+        except ValidationError as e:
+            context['success'] = 0
+            context['message'] = get_first_error_message(e.detail)
+
 
 
         except Exception as e:
@@ -181,7 +207,7 @@ class InvoiceDetailAPIView(APIView):
                 "data": {
                     "invoice": {
                         "id": invoice.id,
-                        "patient_id":invoice.invoice_id,
+                        "invoice_id":invoice.invoice_id,
                         "patient": patient.patient_id,
                         "due_on_receipt": invoice.due_on_receipt,
                         "payment_method": invoice.payment_method,
@@ -215,6 +241,8 @@ class InvoiceDetailAPIView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
+        
+
 
         except Exception as e:
             return Response(
@@ -289,7 +317,7 @@ class AllInvoiceListAPIView(APIView):
             invoice_data = {
                 "invoice": {
                     "id": invoice.id,
-                    "patient_id":invoice.invoice_id,
+                    "invoice_id":invoice.invoice_id,
                     "patient": patient.patient_id,
                     "due_on_receipt": invoice.due_on_receipt,
                     "payment_method": invoice.payment_method,
