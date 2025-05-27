@@ -57,7 +57,7 @@ def create_notification_on_doctor_save(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(
             title="New Doctor Added",
-            message=f"Doctor {instance.doctor_name} has been added.",
+            message=f"Doctor {instance.doctor} has been added.",
             doctor = instance
         )
  
