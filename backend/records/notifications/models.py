@@ -2,8 +2,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.utils import timezone
 from patients.models import Patient
-from doctors.models import DoctorAvailability # type: ignore
- 
+from doctors.models import DoctorAvailability
 from pharmacy.models import Medication
 from invoice.models import Invoice
 
@@ -21,11 +20,6 @@ class Notification(models.Model):
         ('invoice', 'Invoice'), 
         ('sales', 'Sales') 
     ]
-    
-from doctors.models import DoctorAvailability # type: ignore
- 
-
-class Notification(models.Model):
     STATUS_CHOICES = [
         ("Pending", "Pending"),
         ("Approved", "Approved"),
@@ -47,10 +41,6 @@ class Notification(models.Model):
     patient = models.ForeignKey(
         Patient, on_delete=models.CASCADE, null=True, blank=True
     )
-    doctor = models.ForeignKey(
-        DoctorAvailability, on_delete=models.CASCADE, null=True, blank=True
-    )
- 
     # For discount alert on PharmacyInvoiceItem
     pharmacy_invoice_item = models.ForeignKey(
         'p_invoice.PharmacyInvoiceItem',
