@@ -165,7 +165,8 @@ class LabTestListAPIView(APIView):
                 "test_name": test.requested_test,
                 "date": test.request_date.strftime("%Y-%m-%d"),
                 "status": test.status,
-                "action": request.build_absolute_uri(f"/labs/lab_tests/{test.id}/")  
+                "action": test.id,
+                "patient_id": test.patient.patient_id 
             })
 
         return Response({
