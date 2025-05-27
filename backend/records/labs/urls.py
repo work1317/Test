@@ -1,7 +1,11 @@
 from django.urls import path
-from .views import (LabInvoiceCreateAPIView,LabInvoiceListAPIView,LabTestCreateAPIView,
-                    LabTestListAPIView,LabTestDetailAPIView,LabInvoiceDetailAPIView,
-                    LabTestDownloadAPIView)
+from .views import (LabTestCreateAPIView,
+                    LabTestListAPIView,
+                    LabTestDetailAPIView,
+                    LabTestDownloadAPIView,
+                    LabInvoiceCreateAPIView,
+                    LabInvoiceListAPIView,
+                    LabInvoiceDetailAPIView)
 
 urlpatterns = [
     path("create_lab_invoice/", LabInvoiceCreateAPIView.as_view(), name="lab-invoice-create"),

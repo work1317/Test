@@ -202,7 +202,7 @@ useEffect(() => {
         {filteredData.length > 0 ? (
           filteredData.map((invoice) => (
             <tr key={invoice.invoice.id}>
-                <td>{invoice.invoice.invoice_id}</td>
+                <td> {invoice.invoice.invoice_id} </td>
               <td>{invoice.patient_info.patient_name}</td>
               <td>{invoice.patient_info.department}</td>
               <td>

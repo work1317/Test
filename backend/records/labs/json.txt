@@ -1,0 +1,31 @@
+LabInvoice: 
+***********
+
+POST:
+
+{
+  "patient": "Saranya", # Patient should be present in the db
+  "testname": "Blood Test",
+  "amount": "1500.00",
+  "status": "Pending",
+  "date": "2025-05-26"
+}
+
+LabTest:
+********
+
+POST:
+
+{
+  "patient": "P001",
+  "requested_test": "Complete Blood Count",
+  "request_date": "2025-05-26",
+  "priority": "Urgent",
+  "status": "Pending",
+  "notes": "Patient showing signs of infection, needs immediate attention.",
+  "test_date": "2025-05-26",
+  "test_type": "Hematology",
+  "summary": "Test to check for infection markers",
+  "flag": true
+}
+

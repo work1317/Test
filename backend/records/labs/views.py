@@ -1,69 +1,80 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from core import messages 
-from . import models, serializers, validators
-from core.exceptions import SerializerError  
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from . import models, serializers
-from django.urls import reverse
-from django.shortcuts import get_object_or_404,HttpResponse
 from rest_framework import status
+from django.http import HttpResponse, FileResponse
+from core import messages
+from . import models, serializers, validators
+from core.exceptions import SerializerError
+from datetime import datetime
 import os
-from django.http import FileResponse,Http404
+from datetime import date
 
-# Create your views here.
+# Create the views here
 
 class LabInvoiceCreateAPIView(APIView):
     def post(self, request):
         context = {
             "success": 1,
-            "message": messages.DATA_SAVED,
+            "message": "Data saved successfully.",
             "data": {}
         }
         try:
+            # Validate input data (including patient name)
             validator = validators.LabInvoiceValidator(data=request.data)
             if not validator.is_valid():
                 raise SerializerError(validator.errors)
 
             req_params = validator.validated_data
 
+            # Fetch patient object by patient_name (from validated_data)
+            patient_name = req_params['patient']
+            try:
+                patient = models.Patient.objects.get(patient_name=patient_name)
+            except models.Patient.DoesNotExist:
+                context["success"] = 0
+                context["message"] = f"Patient '{patient_name}' does not exist."
+                return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+            # Create LabInvoice instance
             lab_invoice = models.LabInvoice.objects.create(
-                patient_name=req_params['patient_name'],
-                test_name=req_params['test_name'],
+                patient=patient,
+                testname=req_params['testname'],
                 amount=req_params['amount'],
-                date=req_params['date'],
-                status=req_params['status'],
+                status=req_params.get('status', models.LabInvoice.StatusChoices.PENDING),
+                date=req_params.get('date', date.today())
             )
 
+            # Serialize the saved object to return
             serialized = serializers.LabInvoiceSerializer(lab_invoice, context={"request": request})
             context["data"] = serialized.data
 
         except SerializerError as e:
             context["success"] = 0
             context["message"] = str(e)
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             context["success"] = 0
-            context["message"] = str(e)
+            context["message"] = f"An unexpected error occurred: {str(e)}"
+            return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response(context)
+        return Response(context, status=status.HTTP_201_CREATED)
 
 
 class LabInvoiceListAPIView(APIView):
     def get(self, request):
-        invoices = models.LabInvoice.objects.all()
+        invoices = models.LabInvoice.objects.select_related('patient').all()
         simplified_data = []
 
         for invoice in invoices:
-            detail_url = f"/labs/lab_tests/{invoice.pk}/"  # Avoid reverse() error
             simplified_data.append({
-                "patient_name": invoice.patient_name,
-                "test_name": invoice.test_name,
-                "amount": invoice.amount,
-                "status": invoice.status.lower(),  # e.g., "pending"
-                "date": invoice.date,
-                "action": detail_url
+                "patient": invoice.patient.patient_name,
+                "testname": invoice.testname,
+                "amount": str(invoice.amount),
+                "status": invoice.status.lower(),
+                "date": invoice.date.strftime("%Y-%m-%d"),
+                "action": request.build_absolute_uri(f"/labs/invoice_lists/{invoice.id}/")
             })
 
         return Response({
@@ -75,42 +86,35 @@ class LabInvoiceListAPIView(APIView):
 
 class LabInvoiceDetailAPIView(APIView):
     def get(self, request, pk):
-        invoice = get_object_or_404(models.LabInvoice, pk=pk)
+        try:
+            invoice = models.LabInvoice.objects.select_related('patient').get(pk=pk)
 
-        data = {
-            "test_name": invoice.test_name,
-            "amount": invoice.amount,
-            "status": invoice.status.lower(),
-            "date": invoice.date.strftime("%d-%b-%Y")
-        }
+            data = {
+                "patient": invoice.patient.patient_name,
+                "testname": invoice.testname,
+                "amount": str(invoice.amount),
+                "status": invoice.status,
+                "date": invoice.date.strftime("%Y-%m-%d")
+            }
 
-        # If "download" parameter is passed, generate and download the file
-        if request.query_params.get("download") == "true":
-            content = (
-                f"Lab Invoice Detail\n\n"
-                f"Test Name : {data['testname']}\n"
-                f"Amount    : {data['amount']}\n"
-                f"Status    : {data['status']}\n"
-                f"Date      : {data['date']}\n"
-            )
+            return Response({
+                "success": 1,
+                "message": "Lab Invoice Details Fetched Successfully",
+                "data": data
+            })
 
-            response = HttpResponse(content, content_type='text/plain')
-            response['Content-Disposition'] = f'attachment; filename="LabInvoice_{invoice.pk}.txt"'
-            return response
-
-        # Default: return data as JSON
-        return Response({
-            "success": 1,
-            "message": "Lab Invoice Detail Fetched Successfully",
-            "data": data
-        }, status=status.HTTP_200_OK)
+        except models.LabInvoice.DoesNotExist:
+            return Response({
+                "success": 0,
+                "message": "Lab Invoice not found"
+            }, status=status.HTTP_404_NOT_FOUND)
 
 
 class LabTestCreateAPIView(APIView):
     def post(self, request):
         context = {
             "success": 1,
-            "message": messages.DATA_SAVED,
+            "message": "Data saved successfully.",
             "data": {}
         }
         try:
@@ -119,24 +123,20 @@ class LabTestCreateAPIView(APIView):
                 raise SerializerError(validator.errors)
 
             req_params = validator.validated_data
+            patient = get_object_or_404(models.Patient, patient_id=req_params['patient'])
 
             lab_test = models.LabTest.objects.create(
-                patient_id=req_params['patient_id'],
-                patient_name=req_params['patient_name'],
+                patient=patient,
+                request_by=request.user if request.user.is_authenticated else None,
                 requested_test=req_params['requested_test'],
-                requested_by=req_params['requested_by'],
                 request_date=req_params['request_date'],
                 priority=req_params['priority'],
                 status=req_params['status'],
                 notes=req_params.get('notes'),
-
-                user_id=req_params['user_id'],
-                username=req_params['username'],
-
-                test_date=req_params.get('test_date'),
-                test_time=req_params.get('test_time'),
+                test_date=req_params['test_date'],
+                test_time=datetime.now().time(),
                 summary=req_params.get('summary'),
-                test_type=req_params.get('test_type'),
+                test_type=req_params['test_type'],
                 flag=req_params.get('flag', False),
                 upload=req_params.get('upload')
             )
@@ -151,31 +151,21 @@ class LabTestCreateAPIView(APIView):
             context["success"] = 0
             context["message"] = str(e)
 
-        return Response(context)        
+        return Response(context)
 
 
 class LabTestListAPIView(APIView):
     def get(self, request):
-        # Fetch all lab tests from the database
-        tests = models.LabTest.objects.all()
-
-        # Serialize the data
-        serialized = serializers.LabTestSerializer(tests, many=True, context={"request": request})
-
-        # Prepare the data to return only the requested fields in the specific format
+        tests = models.LabTest.objects.select_related('patient').all()
         simplified_data = []
-        for test in serialized.data:
-            # Build the URL to the detail view
-            detail_url =  test['id']
 
-            # Add the test data in the requested format
+        for test in tests:
             simplified_data.append({
-                "patient_name": test['patient_name'],
-                "requested_test": test['requested_test'],
-                "test_type": test['test_type'],
-                "test_date": test['test_date'],
-                "status": test['status'],
-                "action": detail_url  # The dynamic URL for the action
+                "patient_name": test.patient.patient_name,
+                "test_name": test.requested_test,
+                "date": test.request_date.strftime("%Y-%m-%d"),
+                "status": test.status,
+                "action": request.build_absolute_uri(f"/labs/lab_tests/{test.id}/")  
             })
 
         return Response({
@@ -189,11 +179,23 @@ class LabTestDetailAPIView(APIView):
     def get(self, request, pk):
         test = get_object_or_404(models.LabTest, pk=pk)
 
+        # Get doctor name from the patient linked to this test
+        doctor_name = "N/A"
+        if test.patient and test.patient.doctor:
+            doctor_name = test.patient.doctor.d_name  # Use d_name field directly
+
+        attachment_url = (
+            request.build_absolute_uri(test.upload.url)
+            if test.upload else None
+        )
+
         data = {
-            "doctor": test.requested_by,
+            "doctor": doctor_name,
             "test_type": test.test_type,
             "summary": test.summary,
-            "result": os.path.basename(test.upload.name) if test.upload else None
+            "test_date": test.test_date,
+            "result_filename": os.path.basename(test.upload.name) if test.upload else None,
+            "result_download_url": attachment_url
         }
 
         return Response({
@@ -204,6 +206,7 @@ class LabTestDetailAPIView(APIView):
 
 
 class LabTestDownloadAPIView(APIView):
+
     def get(self, request, pk):
         test = get_object_or_404(models.LabTest, pk=pk)
 
@@ -217,3 +220,5 @@ class LabTestDownloadAPIView(APIView):
                 "message": "No file available for download or file does not exist.",
                 "data": {}
             }, status=status.HTTP_404_NOT_FOUND)
+        
+        

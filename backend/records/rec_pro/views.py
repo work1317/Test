@@ -9,12 +9,13 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import AllowAny
 from django.core.exceptions import ObjectDoesNotExist
+from patients.models import Patient
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
+ 
         # Add custom claims to token
         token['username'] = user.username
         token['email'] = user.email

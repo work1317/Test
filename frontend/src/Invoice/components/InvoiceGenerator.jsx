@@ -7,10 +7,10 @@ import { Icon } from "@iconify/react";
 import InvoicePrint from "./InvoicePrint";
 import axios from "axios"; // Add axios for API call
 
-export default function InvoiceGenerator() {
+ export default function InvoiceGenerator() {
   const [paymentMethod, setPaymentMethod] = useState("");
-const [dueOnReceipt, setDueOnReceipt] = useState("");
-const[note,setNote]=useState("");
+  const [dueOnReceipt, setDueOnReceipt] = useState("");
+  const[note,setNote]=useState("");
   const [show, setShow] = useState(true);
   const [formData, setFormData] = useState({
     service: "",
@@ -26,29 +26,14 @@ const[note,setNote]=useState("");
   const [pharmacyCharges, setPharmacyCharges] = useState(0);
   const [pharmacyDates, setPharmacyDates] = useState({ from: "", to: "" });
   const [consultationCharges, setConsultationCharges] = useState({
-    visits: 0,
-    amountPerVisit: 0,
+    visits: "",
+    amountPerVisit: "",
   });
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [concession, setConcession] = useState(0); // Added concession state
   const [patientId, setPatientId] = useState(""); // State for patient ID
   const [patientData, setPatientData] = useState(null);
   const [invoiceData, setInvoiceData] = useState(null); // State for patient data
-
-  // const InvoiceForm = () => {
-  //   const [InvoiceData, setInvoiceData] = useState({
-  //     patient: '',
-  //     due_on_receipt: '',
-  //     payment_method: '',
-  //     notes: '',
-  //     concession: '',
-  //     service_charges: [
-  //       { service_name: '', days: '', amount: '' }
-  //     ],
-  //     investigation_charges: { from_date: '', to_date: '', amount: '' },
-  //     pharmacy_charges: { from_date: '', to_date: '', amount: '' },
-  //     consultation_charges: { no_of_visits: '', amount_per_visit: '' }
-  //   });
 
   // Fetch patient data when   changes
   useEffect(() => {
@@ -69,61 +54,6 @@ const[note,setNote]=useState("");
       setPatientData(null); // Reset if no patient ID is entered
     }
   }, [patientId]);
-
-  // Submit form and send POST request
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   const payload = {
-  //     patient_id: patientId,
-  //     patient_name: patientData?.patient_name || "",
-  //     age: patientData?.age || "",
-  //     gender: patientData?.gender || "",
-  //     mobile_number: patientData?.mobile_number || "",
-  //     doctor_name: patientData?.doctor_name || "",
-  //     ward: patientData?.ward || "",
-  //     appointment_type: patientData?.appointment_type || "",
-
-  //     service_charges: store, // Array of { service, days, amount }
-
-  //     investigation_charges: {
-  //       from_date: investigationDates.from,
-  //       to_date: investigationDates.to,
-  //       amount: investigationCharges
-  //     },
-
-  //     pharmacy_charges: {
-  //       from_date: pharmacyDates.from,
-  //       to_date: pharmacyDates.to,
-  //       amount: pharmacyCharges
-  //     },
-
-  //     consultation_charges: {
-  //       visits: consultationCharges.visits,
-  //       amount_per_visit: consultationCharges.amountPerVisit
-  //     },
-
-  //     total_amount: parseFloat(calculateTotal()),
-  //     concession: parseFloat(concession),
-  //     final_amount: parseFloat(calculateFinalAmount()),
-
-  //     payment_method: "Cash", // Optional: bind to selected state if needed
-  //     due_on_receipt: true,   // Optional: bind to selected state if needed
-  //     notes: "",              // Optional: bind to notes state if you implement one
-  //   };
-
-  //   try {
-  //     const response = await axios.post('http://127.0.0.1:8000/invoice/create-invoice/', payload);
-  //     alert('Invoice created successfully!');
-  //     console.log('Invoice response:', response.data.data);
-  //   } catch (error) {
-  //     alert('Failed to create invoice');
-  //     console.error(error.response?.data || error.message);
-  //   }
-  // };
-
-
-
     const [isPaymentMethodDisabled, setIsPaymentMethodDisabled] = useState(false);
 
   const handlePaymentTermsChange = (e) => {
@@ -133,54 +63,56 @@ const[note,setNote]=useState("");
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const payload = {
-      patient: patientId,
-      due_on_receipt: dueOnReceipt, // hardcoded as per sample
-      payment_method: paymentMethod, // hardcoded for now, can be replaced with state
-      notes: note, // optional or bind to a state if you want dynamic notes
-      concession: concession.toFixed(2),
-
-      service_charges: store.map((item) => ({
-        service_name: item.service,
-        days: Number(item.days),
-        amount: Number(item.amount).toFixed(2),
-      })),
-
-      investigation_charges: {
-        from_date: investigationDates.from,
-        to_date: investigationDates.to,
-        amount: Number(investigationCharges).toFixed(2),
-      },
-
-      pharmacy_charges: {
-        from_date: pharmacyDates.from,
-        to_date: pharmacyDates.to,
-        amount: Number(pharmacyCharges).toFixed(2),
-      },
-
-      consultation_charges: {
-        no_of_visits: consultationCharges.visits,
-        amount_per_visit: Number(consultationCharges.amountPerVisit).toFixed(2),
-      },
-    };
-
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/invoice/create-invoice/",
-        payload
-      );
-      alert("Invoice created successfully!");
-      console.log("Invoice response:", response.data);
-      setPatientData(response.data.data);
-      setInvoiceData(response.data.data)
-      // setShowPrintModal(true);
-    } catch (error) {
-      alert("Failed to create invoice");
-      console.error(error.response?.data || error.message);
-    }
+  const payload = {
+    patient: patientId,
+    due_on_receipt: dueOnReceipt,
+    payment_method: paymentMethod,
+    notes: note,
+    concession: concession.toFixed(2),
+    service_charges: store.map((item) => ({
+      service_name: item.service,
+      days: Number(item.days),
+      amount: Number(item.amount).toFixed(2),
+    })),
+    investigation_charges: {
+      from_date: investigationDates.from,
+      to_date: investigationDates.to,
+      amount: Number(investigationCharges).toFixed(2),
+    },
+    pharmacy_charges: {
+      from_date: pharmacyDates.from,
+      to_date: pharmacyDates.to,
+      amount: Number(pharmacyCharges).toFixed(2),
+    },
+    consultation_charges: {
+      no_of_visits: consultationCharges.visits,
+      amount_per_visit: Number(consultationCharges.amountPerVisit).toFixed(2),
+    },
   };
+
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/invoice/create-invoice/",
+      payload
+    );
+
+    const invoice = response.data.data;  // Use the response data directly
+    setInvoiceData(invoice);             // Update invoiceData state
+    setPatientId(invoice?.invoice?.patient || "");  // Update patientId state safely
+
+    alert(response.data?.message || "Invoice created successfully!");
+
+    setShowPrintModal(false);  // Open print modal
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to create invoice. Please try again.";
+    alert(errorMessage);
+    console.error("Invoice creation error:", error.response?.data || error.message);
+  }
+};
+
 
   // Handle print modal open and close
   const handlePrintOpen = () => {
@@ -239,8 +171,6 @@ const[note,setNote]=useState("");
     return (calculateTotal() - concession).toFixed(2);
   };
 
-  const refresh = "The window should refresh after changing the patient ID in the Patient ID column"
-
   return (
     <>
       {show ? (
@@ -263,13 +193,23 @@ const[note,setNote]=useState("");
                 Print
               </button>
 
-              {showPrintModal && invoiceData && (
+              {/* {showPrintModal && invoiceData && (
                 <InvoicePrint
                   show={showPrintModal}
                   handlePrintClose={handlePrintClose}
                   invoiceData={invoiceData} // ✅ pass data
+                  patientId
                 />
-              )}
+              )} */}
+             {showPrintModal && invoiceData && (
+  <InvoicePrint
+    show={showPrintModal}
+    handlePrintClose={() => setShowPrintModal(false)}
+    invoiceData={invoiceData}                     // pass full invoice data
+    patientId={invoiceData.invoice?.patient || ""} // pass patientId safely
+  />
+)}
+
 
               <Button style={{ backgroundColor: "#002072", color: "white" }}>
                 <Icon icon="material-symbols-light:download" color="#ffffff" />{" "}
@@ -428,8 +368,8 @@ const[note,setNote]=useState("");
                   <h6>Other Charges</h6>
 
                   <p className={styles.subTitle}>Investigation Charges</p>
-                  <Row className="mb-2 col-sm-12">
-                    <Col className="col-sm-4">
+                  <Row className="mb-2">
+                    <Col>
                       <Form.Label>From</Form.Label>
                       <Form.Control
                         type="date"
@@ -442,7 +382,7 @@ const[note,setNote]=useState("");
                         }
                       />
                     </Col>
-                    <Col className="col-sm-4">
+                    <Col>
                       <Form.Label>To</Form.Label>
                       <Form.Control
                         type="date"
@@ -455,7 +395,7 @@ const[note,setNote]=useState("");
                         }
                       />
                     </Col>
-                    <Col className="col-sm-4">
+                    <Col>
                       <Form.Label>Amount</Form.Label>
                       <Form.Control
                         type="number"
@@ -469,7 +409,7 @@ const[note,setNote]=useState("");
 
                   <p className={styles.subTitle}>Pharmacy Charges</p>
                   <Row className="mb-2">
-                    <Col className="col-sm-4">
+                    <Col>
                       <Form.Label>From</Form.Label>
                       <Form.Control
                         type="date"
@@ -482,7 +422,7 @@ const[note,setNote]=useState("");
                         }
                       />
                     </Col>
-                    <Col className="col-sm-4">
+                    <Col>
                       <Form.Label>To</Form.Label>
                       <Form.Control
                         type="date"
@@ -495,7 +435,7 @@ const[note,setNote]=useState("");
                         }
                       />
                     </Col>
-                    <Col className="col-sm-4">
+                    <Col>
                       <Form.Label>Amount</Form.Label>
                       <Form.Control
                         type="number"
@@ -649,21 +589,21 @@ const[note,setNote]=useState("");
             </div>
 
             <Form.Group className="mb-3">
-          <Form.Label className={styles.formLabel}>Payment Terms</Form.Label>
-              <Form.Select
-                className={styles.formSelect}
-                value={dueOnReceipt}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setDueOnReceipt(value);
-                  setIsPaymentMethodDisabled(value === "yes");  // disable Payment Method if 'yes'
-                }}
-  >
-    <option value="">Due on Receipt</option>
-    <option value="yes">Yes</option>
-    <option value="no">No</option>
-  </Form.Select>
-</Form.Group>
+                    <Form.Label className={styles.formLabel}>Payment Terms</Form.Label>
+                    <Form.Select
+                      className={styles.formSelect}
+                      value={dueOnReceipt}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDueOnReceipt(value);
+                        setIsPaymentMethodDisabled(value === "yes");  // disable Payment Method if 'yes'
+                      }}
+                    >
+                      <option value="">Due on Receipt</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </Form.Select>
+          </Form.Group>
 
 
           <Form.Group>

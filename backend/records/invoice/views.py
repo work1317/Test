@@ -10,6 +10,7 @@ from django.db import transaction
 from .serializers import *
 from django.db.models import Q
 from doctors.models import DoctorAvailability
+from rest_framework.validators import ValidationError
 
 # Create your views here.
 
@@ -126,6 +127,7 @@ class InvoiceAPIView(APIView):
                     "final_total": round(final_total, 2)
                 }
             }
+
 
         except Exception as e:
             context["success"] = 0
