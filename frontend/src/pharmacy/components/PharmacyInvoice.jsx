@@ -1085,9 +1085,9 @@ const PharmacyInvoice = () => {
                     disabled={paymentTerms === "Yes"}
                   >
                     <option value="Cash">Cash</option>
-                    <option value="Debit/Credit Card">Debit/Credit Card</option>
+                    <option value="Debit/Credit">Debit/Credit</option>
                     <option value="UPI">UPI</option>
-                    <option value="">Multiple (Cash+Card), (Cash+UPI)</option>
+                    <option value="Multiple (Cash+Card), (Cash+UPI)">Multiple (Cash+Card), (Cash+UPI)</option>
                   </Form.Select>
                 </Form.Group>
               </Form>

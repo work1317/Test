@@ -45,9 +45,7 @@ INSTALLED_APPS = [
     'labs',
     'rest_framework',
     'corsheaders',
-    'notifications.apps.NotificationsConfig',
     'invoice',
-    'p_invoice',
     'dashboard',
 ]
 
