@@ -31,13 +31,14 @@ function DailyVital() {
                 console.error("Error fetching vitals:", error);
             }
         };
-   
-       
-        fetchVitals();
-
-        const interval =  setInterval(fetchVitals, 1000);
-
-        return () => clearInterval(interval)
+        fetchVitals()
+      const handleRefresh = () => fetchVitals(); // Refresh on event
+ 
+    window.addEventListener("refreshAddRecordModal", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshAddRecordModal", handleRefresh);
+    };
     }, []);
    
    

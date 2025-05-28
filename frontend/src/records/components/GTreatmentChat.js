@@ -34,9 +34,13 @@ function GTreatmentChat({ patient }) {
   }
     fecthingData();
 
-    const interval = setInterval(fecthingData, 1000);
-
-    return () => clearInterval(interval)
+    const handleRefresh = () => fecthingData(); // Refresh on event
+ 
+    window.addEventListener("refreshTreatmentChat", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshTreatmentChat", handleRefresh);
+    };
   }, [patient]);
 
   return (

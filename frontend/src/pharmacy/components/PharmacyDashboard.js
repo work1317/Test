@@ -35,6 +35,13 @@ function PharmacyDashboard() {
 
   useEffect(() => {
     fetchStats();
+     const handleRefresh = () => fetchStats(); // Refresh on event
+ 
+    window.addEventListener("refreshAddMedication", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshAddMedication", handleRefresh);
+    };
   }, []);
 
   // const hasFetched = useRef(false);

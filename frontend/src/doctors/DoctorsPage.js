@@ -31,7 +31,7 @@ const DoctorsPage = () => {
   const [totalDoctors, setTotalDoctors] = useState(0);
   const [totalPatients, setTotalPatients] = useState(0);
   const [totalExpertise, setTotalExpertise] = useState(0);
-  useEffect(() => {
+  
     const getDoctors = async () => {
       setLoading(true);
       try {
@@ -51,16 +51,9 @@ const DoctorsPage = () => {
       }
       setLoading(false);
     };
-    getDoctors();
-    const handleRefresh = () => {
-      getDoctors();
-    };
-
-    window.addEventListener("refreshAddDoctor", handleRefresh);
-
-    return () => {
-      window.removeEventListener("refreshAddDoctor", handleRefresh);
-    };
+   
+    useEffect(() => {
+     getDoctors();
   }, []);
 
   const handleSearch = (e) => setQuery(e.target.value);
@@ -109,6 +102,7 @@ const DoctorsPage = () => {
             <AddDoctor
               show={showModal2}
               handleClose={() => setShowModal2(false)}
+              refreshDoctor={getDoctors}
             />
           </div>
         </Col>

@@ -255,8 +255,7 @@ const TreatmentChat = ({ handleClose,patientId }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    
-  
+     window.dispatchEvent(new Event("refreshTreatmentChat"));
       console.log("Saved Medicines Response:", response.data);
       alert("Medicines saved successfully!");
       setMedicines([]);  // Clear the list after saving

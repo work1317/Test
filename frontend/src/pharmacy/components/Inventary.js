@@ -35,9 +35,13 @@ function Inventary({ onMedicationAdded }) {
     };
     fetchMedications();
 
-    const interval =  setInterval(fetchMedications, 1000);
-
-    return () =>  clearInterval(interval)
+    const handleRefresh = () => fetchMedications(); // Refresh on event
+ 
+    window.addEventListener("refreshAddMedication", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshAddMedication", handleRefresh);
+    };
   }, []);
 
   useEffect(() => {

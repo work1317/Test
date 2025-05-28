@@ -29,6 +29,8 @@ function AddSuppliers({ show, handleClose }) {
             });
             console.log('Response:', response.data);
             if (response.data.success === 1) {
+                window.dispatchEvent(new Event("refreshAddSuppliers"));
+                
                 alert('Supplier added successfully');
                 setSupplyData({ name: '', email: '', phone: '', products: '' }); // Reset form
                 handleClose(); // Close modal

@@ -130,6 +130,7 @@ const PainAssessment = ({ handleClose, patientId }) => {
 
       if (response.status === 200 || response.status === 201) {
         console.log("API Response:", response.data);
+        window.dispatchEvent(new Event("refreshPainAssessment"));
         alert(`Pain assessment for patient ${patientId} saved successfully!`);
         handleClose();
       } 

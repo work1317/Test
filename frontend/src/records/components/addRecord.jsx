@@ -143,6 +143,7 @@ function AddRecordModal({show,handleClose,patientId}) {
     try {
       const response = await api.post("/records/records/create/", payload);
       const data = response.data;
+      window.dispatchEvent(new Event("refreshAddRecordModal"));
   
       console.log("API RESPONSE:", data);
   

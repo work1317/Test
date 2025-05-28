@@ -164,10 +164,15 @@ const GPainAssesment = ({ patient }) => {
       }
     }
     fecthingData();
+     const handleRefresh = () => fecthingData(); // Refresh on event
+ 
+    window.addEventListener("refreshPainAssessment", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshPainAssessment", handleRefresh);
+    };
 
-    const interval = setInterval(fecthingData, 1000);
-
-    return () => clearInterval(interval)
+   
     }, [patient]);
   
     return (

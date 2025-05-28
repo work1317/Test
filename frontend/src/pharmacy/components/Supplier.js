@@ -33,6 +33,13 @@ function Supplier({ onViewAll }) {
 
   useEffect(() => {
     fetchSuppliers();
+     const handleRefresh = () => fetchSuppliers(); // Refresh on event
+ 
+    window.addEventListener("refreshAddSuppliers", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshAddSuppliers", handleRefresh);
+    };
   }, []);
 
   // Filter suppliers based on searchQuery

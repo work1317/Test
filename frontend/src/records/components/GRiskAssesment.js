@@ -23,10 +23,10 @@ const GRiskAssesment = ({ patient }) => {
     // Add more labels as needed...
   };
 
-  useEffect(() => {
+ const fetchRiskFactors = async () => {
     if (!patient?.patient_id) return;
 
-    const fetchRiskFactors = async () => {
+    
       try {
         const response = await api.get(
           `/records/get-multiple-risk-factors/${patient.patient_id}/`
@@ -48,11 +48,16 @@ const GRiskAssesment = ({ patient }) => {
       }
     };
 
+     useEffect(() => {
     fetchRiskFactors();
+    const handleRefresh = () => fetchRiskFactors(); // Refresh on event
+ 
+    window.addEventListener("refreshRiskAssessment ", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshRiskAssessment ", handleRefresh);
+    };
 
-    const interval =  setInterval(clearInterval);
-
-    return () => clearInterval(interval)
   }, [patient]);
 
   const renderCheckboxes = (factorKey, factorDataArray) => {

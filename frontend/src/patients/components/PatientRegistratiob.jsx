@@ -11,7 +11,7 @@ import {
 import api from "../../utils/axiosInstance";
 import PatientRegister from "../css/PatientRegistration.module.css";
 
-const PatientRegistration = ({ show, handleClose }) => {
+const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
   const [formData, setFormData] = useState({
     patient_name: "",
     doctor:"",
@@ -74,6 +74,7 @@ const PatientRegistration = ({ show, handleClose }) => {
       (response.status === 200 || response.status === 201) &&
       response.data.success === 1
     ) {
+      await refreshPatient()
       setUserDetails({
         patient_id: response.data.data.patient_details.patient_id,
         patient_name: response.data.data.patient_details.patient_name,

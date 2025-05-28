@@ -29,9 +29,13 @@ function GCarePlan({ patient }) {
     }
   }
   fecthingData()
-  const interval = setInterval(fecthingData, 1000)
-
-  return () =>  interval
+   const handleRefresh = () => fecthingData(); // Refresh on event
+ 
+    window.addEventListener("refreshCarePlan", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshCarePlan", handleRefresh);
+    };
   }, [patient]);
 
   if (errorMessage) {

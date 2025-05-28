@@ -27,7 +27,7 @@ const ProgressNotes = ({ handleClose,patientId }) => {
       { headers: { "Content-Type": "application/json" } }
      
     );
-
+    window.dispatchEvent(new Event("refreshProgressNotes"));
       console.log("API Response:", response.data);
       alert("Progress note saved successfully!");
       handleClose();

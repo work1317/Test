@@ -35,6 +35,7 @@ const CarePlan= ({ show, handleClose,patientId })  =>{
          { headers: { "Content-Type": "application/json" }},
          
       );
+       window.dispatchEvent(new Event("refreshCarePlan"));
       
       console.log('Response:', response.data);
       alert('Form submitted successfully!');

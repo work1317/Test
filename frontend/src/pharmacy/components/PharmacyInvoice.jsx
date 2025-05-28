@@ -18,7 +18,7 @@ const PharmacyInvoice = () => {
   const [showRecentInvoices, setShowRecentInvoices] = useState(false);
   const [discount, setDiscount] = useState(5);
   const [tax, setTax] = useState(5);
-  const [paymentTerms, setPaymentTerms] = useState("No");
+  const [paymentTerms, setPaymentTerms] = useState();
 
 
 
@@ -360,175 +360,7 @@ const PharmacyInvoice = () => {
     setInvoiceData({ ...invoiceData, items: updatedItems });
   };
 
-  // const handleSaveInvoice = async () => {
-  //   const discountValue = parseFloat(discount || 0);
-  //   const taxValue = parseFloat(tax || 0);
-
-  //   const payload = {
-  //     patient_id: selectedValue === "yes" ? null : patientDetails.patient_id,
-  //     patient_name: patientDetails.patient_name,
-  //     age: patientDetails.age,
-  //     gender: patientDetails.gender,
-  //     doctor_name: patientDetails.doctor_name,
-  //     guest: selectedValue === "yes",
-  //     typeof_transaction: invoiceData.typeof_transaction,
-  //     description: invoiceData.description,
-  //     paid_amount: invoiceData.summary.total_paid_amount,
-  //     appointment_type: "Outpatient",
-  //     items: invoiceData.items.map((item) => {
-  //       const amount = parseFloat(item.amount || 0);
-  //       const discountAmount = (amount * discountValue) / 100;
-  //       const netAmount = amount - discountAmount;
-  //       const taxAmount = (netAmount * taxValue) / 100;
-  //       const finalAmount = netAmount + taxAmount;
-
-  //       return {
-  //         medication_name: item.medication_name,
-  //         quantity: parseInt(item.quantity, 10),
-  //         mrp: parseFloat(item.mrp || 0),
-  //         expiry_date: item.expiry_date,
-  //         amount: amount.toFixed(2),
-  //         discount_percentage: discountValue.toFixed(2),
-  //         tax_percentage: taxValue.toFixed(2),
-  //         discount_amount: discountAmount.toFixed(2),
-  //         tax_amount: taxAmount.toFixed(2),
-  //         net_amount: netAmount.toFixed(2),
-  //         final_amount: finalAmount.toFixed(2),
-  //       };
-  //     }),
-  //   };
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://127.0.0.1:8000/p_invoice/create-invoice-with-items/",
-  //       payload,
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     );
-
-  //     if (response?.data?.success) {
-  //       setSuccessMessage(response.data.message || "Invoice created!");
-  //       console.log("✅ Invoice saved:", response.data);
-  //     } else {
-  //       alert(" Failed to create invoice.");
-  //       console.log("Response error:", response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       " Error creating invoice:",
-  //       error.response?.data || error.message
-  //     );
-  //   }
-  // };
-
-  //   const handleSaveInvoice = async () => {
-  //   const discountValue = parseFloat(discount || 0);
-  //   const taxValue = parseFloat(tax || 0);
-
-  //   const payload = {
-  //     patient_id: selectedValue === "yes" ? null : patientDetails.patient_id,
-  //     patient_name: patientDetails.patient_name,
-  //     age: patientDetails.age,
-  //     gender: patientDetails.gender,
-  //     doctor_name: patientDetails.doctor_name,
-  //     guest: selectedValue === "yes",
-  //     typeof_transaction: invoiceData.typeof_transaction,
-  //     description: invoiceData.description,
-  //     paid_amount: invoiceData.summary.total_paid_amount,
-  //     appointment_type: "Outpatient",
-  //     items: invoiceData.items.map((item) => {
-  //       const amount = parseFloat(item.amount || 0);
-  //       const discountAmount = (amount * discountValue) / 100;
-  //       const netAmount = amount - discountAmount;
-  //       const taxAmount = (netAmount * taxValue) / 100;
-  //       const finalAmount = netAmount + taxAmount;
-
-  //       return {
-  //         medication_name: item.medication_name,
-  //         quantity: parseInt(item.quantity, 10),
-  //         mrp: parseFloat(item.mrp || 0),
-  //         expiry_date: item.expiry_date,
-  //         amount: amount.toFixed(2),
-  //         discount_percentage: discountValue.toFixed(2),
-  //         tax_percentage: taxValue.toFixed(2),
-  //         discount_amount: discountAmount.toFixed(2),
-  //         tax_amount: taxAmount.toFixed(2),
-  //         net_amount: netAmount.toFixed(2),
-  //         final_amount: finalAmount.toFixed(2),
-  //       };
-  //     }),
-  //   };
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://127.0.0.1:8000/p_invoice/create-invoice-with-items/",
-  //       payload,
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     );
-
-  //     if (response?.data?.success) {
-  //       setSuccessMessage(response.data.message || "Invoice created!");
-  //       console.log("✅ Invoice saved:", response.data);
-
-  //       // Extract the new invoice ID from the response
-  //       const newInvoiceId = response.data.invoice_id || response.data.data?.id;
-
-  //       if (newInvoiceId) {
-  //         // Set the invoice ID and open print modal
-  //         setInvoiceId(newInvoiceId);
-
-  //         // Reset form for new entry (optional)
-  //         setInvoiceData({
-  //           gst_no: "",
-  //           id: "",
-  //           typeof_transaction: "",
-  //           description: "",
-  //           summary: {
-  //             net_amount: 0,
-  //             paid_amount: 0,
-  //             final_amount: 0,
-  //             discount_amount: 0,
-  //           },
-  //           items: [
-  //             {
-  //               medication_name: "",
-  //               batch_no: "",
-  //               expiry_date: "",
-  //               mrp: "",
-  //               unit_price: 0,
-  //               quantity: "",
-  //               amount: 0,
-  //             },
-  //           ],
-  //         });
-
-  //         setPatientDetails({
-  //           patient_id: "",
-  //           patient_name: "",
-  //           age: "",
-  //           gender: "",
-  //           doctor_name: "",
-  //           guest: "No",
-  //         });
-
-  //         setSelectedValue("no");
-  //       }
-  //     } else {
-  //       alert("Failed to create invoice.");
-  //       console.log("Response error:", response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       "Error creating invoice:",
-  //       error.response?.data || error.message
-  //     );
-  //     alert("An error occurred while creating the invoice.");
-  //   }
-  // };
-
+  
   const handleSaveInvoice = async () => {
     const discountValue = parseFloat(discount || 0);
     const taxValue = parseFloat(tax || 0);
@@ -644,18 +476,18 @@ const PharmacyInvoice = () => {
   };
 
 
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => {
-        console.log("getInvoice", getinvoice);
-        setSuccessMessage("");
-        // setShowModal(true)
-      }, 500); // 3000ms = 3 seconds
+  // useEffect(() => {
+  //   if (successMessage) {
+  //     const timer = setTimeout(() => {
+  //       console.log("getInvoice", getinvoice);
+  //       setSuccessMessage("");
+  //       // setShowModal(true)
+  //     }, 500); // 3000ms = 3 seconds
 
-      // Cleanup the timer on unmount or when message changes
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
+  //     // Cleanup the timer on unmount or when message changes
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [successMessage]);
 
   const headerStyle = { backgroundColor: "#002072", color: "white" };
   return (
@@ -1070,6 +902,7 @@ const PharmacyInvoice = () => {
                     value={paymentTerms}
                     onChange={(e) => setPaymentTerms(e.target.value)}
                   >
+                    <option value="Select payment terms" selected>Select Payment Terms </option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </Form.Select>
@@ -1087,6 +920,7 @@ const PharmacyInvoice = () => {
                     }
                     disabled={paymentTerms === "Yes"}
                   >
+                    <option value= "select payment metho">Select Pyment Methos</option>
                     <option value="Cash">Cash</option>
                     <option value="Debit/Credit">Debit/Credit</option>
                     <option value="UPI">UPI</option>

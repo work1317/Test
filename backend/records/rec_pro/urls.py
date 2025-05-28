@@ -36,7 +36,7 @@ urlpatterns = [
     path('pharmacy/',include('pharmacy.urls')),
     path('labs/',include('labs.urls')),
     path('invoice/',include('invoice.urls')),
-    # path('p_invoice/',include('p_invoice.urls')),
+    path('p_invoice/',include('p_invoice.urls')),
 ]
 
 if settings.DEBUG:

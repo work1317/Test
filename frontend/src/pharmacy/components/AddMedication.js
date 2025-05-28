@@ -46,6 +46,7 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
         console.log(response)
       if (response.data.success === 1) {
         alert("Medication successfully added!");
+        window.dispatchEvent(new Event("refreshAddMedication"));
         if (onMedicationAdded) {
           onMedicationAdded(); // This will re-fetch stats in PharmacyDashboard
         }

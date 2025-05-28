@@ -28,6 +28,13 @@ function RecordPrescription() {
     }
   }
   fecthingData()
+   const handleRefresh = () => fecthingData(); // Refresh on event
+ 
+    window.addEventListener("refreshAddRecordModal", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshAddRecordModal", handleRefresh);
+    };
   }, [])
  
  

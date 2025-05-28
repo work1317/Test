@@ -34,8 +34,13 @@ function GNursingNotes({ patient }) {
   }
   fecthingData();
 
-  const interval = setTimeout(fecthingData, 1000);
-  return () => clearTimeout(interval)
+  const handleRefresh = () => fecthingData(); // Refresh on event
+ 
+    window.addEventListener("refreshNursingNote", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshNursingNote", handleRefresh);
+    };
   }, [patient]);
 
   return (

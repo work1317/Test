@@ -10,6 +10,7 @@ function AppointmentDetailsModal({ show, handleClose, appointmentId }) {
   const [showRescheduleModal, setShowRescheduleModal] = useState(false); // 👈 New state
 
   useEffect(() => {
+    
     if (show && appointmentId) {
       api.get(`/appointments/get-appointments/${appointmentId}/`)
         .then(response => {
@@ -19,7 +20,9 @@ function AppointmentDetailsModal({ show, handleClose, appointmentId }) {
           console.error('Error fetching appointment details:', error);
         });
     }
+
   }, [show, appointmentId]);
+  
 
   const handleCancelAppointment = () => {
     if (window.confirm("Are you sure you want to cancel this appointment?")) {

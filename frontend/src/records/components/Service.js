@@ -77,6 +77,13 @@ function Service() {
             }
         };
         fetching();
+         const handleRefresh = () => fetching(); // Refresh on event
+ 
+    window.addEventListener("refreshAddRecordModal", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshAddRecordModal", handleRefresh);
+    };
     }, [selectedPatient.patient_id]);
   return (
     <div>

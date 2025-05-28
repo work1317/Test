@@ -83,6 +83,7 @@ const InitialAssessment = ({ handleClose, patientId }) => {
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
+      window.dispatchEvent(new Event("refreshInitialAssessment"));
       console.log("Response:", response.data);
       alert("Form submitted successfully!");
       handleClose();

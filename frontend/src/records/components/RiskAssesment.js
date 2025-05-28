@@ -206,19 +206,19 @@ const RiskAssessment = ({ handleClose, patientId }) => {
       value: 1,
       labels: {
         "Minor Surgery": "minor_surgery",
-        "Age 40-60 yrs": "age_40_60_yrs",
-        "Pregnancy or Post Partum (<1 month)": "pregnancy_or_post_partum",
+        "Age 40-60 yrs": "age_40_to_60_yrs",
+        "Pregnancy or Post Partum (<1 month)": "pregnancy_or_post_martum",
         "Varicose Veins": "varicose_veins",
         "Inflammatory Bowel Disease": "inflammatory_bowel_disease",
         "Obesity (>20% of Ideal BW)": "obesity",
         "Combined Oral": "combined_oral",
-        "Contraceptives/HRT": "contraceptives_hrt"
+        "Contraceptives/HRT": "contraceptives_or_HRT"
       },
     },
     RiskFactor2: {
       value: 2,
       labels: {
-        "Age over 60 years": "age_over_60_years",
+        "Age over 60 years": "age_over_60_yrs",
         "Malignancy": "malignancy",
         "Major surgery": "major_surgery",
         "Immobilising Plaster Cast": "immobilising_plaster_cast",
@@ -231,17 +231,17 @@ const RiskAssessment = ({ handleClose, patientId }) => {
     RiskFactor3: {
       value: 3,
       labels: {
-        "History of DVT/PE": "history_of_dvt_pe",
+        "History of DVT/PE": "history_of_DVT_or_PE",
         "Myocardial Infarction": "myocardial_infarction",
         "Congestive Heart Failure": "congestive_heart_failure",
-        "Severe sepsis/Infection": "severe_sepsis_infection",
-        "Factor V Leiden/Activated": "factor_v_leiden_activated",
-        "Protein C Resistance": "protein_c_resistance",
-        "Antithrombin III Deficiency": "antithrombin_iii_deficiency",
-        "Proteins C & S Deficiency": "proteins_c_and_s_deficiency",
+        "Severe sepsis/Infection": "severe_sepsis_or_infection",
+        "Factor V Leiden/Activated": "factor_V_leiden_or_activated",
+        "Protein C Resistance": "protein_C_resistance",
+        "Antithrombin III Deficiency": "antithrombin_III_deficiency",
+        "Proteins C & S Deficiency": "proteins_C_and_S_deficiency",
         "Dysfibrinogenemia": "dysfibrinogenemia",
         "Homocysteinemia": "homocysteinemia",
-        "20210A Prothrombin Mutation": "prothrombin_20210a_mutation",
+        "20210A Prothrombin Mutation": "prothrombin_mutation_20210A",
         "Lupus Anticoagulant": "lupus_anticoagulant",
         "Antiphospholipid Antibodies": "antiphospholipid_antibodies",
         "Myeloproliferative Disorders": "myeloproliferative_disorders"
@@ -307,6 +307,7 @@ const RiskAssessment = ({ handleClose, patientId }) => {
 
       const data = response.data;
       if (response.status === 200 && data.success === 1) {
+        window.dispatchEvent(new Event("refreshRiskAssessment"));
         console.log("Saved successfully:", data);
         handleClose();
       } else {

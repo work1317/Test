@@ -23,7 +23,7 @@ function PatientManagement() {
   const [patients, setPatients] = useState([]);
   const [counts, setCounts] = useState({});
 
-  useEffect(() => {
+  
  
 
   const fetchPatients = async () => {
@@ -43,6 +43,7 @@ function PatientManagement() {
     }
     setLoading(false);
   };
+  useEffect(() => {
   fetchPatients();
 }, []);
 
@@ -90,7 +91,8 @@ function PatientManagement() {
           </button>
           <PatientRegistration
             show={showModal}
-            handleClose={handleClose}/>
+            handleClose={handleClose}
+            refreshPatient={fetchPatients}/>
           {/* <Icon
             icon="fluent-mdl2:time-entry"
             width={24}

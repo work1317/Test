@@ -22,6 +22,7 @@ const NursingNote = ({ handleClose, patientId }) => {
         { patient: patientId, description: notes },
         { headers: { "Content-Type": "application/json" } }
       );
+       window.dispatchEvent(new Event("refreshNursingNote"));
       console.log("API Response:", response.data);
       alert("Nursing note saved successfully!");
       handleClose();

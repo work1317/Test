@@ -31,10 +31,18 @@ function GProgressNotes({ patient }) {
           setProgress([]);
         });
     }
+    
   }
-  const interval = setInterval(fectgingData, 1000);
   
-  return () =>  clearInterval(interval)
+  fectgingData()
+
+    const handleRefresh = () => fectgingData(); // Refresh on event
+ 
+    window.addEventListener("refreshNursingNote", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshNursingNote", handleRefresh);
+    };
   }, [patient]);
 
   return (

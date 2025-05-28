@@ -84,16 +84,20 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
       <Modal.Body ref={printRef}>
         {getinvoice ? (
           <>
-            <Row className="align-items-center">
-              <Col xs="auto" md={3}>
-                <img
-                  src={logo}
-                  alt="Hospital Logo"
-                  className="ms-4"
-                  style={{ height: "120px" }}
-                />
-              </Col>
-              <Col md={9}>
+         <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <img
+                src={logo}
+                alt="Hospital Logo"
+                style={{ height: "120px", marginLeft: "20px" }}
+              />
+              <div>
                 <h2 className="m-0" style={{ color: "#A34C51" }}>
                   Sai Teja Multi Speciality Hospital
                 </h2>
@@ -101,20 +105,20 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                   (A UNIT OF SAVITHA HEALTH CARE PVT.LTD)
                 </h5>
                 <p className="mb-0">
-                  Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035.{" "}
-                  <br />
+                  Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035. <br />
                   Ph: 040 4006 2725, +91 84840 19791
                 </p>
-              </Col>
-            </Row>
+              </div>
+            </div>
+ 
  
             <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
  
             <h4 className="mb-3">Invoice Details</h4>
             <Row className="mb-2">
               {/* <Col>DL.No: {getinvoice.bill_no}</Col> */}
-              <Col>GST No: 36GXDPS888251ZH</Col>
-              <Col>DL NO: 135/RR2/AP/2010 </Col>
+              <Col>GST No: GST0123456</Col>
+              <Col>DL NO: GST0123456 </Col>
             </Row>
             <Row className="mb-3">
               <Col>Bill Date: {getinvoice.Bill_Date}</Col>

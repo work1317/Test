@@ -33,9 +33,14 @@ function GInitialAssesment({ patient }) {
   }
   fecthingData()
 
-  const interval = setInterval(fecthingData, 1000);
 
-  return () => clearInterval(interval)
+    const handleRefresh = () => fecthingData(); // Refresh on event
+ 
+    window.addEventListener("refreshInitialAssessment", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshInitialAssessment", handleRefresh);
+    };
   }, [patient]);
 
   if (message && !assessment) {

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button, Form, Modal, Row, Col, Dropdown,Alert } from "react-bootstrap";
 import api from "../../utils/axiosInstance";
 
-const AddDoctor = ({ show, handleClose }) => {
+const AddDoctor = ({ show, handleClose, refreshDoctor }) => {
   const [formData, setFormData] = useState({
     d_name: "",
     d_department: "",
@@ -54,6 +54,7 @@ const AddDoctor = ({ show, handleClose }) => {
         window.dispatchEvent(new Event('refreshAddDoctor'))
         alert("Doctor added")
         // Do success handling like closing modal or resetting form
+        await refreshDoctor()
         handleClose(); 
 
       } 
