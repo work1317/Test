@@ -27,7 +27,7 @@ function Notifications() {
   });
   const [showPatientModal, setShowPatientModal] = useState(false); // ✅ Modal state
  
-  const notificationsPerPage = 15;
+  const notificationsPerPage = 10;
  
   // const [visibleCount, setVisibleCount] = useState({
   //   all: 3,

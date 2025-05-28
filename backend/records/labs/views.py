@@ -9,6 +9,7 @@ from core.exceptions import SerializerError
 from datetime import datetime
 import os
 from datetime import date
+from rest_framework.parsers import MultiPartParser, FormParser
 
 # Create the views here
 
@@ -111,6 +112,7 @@ class LabInvoiceDetailAPIView(APIView):
 
 
 class LabTestCreateAPIView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
     def post(self, request):
         context = {
             "success": 1,
@@ -154,19 +156,29 @@ class LabTestCreateAPIView(APIView):
         return Response(context)
 
 
+
+
 class LabTestListAPIView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
     def get(self, request):
         tests = models.LabTest.objects.select_related('patient').all()
         simplified_data = []
 
         for test in tests:
+            attachment_url = (
+                request.build_absolute_uri(test.upload.url).rstrip('/')
+                if test.upload else None
+            )
+
             simplified_data.append({
                 "patient_name": test.patient.patient_name,
                 "test_name": test.requested_test,
                 "date": test.request_date.strftime("%Y-%m-%d"),
                 "status": test.status,
                 "action": test.id,
-                "patient_id": test.patient.patient_id 
+                "patient_id": test.patient.patient_id,
+                "result_download_url": attachment_url
             })
 
         return Response({

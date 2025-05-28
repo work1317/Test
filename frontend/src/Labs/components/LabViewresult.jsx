@@ -7,16 +7,43 @@ import { forms } from "./Labtest";
 import api from "../../utils/axiosInstance";
 
 function LabViewresult({ handlerClose, selectedResult, selectForm }) {
-  const handleDownload = async () => {
-    const url = api.get(`labs/labtests_download/${selectForm.action}/`);
-    console.log(url);
-    const link = document.createElement('a');
-    link.href = url;
+  // const handleDownload = async () => {
+  //   const url = api.get(`labs/labtests_download/${selectForm.action}/`);
+  //   console.log(url);
+  //   const link = document.createElement('a');
+  //   link.href = url;
   
 
-    link.download = 'labtest_image.jpg'; 
+  //   link.download = 'labtest_image.jpg'; 
+  //   link.click();
+  // };
+
+  const handleDownload = async () => {
+  try {
+    const response = await api.get(`labs/labtests_download/${selectForm.action}/`, {
+      responseType: 'blob', // Important to get image data correctly
+    });
+
+    // Create a Blob from the image response
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+
+    // Create a temporary link element
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'labtest_image.jpg'); // File name
+
+    // Trigger the download
+    document.body.appendChild(link);
     link.click();
-  };
+
+    // Clean up
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error downloading the image:', error);
+  }
+};
+
   return (
     <div>
       <div className={styles.modalOverlay}>

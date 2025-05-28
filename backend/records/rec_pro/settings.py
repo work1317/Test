@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'invoice',
     'dashboard',
+    'p_invoice',
 ]
 
 MIDDLEWARE = [

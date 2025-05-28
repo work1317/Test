@@ -27,6 +27,9 @@ import DailyVital from "./DailyVital";
 import RecordPrescription from './RecordPrescription'
 import Service from './Service'
 import AllRecord from "./AllRecord";
+import LabResult from './LabResult'
+import RecordImaging from "./RecordImaging";
+
 const tabData = [
   { name: "All Records", icon: FileText, tab: "Records" },
   { name: "Lab Results", icon: Microscope, tab: "lab" },
@@ -60,6 +63,7 @@ const RecordLab = () => {
   const [filter, setFilter] = useState("all");
   const [patients, setPatients] = useState([]);
   const [records, setRecords] = useState([]);
+  const [transformData, setTransFormData] = useState([]);
  
   const recordTypeMap = {
     Records: "all",
@@ -69,6 +73,25 @@ const RecordLab = () => {
     vitals: "vitals",
     services: "services_procedures",
   };
+
+
+  useEffect(() => {
+  const fectingData = async () => {
+    try {
+      const response = await api.get(
+        "labs/lab_tests/"
+      );
+      if (response.data.success) {
+        console.log(response.data.data);
+        setTransFormData(response.data.data);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+  fectingData();
+ 
+}, []);
  
   useEffect(() => {
     const fetchPatients = async () => {
@@ -153,7 +176,7 @@ const RecordLab = () => {
  
   const handlePatientSelect = (patient) => {
     setSelectedPatient(patient);
-    setActiveTab("Records"); // Only default the main tab, not notes
+     // Only default the main tab, not notes
   };
  
   return (
@@ -330,12 +353,17 @@ const RecordLab = () => {
                   <doctors.Provider value={{ selectedPatient}}>
                     <DailyVital  />
                   </doctors.Provider> }
-                  {/* {activeTab === "lab" && <LabResult />} */}
+                  {activeTab === "lab" && <doctors.Provider value={{selectedPatient}}>
+                  <LabResult transformData={transformData} />
+                  </doctors.Provider>}
                   {activeTab === "prescription" &&
                   <doctors.Provider value={{ selectedPatient}}>
                     <RecordPrescription />
                   </doctors.Provider>}
-                  {/* {activeTab === "Imaging" && <RecordImaging />} */}
+                  {activeTab === "Imaging" &&
+                  <doctors.Provider value={{selectedPatient}}>
+                   <RecordImaging transformData={transformData} />
+                   </doctors.Provider>}
                   {activeTab === "Records" &&
                     <doctors.Provider value={{selectedPatient}}>
                       <AllRecord activeTab={activeTab}  />

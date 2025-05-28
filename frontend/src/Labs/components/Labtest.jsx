@@ -94,9 +94,10 @@ function Labtest() {
         // console.log("Fetched Data:", response.data.data);
         const NewsData = response.data.data;
         setSelectResult(NewsData);
+
         
 
-        // console.log("Data set to state:", selectedResult);
+        console.log("Data set to state:", selectedResult);
       }
     } catch (err) {
       console.error("Error fetching lab test:", err);
@@ -128,6 +129,7 @@ function Labtest() {
     try {
       const response = await api.get("labs/lab_tests/");
       setFormObj(response.data.data);
+      console.log(response.data.data)
     } catch (error) {
       console.log("Error fetching lab tests:", error);
     }

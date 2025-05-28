@@ -20,7 +20,7 @@ const PharmacyInvoice = () => {
   const [tax, setTax] = useState(5);
   const [paymentTerms, setPaymentTerms] = useState("No");
 
-  
+
 
   const [suggestions, setSuggestions] = useState([]);
   const [activeRowIndex, setActiveRowIndex] = useState(null);
@@ -86,7 +86,7 @@ const PharmacyInvoice = () => {
     setShowRecentInvoices(!showRecentInvoices);
   };
 
-  const handleItemChange = async (index, field, value) => {};
+  const handleItemChange = async (index, field, value) => { };
 
   const [selectedValue, setSelectedValue] = useState("no");
   //  const [guestString, setGuestString] = useState("No");
@@ -138,7 +138,7 @@ const PharmacyInvoice = () => {
   const deleteMedicineRow = (index) => {
     setInvoiceData((prevData) => {
       const updatedItems = [...prevData.items];
-      updatedItems.splice(index, 1); // Remove item at the given index
+      updatedItems.splice(index, 1); // remove row at index
 
       return {
         ...prevData,
@@ -147,7 +147,6 @@ const PharmacyInvoice = () => {
       };
     });
   };
-
   useEffect(() => {
     setInvoiceData((prevData) => ({
       ...prevData,
@@ -530,119 +529,119 @@ const PharmacyInvoice = () => {
   //   }
   // };
 
- const handleSaveInvoice = async () => {
-  const discountValue = parseFloat(discount || 0);
-  const taxValue = parseFloat(tax || 0);
+  const handleSaveInvoice = async () => {
+    const discountValue = parseFloat(discount || 0);
+    const taxValue = parseFloat(tax || 0);
 
-  const payload = {
-    patient_id: selectedValue === "yes" ? null : patientDetails.patient_id,
-    patient_name: patientDetails.patient_name,
-    age: patientDetails.age,
-    gender: patientDetails.gender,
-    doctor_name: patientDetails.doctor_name,
-    guest: selectedValue === "yes",
-    typeof_transaction: invoiceData.typeof_transaction,
-    description: invoiceData.description,
-    paid_amount: invoiceData.summary.total_paid_amount,
-    appointment_type: "Outpatient",
-    items: invoiceData.items.map((item) => {
-      const amount = parseFloat(item.amount || 0);
-      const discountAmount = (amount * discountValue) / 100;
-      const netAmount = amount - discountAmount;
-      const taxAmount = (netAmount * taxValue) / 100;
-      const finalAmount = netAmount + taxAmount;
+    const payload = {
+      patient_id: selectedValue === "yes" ? null : patientDetails.patient_id,
+      patient_name: patientDetails.patient_name,
+      age: patientDetails.age,
+      gender: patientDetails.gender,
+      doctor_name: patientDetails.doctor_name,
+      guest: selectedValue === "yes",
+      typeof_transaction: invoiceData.typeof_transaction,
+      description: invoiceData.description,
+      paid_amount: invoiceData.summary.total_paid_amount,
+      appointment_type: "Outpatient",
+      items: invoiceData.items.map((item) => {
+        const amount = parseFloat(item.amount || 0);
+        const discountAmount = (amount * discountValue) / 100;
+        const netAmount = amount - discountAmount;
+        const taxAmount = (netAmount * taxValue) / 100;
+        const finalAmount = netAmount + taxAmount;
 
-      return {
-        medication_name: item.medication_name,
-        quantity: parseInt(item.quantity, 10),
-        mrp: parseFloat(item.mrp || 0),
-        expiry_date: item.expiry_date,
-        amount: amount.toFixed(2),
-        discount_percentage: discountValue.toFixed(2),
-        tax_percentage: taxValue.toFixed(2),
-        discount_amount: discountAmount.toFixed(2),
-        tax_amount: taxAmount.toFixed(2),
-        net_amount: netAmount.toFixed(2),
-        final_amount: finalAmount.toFixed(2),
-      };
-    }),
-  };
+        return {
+          medication_name: item.medication_name,
+          quantity: parseInt(item.quantity, 10),
+          mrp: parseFloat(item.mrp || 0),
+          expiry_date: item.expiry_date,
+          amount: amount.toFixed(2),
+          discount_percentage: discountValue.toFixed(2),
+          tax_percentage: taxValue.toFixed(2),
+          discount_amount: discountAmount.toFixed(2),
+          tax_amount: taxAmount.toFixed(2),
+          net_amount: netAmount.toFixed(2),
+          final_amount: finalAmount.toFixed(2),
+        };
+      }),
+    };
 
-  try {
-    const response = await api.post(
-      "p_invoice/create-invoice-with-items/",
-      payload,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    try {
+      const response = await api.post(
+        "p_invoice/create-invoice-with-items/",
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-    if (response?.data?.success) {
-      setSuccessMessage(response.data.message || "Invoice created!");
-      window.dispatchEvent(new Event("refreshPharmacyInvoice"));
-      console.log("✅ Invoice saved:", response.data);
+      if (response?.data?.success) {
+        setSuccessMessage(response.data.message || "Invoice created!");
+        window.dispatchEvent(new Event("refreshPharmacyInvoice"));
+        console.log("✅ Invoice saved:", response.data);
 
-      // ✅ Extract fields safely
-      const newInvoiceId = response.data.invoice_id || response.data.data?.id;
-      const BillNo = response.data.Bill_No || response.data.data?.Bill_No;
-      const BillDate = response.data.Bill_Date || response.data.data?.Bill_Date;
+        // ✅ Extract fields safely
+        const newInvoiceId = response.data.invoice_id || response.data.data?.id;
+        const BillNo = response.data.Bill_No || response.data.data?.Bill_No;
+        const BillDate = response.data.Bill_Date || response.data.data?.Bill_Date;
 
-      // ✅ Set invoice data including bill details
-      setGetInvoice({
-        ...payload,
-        invoice_id: newInvoiceId,
-        Bill_No: BillNo,
-        Bill_Date: BillDate,
-      });
+        // ✅ Set invoice data including bill details
+        setGetInvoice({
+          ...payload,
+          invoice_id: newInvoiceId,
+          Bill_No: BillNo,
+          Bill_Date: BillDate,
+        });
 
-      if (newInvoiceId) {
-        setInvoiceId(newInvoiceId);
+        if (newInvoiceId) {
+          setInvoiceId(newInvoiceId);
 
-        // Reset form (optional)
-        setInvoiceData({
-          gst_no: "",
-          id: "",
-          typeof_transaction: "",
-          description: "",
-          summary: {
-            net_amount: 0,
-            paid_amount: 0,
-            final_amount: 0,
-            discount_amount: 0,
-          },
-          items: [
-            {
-              medication_name: "",
-              batch_no: "",
-              expiry_date: "",
-              mrp: "",
-              unit_price: 0,
-              quantity: "",
-              amount: 0,
+          // Reset form (optional)
+          setInvoiceData({
+            gst_no: "",
+            id: "",
+            typeof_transaction: "",
+            description: "",
+            summary: {
+              net_amount: 0,
+              paid_amount: 0,
+              final_amount: 0,
+              discount_amount: 0,
             },
-          ],
-        });
+            items: [
+              {
+                medication_name: "",
+                batch_no: "",
+                expiry_date: "",
+                mrp: "",
+                unit_price: 0,
+                quantity: "",
+                amount: 0,
+              },
+            ],
+          });
 
-        setPatientDetails({
-          patient_id: "",
-          patient_name: "",
-          age: "",
-          gender: "",
-          doctor_name: "",
-          guest: "No",
-        });
+          setPatientDetails({
+            patient_id: "",
+            patient_name: "",
+            age: "",
+            gender: "",
+            doctor_name: "",
+            guest: "No",
+          });
 
-        setSelectedValue("no");
+          setSelectedValue("no");
+        }
+      } else {
+        alert("Failed to create invoice.");
+        console.log("Response error:", response.data);
       }
-    } else {
-      alert("Failed to create invoice.");
-      console.log("Response error:", response.data);
+    } catch (error) {
+      console.error("Error creating invoice:", error.response?.data || error.message);
+      alert("An error occurred while creating the invoice.");
     }
-  } catch (error) {
-    console.error("Error creating invoice:", error.response?.data || error.message);
-    alert("An error occurred while creating the invoice.");
-  }
-};
+  };
 
 
   useEffect(() => {
@@ -715,10 +714,10 @@ const PharmacyInvoice = () => {
                 show={showModal}
                 onClose={() => setShowModal(false)}
               />
-              <Button style={headerStyle}>
+              {/* <Button style={headerStyle}>
                 <Icon icon="material-symbols-light:download" className="mb-1" />{" "}
                 Download PDF
-              </Button>
+              </Button> */}
             </>
           )}
         </Col>
@@ -744,7 +743,7 @@ const PharmacyInvoice = () => {
                     type="text"
                     name="gst_no"
                     value={invoiceData.gst_no}
-                    placeholder="INV001"
+                    placeholder="36GXDPS888251ZH"
                     className="w-50 text-black"
                     readOnly
                   />
@@ -755,7 +754,7 @@ const PharmacyInvoice = () => {
                     type="text"
                     name="gst_no"
                     value={invoiceData.gst_no}
-                    placeholder="INV001"
+                    placeholder="135/RR2/AP/2010"
                     className="w-50 text-black"
                     readOnly
                   />
@@ -907,7 +906,11 @@ const PharmacyInvoice = () => {
                   <Button variant="secondary" onClick={addMedicineRow}>
                     + Add Medicine
                   </Button>
-                  <Button variant="danger" onClick={deleteMedicineRow}>
+                  <Button
+                    variant="danger"
+                    onClick={() => deleteMedicineRow(invoiceData.items.length - 1)}
+                    disabled={invoiceData.items.length === 0} // Optional: disables button if no rows
+                  >
                     Delete
                   </Button>
                 </div>

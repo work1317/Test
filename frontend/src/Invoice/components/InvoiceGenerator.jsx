@@ -212,10 +212,10 @@ import api from "../../utils/axiosInstance";
 )}
 
 
-              <Button style={{ backgroundColor: "#002072", color: "white" }}>
+              {/* <Button style={{ backgroundColor: "#002072", color: "white" }}>
                 <Icon icon="material-symbols-light:download" color="#ffffff" />{" "}
                 Download PDF
-              </Button>
+              </Button> */}
             </div>
           </div>
 
@@ -370,7 +370,7 @@ import api from "../../utils/axiosInstance";
 
                   <p className={styles.subTitle}>Investigation Charges</p>
                   <Row className="mb-2">
-                    <Col>
+                    <Col className="col-sm-4">
                       <Form.Label>From</Form.Label>
                       <Form.Control
                         type="date"
@@ -383,7 +383,7 @@ import api from "../../utils/axiosInstance";
                         }
                       />
                     </Col>
-                    <Col>
+                    <Col className="col-sm-4">
                       <Form.Label>To</Form.Label>
                       <Form.Control
                         type="date"
@@ -396,7 +396,7 @@ import api from "../../utils/axiosInstance";
                         }
                       />
                     </Col>
-                    <Col>
+                    <Col className="col-sm-4">
                       <Form.Label>Amount</Form.Label>
                       <Form.Control
                         type="number"
@@ -410,7 +410,7 @@ import api from "../../utils/axiosInstance";
 
                   <p className={styles.subTitle}>Pharmacy Charges</p>
                   <Row className="mb-2">
-                    <Col>
+                    <Col className="col-sm-4">
                       <Form.Label>From</Form.Label>
                       <Form.Control
                         type="date"
@@ -423,7 +423,7 @@ import api from "../../utils/axiosInstance";
                         }
                       />
                     </Col>
-                    <Col>
+                    <Col className="col-sm-4">
                       <Form.Label>To</Form.Label>
                       <Form.Control
                         type="date"
@@ -436,7 +436,7 @@ import api from "../../utils/axiosInstance";
                         }
                       />
                     </Col>
-                    <Col>
+                    <Col className="col-sm-4">
                       <Form.Label>Amount</Form.Label>
                       <Form.Control
                         type="number"
@@ -524,10 +524,10 @@ import api from "../../utils/axiosInstance";
                       <br />
                     </Col>
                     <Col>
-                      {calculateDays(
+                      {/* {calculateDays(
                         investigationDates.from,
                         investigationDates.to
-                      )}
+                      )} */}
                     </Col>
                     <Col>{investigationCharges.toFixed(2)}</Col>
                   </Row>
@@ -537,7 +537,7 @@ import api from "../../utils/axiosInstance";
                       <br />
                     </Col>
                     <Col>
-                      {calculateDays(pharmacyDates.from, pharmacyDates.to)}
+                      {/* {calculateDays(pharmacyDates.from, pharmacyDates.to)} */}
                     </Col>
                     <Col>{pharmacyCharges.toFixed(2)}</Col>
                   </Row>
@@ -545,7 +545,9 @@ import api from "../../utils/axiosInstance";
                     <Col>
                       Consultation Charges ({consultationCharges.visits} visits)
                     </Col>
-                    <Col>{consultationCharges.visits}</Col>
+                    <Col>
+                    {/* {consultationCharges.visits} */}
+                    </Col>
                     <Col>
                       {(
                         consultationCharges.visits *
