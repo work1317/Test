@@ -193,15 +193,6 @@ import api from "../../utils/axiosInstance";
                 <Icon icon="material-symbols-light:print-outline-rounded" />{" "}
                 Print
               </button>
-
-              {/* {showPrintModal && invoiceData && (
-                <InvoicePrint
-                  show={showPrintModal}
-                  handlePrintClose={handlePrintClose}
-                  invoiceData={invoiceData} // ✅ pass data
-                  patientId
-                />
-              )} */}
              {showPrintModal && invoiceData && (
   <InvoicePrint
     show={showPrintModal}
@@ -211,11 +202,6 @@ import api from "../../utils/axiosInstance";
   />
 )}
 
-
-              {/* <Button style={{ backgroundColor: "#002072", color: "white" }}>
-                <Icon icon="material-symbols-light:download" color="#ffffff" />{" "}
-                Download PDF
-              </Button> */}
             </div>
           </div>
 

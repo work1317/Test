@@ -7,14 +7,6 @@ from .models import *
 class VitalsAdmin(admin.ModelAdmin):
     list_display = ['category','patient','recorded_by','blood_pressure','bmi','grbs','cvs','cns','respiratory_rate','weight','height','summary','report','created_at','last_updated_at']
 
-# @admin.register(LabResult)
-# class LabResultAdmin(admin.ModelAdmin):
-#     list_display = ['category','patient','title','summary','report','created_at','last_updated_at']
-
-# @admin.register(Imaging)
-# class ImagingAdmin(admin.ModelAdmin):
-#     list_display = ['patient','scan_type','summary','report','created_at','last_updated_at']
-
 @admin.register(Prescription)
 class PrescriptionAdmin(admin.ModelAdmin):
     list_display = ['patient','medication_name','dosage','duration','summary','report','created_at','last_updated_at']

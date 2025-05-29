@@ -547,10 +547,6 @@ const PharmacyInvoice = () => {
                 show={showModal}
                 onClose={() => setShowModal(false)}
               />
-              {/* <Button style={headerStyle}>
-                <Icon icon="material-symbols-light:download" className="mb-1" />{" "}
-                Download PDF
-              </Button> */}
             </>
           )}
         </Col>
@@ -616,16 +612,6 @@ const PharmacyInvoice = () => {
                     No
                   </label>
                 </div>
-
-                {/* <Form.Group>
-                  <Form.Label>Form type</Form.Label>
-                  <Form.Control
-                    type="text"
-                    
-                    readOnly
-                    className="w-50"
-                  />
-                </Form.Group> */}
               </Form>
             </Col>
 
@@ -769,14 +755,6 @@ const PharmacyInvoice = () => {
                           name="medication_name"
                           value={item.medication_name}
                           onChange={(e) => handlerInput(e, idx)}
-                          // onBlur={() => {
-                          //   setTimeout(() => {
-                          //     setSuggestions([]);
-                          //     setActiveRowIndex(null);
-                          //     fetchData(idx)
-
-                          //   }, 200);
-                          // }}
 
                           onFocus={() => setActiveRowIndex(idx)} // optional
                         />

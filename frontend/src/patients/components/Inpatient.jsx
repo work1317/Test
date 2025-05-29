@@ -12,10 +12,6 @@ export default function Inpatient({patient}) {
   const [activeTab, setActiveTab] = useState("vitals"); 
   const [show, setShow] = useState(false);
   const [editDisabled, setEditDisabled] = useState(false);
-  // const [vitalsList, setVitalsList] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -36,34 +32,6 @@ export default function Inpatient({patient}) {
     return () => clearInterval(interval);
   }, [patient.admissionTime]);
 
-  // const handleShow = () => setShow(true);
-  // const handleClose = () => setShow(false);
-  // useEffect(() => {
-  //   if (!patient) return;
-
-  //   const fetchVitals = async () => {
-  //     try {
-  //       const response = await fetch(`//records/vitals/${patient.patient_id}`);
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch vitals data");
-  //       }
-  //       // const data = await response.json();
-  //       setVitalsList(response.data);  // assuming data is an array of vitals entries
-  //     } catch (err) {
-  //       setError(err.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchVitals();
-  // }, [patient]);
-
-  // if (loading) return <div>Loading vitals...</div>;
-  // if (error) return <div>Error: {error}</div>;
-  // if (vitalsList.length === 0) return <div>No vitals records found.</div>;
-
-  // console.log(vitalsList);
 
   return (
     <div className="patient-details-container">
@@ -144,114 +112,6 @@ export default function Inpatient({patient}) {
 
       {/* Conditionally Render the Selected Tab Content */}
       <div className="tab-content mt-4">
-        {/* {activeTab === "vitals" && (
-          <div className="vitals-section">
-            <div className="vitals-card">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="vitals-title">Vitals Check</h5>
-                <span className="vitals-time">2024-03-17 08:00 AM</span>
-              </div>
-
-              <div className="row">
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Thermometer size={16} className="vital-icon" />
-                      <span className="vital-label">Temperature</span>
-                    </div>
-                    <div className="vital-value">98.6 F</div>
-                  </div>
-                </div>
-
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Activity size={16} className="vital-icon" />
-                      <span className="vital-label">Blood Pressure</span>
-                    </div>
-                    <div className="vital-value">120/80</div>
-                  </div>
-                </div>
-
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Heart size={16} className="vital-icon" />
-                      <span className="vital-label">Heart Rate</span>
-                    </div>
-                    <div className="vital-value">72 BPM</div>
-                  </div>
-                </div>
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Droplet size={16} className="vital-icon" />
-                      <span className="vital-label">Oxygen Level</span>
-                    </div>
-                    <div className="vital-value">98%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="vitals-Secondsection">
-            <div className="vitals-card">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="vitals-title">Vitals Check</h5>
-                <span className="vitals-time">2024-03-17 03:00 PM</span>
-              </div>
-              <div className="row">
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Thermometer size={16} className="vital-icon" />
-                      <span className="vital-label">Temperature</span>
-                    </div>
-                    <div className="vital-value">98.8 F</div>
-                  </div>
-                </div>
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Activity size={16} className="vital-icon" />
-                      <span className="vital-label">Blood Pressure</span>
-                    </div>
-                    <div className="vital-value">118/78</div>
-                  </div>
-                </div>
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Heart size={16} className="vital-icon" />
-                      <span className="vital-label">Heart Rate</span>
-                    </div>
-                    <div className="vital-value">75 BPM</div>
-                  </div>
-                </div>
-
-                <div className="col-md-3 col-6 mb-3">
-                  <div className="vital-item">
-                    <div className="d-flex align-items-center mb-1">
-                      <Droplet size={16} className="vital-icon" />
-                      <span className="vital-label">Oxygen Level</span>
-                    </div>
-                    <div className="vital-value">97%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-        )} */}
-
-        {/* category:"",
-      height: "",
-      weight: "",
-      blood_pressure: "",
-      bmi: "",
-      grbs: "",
-      cvs: "",
-      respiratory_rate: "",
-      cns: "", */}
         {activeTab === "vitals" && <Vitals patient_id={patient.patient_id} />}
         {activeTab === "prescription" && <Prescription patient_id={patient.patient_id} />}
         {activeTab === "history" && <History />}

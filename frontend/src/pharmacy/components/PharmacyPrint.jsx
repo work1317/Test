@@ -147,9 +147,6 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                   <th style={headerStyle}>MRP</th>
                   <th style={headerStyle}>Qty</th>
                   <th style={headerStyle}>Amount</th>
-                  {/* <th style={headerStyle}>Discount</th>
-      <th style={headerStyle}>Tax</th>
-      <th style={headerStyle}>Net Amount</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -160,9 +157,6 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                     <td>{item.mrp}</td>
                     <td>{item.quantity}</td>
                     <td>{item.amount}</td>
-                    {/* <td>{item.discount_amount}</td>
-        <td>{item.tax_amount}</td>
-        <td>{item.net_amount}</td> */}
                   </tr>
                 ))}
               </tbody>

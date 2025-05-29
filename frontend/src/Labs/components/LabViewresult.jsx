@@ -7,16 +7,6 @@ import { forms } from "./Labtest";
 import api from "../../utils/axiosInstance";
 
 function LabViewresult({ handlerClose, selectedResult, selectForm }) {
-  // const handleDownload = async () => {
-  //   const url = api.get(`labs/labtests_download/${selectForm.action}/`);
-  //   console.log(url);
-  //   const link = document.createElement('a');
-  //   link.href = url;
-  
-
-  //   link.download = 'labtest_image.jpg'; 
-  //   link.click();
-  // };
 
   const handleDownload = async () => {
   try {

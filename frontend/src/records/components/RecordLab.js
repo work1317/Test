@@ -115,12 +115,6 @@ const RecordLab = () => {
     setQuery(e.target.value);
   };
 
-  // const latestVisit = records.length
-  // ? new Date(Math.max(...records.map(r => new Date(r.created_at)))).toLocaleDateString()
-  // : "No records";
-
-  // const latestRecord = [...records].sort((a, b) => new Date(b.last_updated_at) - new Date(a.last_updated_at))[0];
-
   const getLastVisitDate = (records) => {
     if (!records || records.length === 0) return null;
   
@@ -135,16 +129,6 @@ const RecordLab = () => {
 
   const lastVisitDate = getLastVisitDate(records);
   
- 
-  // const filteredPatients = patients.filter(
-  //   (patient) =>
-  //     (filter === "all" || patient.appointment_type === filter) &&
-  //     (patient.patient_name.toLowerCase().includes(query.toLowerCase()) ||
-  //       patient.patient_id.toString().includes(query) ||
-  //       (patient.phno &&
-  //         patient.phno.toString().includes(query)))
-  // );
- 
  const lowerQuery = query.toLowerCase();
  
   const filteredPatients = patients.filter(
@@ -299,16 +283,6 @@ const RecordLab = () => {
             </Col>
             <Col xs={6} md={3}>
               {/* <small className="text-muted fw-bold">Last Visit: {latestRecord}</small> */}
-
-              {/* <small className="text-muted fw-bold">
-                Last Visit: {records.length > 0 ? new Date(records[0].last_updated_at).toLocaleString('en-IN', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }) : 'N/A'}
-              </small> */}
 
               {/* const lastVisitDate = getLastVisitDate(records); */}
               <small className="text-muted fw-bold">

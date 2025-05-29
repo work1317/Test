@@ -76,32 +76,6 @@ class MedicationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class RecentPharmacyInvoicesSerializer(serializers.ModelSerializer):
-#     Amount = serializers.SerializerMethodField()
-#     DiscountAmt = serializers.SerializerMethodField()
-#     AfterDiscount = serializers.SerializerMethodField()
-#     NetAmount = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = PharmacyInvoice
-#         fields = [
-#             "Bill_No", "Bill_Date", "typeof_transaction", "patient_name",
-#             "appointment_type", "Amount", "DiscountAmt", "AfterDiscount",
-#         ]
-
-#     def get_Amount(self, obj):
-#         return obj.paid_amount or 0
-
-#     def get_DiscountAmt(self, obj):
-#         return sum([item.discount_amount for item in obj.items.all()])
-
-#     def get_AfterDiscount(self, obj):
-#         return sum(item.net_amount for item in obj.items.all())
-
-#     def get_NetAmount(self, obj):
-#         return self.get_AfterDiscount(obj)
-
-
 
 class RecentPharmacyInvoicesSerializer(serializers.ModelSerializer):
     items = PharmacyInvoiceItemSerializer(many=True, read_only=True)

@@ -52,12 +52,6 @@ function PatientManagement() {
     setQuery(e.target.value);
   };
 
-  // const filteredPatients = patients.filter(
-  //   (patient) =>
-  //     (filter === "all" || patient.appointment_type === filter) &&
-  //     patient.patient_name.toLowerCase().includes(query.toLowerCase())
-  // );
-
   const filteredPatients = patients.filter(
     (patient) =>
       (filter === "all" || patient.appointment_type === filter) &&
@@ -93,15 +87,6 @@ function PatientManagement() {
             show={showModal}
             handleClose={handleClose}
             refreshPatient={fetchPatients}/>
-          {/* <Icon
-            icon="fluent-mdl2:time-entry"
-            width={24}
-            height={24}
-            className={PatientStyles.addimage}
-            onClick={() => setShow(true)}
-          /> */}
-          
-          {/* <Addnotes show={show} handleClose={() => setShow(false)} /> */}
         </Col>
       </Row>
       <Row className="mt-4 g-4 px-3" xs={1} sm={2} md={2} lg={4} xl={4}>
@@ -265,11 +250,6 @@ function PatientManagement() {
         {/* If a patient is selected, show Inpatient component; otherwise, show "Select a Patient" card */}
         <Col xs={12} sm={12} md={8} className={PatientStyles.maincard}>
           {selectedPatient ? (
-            // selectedPatient.appointment_type === "inpatient" ? (
-            //   <Inpatient patient={selectedPatient} />
-            // ) : (
-            //   <Outpatient patient={selectedPatient} />
-            // )
             <Inpatient
               show={showModal}
               handleClose={() => setShowModal(false)}

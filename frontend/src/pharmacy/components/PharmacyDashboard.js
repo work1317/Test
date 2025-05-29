@@ -44,15 +44,6 @@ function PharmacyDashboard() {
     };
   }, []);
 
-  // const hasFetched = useRef(false);
-
-  // useEffect(() => {
-  //   if (!hasFetched.current) {
-  //     fetchStats();
-  //     hasFetched.current = true;
-  //   }
-  // }, []);
-
 
   const fetchStats = async () => {
     try {

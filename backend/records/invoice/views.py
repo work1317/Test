@@ -282,18 +282,6 @@ class AllInvoiceListAPIView(APIView):
         if department:
             invoices = invoices.filter(patient__doctor__d_department__name__icontains=department)
 
-        # if department:
-        #     # doctor_ids = DoctorAvailability.objects.filter(
-        #     #     d_name__icontains=request.GET.get('doctor_name', '')
-        #     # ).values_list('id', flat=True)
-
-        #     patients = Patient.objects.filter(doctor_name__in=DoctorAvailability.objects.filter(
-        #         d_department__name__icontains=department
-        #     ).values_list('d_name', flat=True))
-
-        #     invoices = invoices.filter(patient__in=patients)
-
-
         if service_name:
             invoices = invoices.filter(service_charges__service_name__icontains=service_name).distinct()
 

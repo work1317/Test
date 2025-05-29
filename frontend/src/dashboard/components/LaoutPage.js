@@ -53,21 +53,6 @@ const LaoutPage = () => {
   const suggRef = useRef(null);
   const auth = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   fetch(API)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       const ApiData = data.map((user) => ({
-  //         sno: user.sno,
-  //         name: user.name,
-  //         dept: user.dept,
-  //         phone: user.phone,
-  //       }));
-  //       setSuggs(ApiData);
-  //     })
-  //     .catch((err) => console.error("Error fetching data:", err));
-  // }, []);
-
   useEffect(() => {
     if (suggRef.current && activeItem >= 0) {
       suggRef.current.children[activeItem]?.scrollIntoView({
@@ -211,29 +196,7 @@ const LaoutPage = () => {
           <Col xs={12} lg={10} className="mt-1">
             <div className={styles.MainContainer}>
               <nav className={styles.navbar}>
-                {/* <div className={styles.navtitle}>Dash board</div> */}
                 <div className={styles.navtitle}>{selectedPage}</div>
-
-                {/* <div className={styles.navsearchContainer}>
-                  <Icon
-                    icon="si:search-line"
-                    width="16"
-                    height="16"
-                    style={{ color: "#868686" }}
-                  />
-
-                  <input
-                    type="text"
-                    value={searchInput}
-                    className={styles.navsearchInput}
-                    onChange={handleSearchInput}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Search..."
-                  />
-                </div> */}
-
-                {/* <div className={styles.line}></div> */}
-
                 <div className={styles.navrightSection}>
                   <div className={styles.bellContainer}>
                     <Icon

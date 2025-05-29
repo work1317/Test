@@ -109,7 +109,7 @@ const DoctorsPage = () => {
       </Row>
       <Row className="mt-3">
         <Col xs={12} sm={12} md={3}>
-          <Card className="shadow-sm p-3">
+          <Card className="shadow-sm">
             <Card.Body>
               <div className="d-flex justify-content-between">
                 <Icon
@@ -128,7 +128,7 @@ const DoctorsPage = () => {
           </Card>
         </Col>
         <Col xs={12} sm={12} md={3}>
-          <Card className="shadow-sm p-3">
+          <Card className="shadow-sm">
             <Card.Body>
               <div className="d-flex justify-content-between ">
                 <Image
@@ -148,7 +148,7 @@ const DoctorsPage = () => {
           </Card>
         </Col>
         <Col xs={12} sm={12} md={3}>
-          <Card className="shadow-sm p-3">
+          <Card className="shadow-sm">
             <Card.Body>
               <div className="d-flex justify-content-around ">
                 <Icon
@@ -167,7 +167,7 @@ const DoctorsPage = () => {
           </Card>
         </Col>
         <Col xs={12} sm={12} md={3}>
-          <Card className="shadow-sm p-3">
+          <Card className="shadow-sm">
             <Card.Body>
               <div className="d-flex justify-content-between">
                 <Icon
@@ -250,14 +250,17 @@ const DoctorsPage = () => {
                     <p className="ms-2 text-muted">{doctor.d_phn_no}</p>
                   </div>
                 </Card.Body>
-                <Card.Footer className="d-flex justify-content-between">
+                <Card.Footer
+                  className="d-flex justify-content-between"
+                  style={{ padding: "6px 12px" }}
+                >
                   <div className="d-flex align-items-center">
-                    <GoPeople size={30} className="text-muted" />
-                    <p className="ms-2">{totalPatients}</p>
+                    <GoPeople size={20} className="text-muted pb-1" />
+                    <p className="ms-2 mb-0" style={{ fontSize: "0.85rem" }}>{doctor.patient_count}</p>
                   </div>
-                  <div className="d-flex align-items-center">
-                    <CiCalendar size={30} className="text-muted" />
-                    <p className="ms-2">
+                    <div className="d-flex">
+                    <CiCalendar size={25} className="text-muted pb-1" />
+                    <p className="ms-2 mb-0" style={{ fontSize: "0.85rem" }}>
                       {index === 0 ? "25 Today" : "15 Today"}
                     </p>
                   </div>

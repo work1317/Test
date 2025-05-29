@@ -326,61 +326,6 @@ class InvoiceDownloadAPIView(APIView):
  
 # -------------------- RECENT ----------------------------------------
 
-# class RecentPharmacyInvoicesAPIView(APIView):
-#     def get(self, request, *args, **kwargs):
-#         try:
-#             # Extract query parameters
-#             start_date = request.query_params.get('start_date')
-#             end_date = request.query_params.get('end_date')
-#             appointment_type = request.query_params.get('appointment_type')
-#             payment_status = request.query_params.get('payment_status')
-
-#             # Build filters dynamically using Q
-#             filters = Q()
-#             if start_date:
-#                 filters &= Q(Bill_Date__gte=start_date)
-#             if end_date:
-#                 filters &= Q(Bill_Date__lte=end_date)
-#             if appointment_type:
-#                 filters &= Q(appointment_type=appointment_type)
-#             if payment_status:
-#                 filters &= Q(typeof_transaction=payment_status)
-
-#             # Apply filters to the queryset
-#             invoices_qs = PharmacyInvoice.objects.filter(filters).order_by('-id')
-
-#             # Aggregate totals
-#             total_paid_amount = invoices_qs.aggregate(total=Sum('paid_amount'))['total'] or 0
-
-#             item_aggregates = PharmacyInvoiceItem.objects.filter(invoice__in=invoices_qs).aggregate(
-#                 total_discount_amount=Sum('discount_amount'),
-#                 total_net_amount=Sum('net_amount'),
-#             )
-
-#             # Serialize data
-#             serializer = PharmacyInvoiceSerializer(invoices_qs, many=True)
-
-#             return Response({
-#                 "success": 1,
-#                 "message": "Filtered invoices fetched successfully",
-#                 "data": serializer.data,
-#                 "totals": {
-#                     "total_amount": item_aggregates.get('total_final_amount') or 0,
-#                     "total_discount_amount": item_aggregates.get('total_discount_amount') or 0,
-#                     "total_after_discount_amount": total_paid_amount,
-#                     "total_net_amount": item_aggregates.get('total_net_amount') or 0,
-#                 }
-#             }, status=status.HTTP_200_OK)
-
-#         except Exception as e:
-#             return Response({
-#                 "success": 0,
-#                 "message": f"An error occurred: {str(e)}",
-#                 "data": []
-#             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
 class RecentPharmacyInvoicesAPIView(APIView):
     def get(self, request, *args, **kwargs):
         try:

@@ -37,17 +37,6 @@ function Addform({ handlerClose, saveForms,patients }) {
     }
   };
  
-  // const formsChanges = (e) => {
-  //   const { name, type, checked, value, files } = e.target;
- 
-  //   const newValue = type === "checkbox" || type === "switch" ? checked : value;
- 
-  //   setFormsData((prevState) => ({
-  //     ...prevState,
-  //     [name]: files ? files[0] : newValue,
-  //   }));
-    
-  // };
 
   const formsChanges = (e) => {
   const { name, type, checked, value, files } = e.target;

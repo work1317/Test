@@ -86,26 +86,6 @@ function AddRecordModal({show,handleClose,patientId}) {
     }));
   };
 
-  // const handleSave = () => {
-  //   if (recordType === "Select Type") {
-  //     alert("Please select a record type before saving.");
-  //     return;
-  //   }
-
-  //   setSavedRecords((prev) => {
-  //     const newRecords = [...prev, { type: recordType, data: formData[recordType] }];
-  //     console.log("Updated Saved Records inside setState:", newRecords); 
-  //     return newRecords;
-  //   });
-
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [recordType]: Object.fromEntries(Object.keys(prev[recordType]).map((key) => [key, key === "files" ? null : ""])),
-  //   }));
-  //   setClearPreview(prev => !prev);
-
-  //   alert("Record saved successfully!");
-  // };
   const handleSave = async () => {
     if (recordType === "Select Type") {
       alert("Please select a record type before saving.");
@@ -151,6 +131,7 @@ function AddRecordModal({show,handleClose,patientId}) {
         alert("Record saved successfully!");
         setSavedRecords((prev) => [...prev, { type: recordType, data: formData[recordType] }]);
         setClearPreview((prev) => !prev); // Toggle preview reset
+        handleClose();
       } 
       else {
         alert("Error: " + JSON.stringify(data.message));

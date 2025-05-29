@@ -53,15 +53,6 @@ const PainAssessment = ({ handleClose, patientId }) => {
     });
   };
 
-  // const updatePainIntensity = (event) => {
-  //   if (!progressRef.current) return;
-  //   const rect = progressRef.current.getBoundingClientRect();
-  //   const clickX = event.clientX - rect.left;
-  //   let newPainLevel = Math.round((clickX / rect.width) * 20) / 2;
-  //   newPainLevel = Math.max(0, Math.min(10, newPainLevel));
-  //   setPainIntensity(newPainLevel);
-  // };
-
   const updatePainIntensity = (event) => {
     if (!progressRef.current) return;
     const rect = progressRef.current.getBoundingClientRect();

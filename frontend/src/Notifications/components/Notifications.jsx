@@ -147,27 +147,6 @@ const handleNotificationClick = async (id) => {
 };
 
 
- 
-  // const loadMoreNotifications = () => {
-  //   setVisibleCount((prevCounts) => ({
-  //     ...prevCounts,
-  //     [activeTab]: prevCounts[activeTab] + 3,
-  //   }));
-  // };
- 
- 
-// const filteredNotifications = allnotifications.filter((note) => {
-//   const matchesTab = activeTab === "all" || note.category === activeTab;
-//   const matchesSearch =
-//     query === "" ||
-//     note.title.toLowerCase().includes(query.toLowerCase()) ||
-//     note.description1.toLowerCase().includes(query.toLowerCase()) ||
-//     note.description2.toLowerCase().includes(query.toLowerCase());
-
-//   return matchesTab && matchesSearch;
-// });
-
-
 const filteredNotifications = allnotifications.filter((note) => {
   const matchesTab =
     activeTab === "all" ||
@@ -346,34 +325,6 @@ useEffect(() => {
           ))}
       </div>
  
-      {/* {visibleCount[activeTab] < filteredNotifications.length && (
-        <Row className="mt-3 text-center">
-          <Col>
-            <p
-              className={Notificationstyle.load}
-              onClick={loadMoreNotifications}
-              style={{ cursor: "pointer" }}
-            >
-              Load more notifications
-            </p>
-          </Col>
-        </Row>
-      )} */}
- 
-      {/* {totalPages > 1 && (
-        <Pagination className="mt-3 justify-content-center">
-          {[...Array(totalPages).keys()].map((number) => (
-            <Pagination.Item
-              key={number + 1}
-              active={number + 1 === currentPage}
-              onClick={() => setCurrentPage(number + 1)}
-            >
-              {number + 1}
-            </Pagination.Item>
-          ))}
-        </Pagination>
-      )} */}
-       {/* Pagination */}
       {totalPages > 1 && (
         <Pagination className="mt-3 justify-content-center">
           <Pagination.Prev

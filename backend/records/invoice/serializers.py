@@ -66,7 +66,6 @@ class ConsultationChargeSerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
-    # patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
     patient = serializers.SlugRelatedField(queryset=Patient.objects.all(), slug_field='patient_id')
     service_charges = ServiceChargeSerializer(many=True)
     investigation_charges = InvestigationChargeSerializer()

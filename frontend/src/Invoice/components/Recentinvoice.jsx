@@ -50,52 +50,6 @@ function Recentinvoice({ back }) {
         setServiceQuery(e.target.value.toLowerCase());
     };
 
-    // Filter invoice data based on the search query (patient name, patient ID, or mobile) and other filters
-//     useEffect(() => {
-//         let filtered = invoiceData;
-//         if (searchQuery) {
-//     const query = searchQuery.toLowerCase();
-//     filtered = filtered.filter((invoice) => {
-//         const patientInfo = invoice.patient_info || {};
-//         const patientName = (patientInfo.patient_name || '').toLowerCase();
-//         const patientId = (invoice.patient || '')
-//         const mobileNumber = patientInfo.mobile_number || '';
-
-//         return (
-//             patientName.includes(query) ||
-//             patientId.includes(query) ||
-//             mobileNumber.includes(searchQuery)  ||
-//             patientId.includes(searchQuery)
-//         );
-//     });
-// }
-
-
-
-    
-
-
-//         // Department filter
-//         if (selectedDepartment) {
-//             filtered = filtered.filter((invoice) =>
-//                 invoice.patient_info.department.toLowerCase().includes(selectedDepartment.toLowerCase())
-//             );
-//         }
-
-//         // Service filter
-//         if (serviceQuery) {
-//             filtered = filtered.filter((invoice) => {
-//                 // Checking if any of the services in the invoice match the service query
-//                 return invoice.invoice.service_charges.some((service) =>
-//                     service.service_name.toLowerCase().includes(serviceQuery)
-//                 );
-//             });
-//         }
-
-//         setFilteredData(filtered);
-//     }, [searchQuery, selectedDepartment, serviceQuery, invoiceData]);
-
-
 useEffect(() => {
     let filtered = invoiceData;
 
