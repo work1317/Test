@@ -43,9 +43,13 @@ const ScheduleAppointments = ({ show, handleClose}) => {
     setLoading(true);
     try {
       const response = await api.post("/appointments/create-appointments/", formData);
-      // console.log("Appointment  Registered:", response.data);
+      console.log("Appointment  Registered:", response.data);
+      alert(response.data.message)
       setMessage("Appointment registered successfully");
       handleClose();
+      setMessage("")
+      setFormData({patient_name:"", age: "", gender: "", email: "", doctor: "",appointment_id: "",patient:"",
+    date: "", time: "", phno: "", appointment_type: "", blood_group: "", notes: "", ward_no:"",diagnosis:"",})
     } catch (error) {
       console.error("Error submitting form:", error);
       setMessage("Failed to register Appointment");

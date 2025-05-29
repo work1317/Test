@@ -63,8 +63,8 @@ function PatientManagement() {
       (filter === "all" || patient.appointment_type === filter) &&
       (patient.patient_name.toLowerCase().includes(query.toLowerCase()) ||
         patient.patient_id.toString().includes(query) ||
-        (patient.phone_number &&
-          patient.phone_number.toString().includes(query)))
+        (patient.phno &&
+          patient.phno.toString().includes(query)))
   );
 
   const handlePatientSelect = (patient) => {

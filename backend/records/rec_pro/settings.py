@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'pharmacy',
     'labs',
     'rest_framework',
+    'notifications.apps.NotificationsConfig',
     'corsheaders',
     'invoice',
     'dashboard',

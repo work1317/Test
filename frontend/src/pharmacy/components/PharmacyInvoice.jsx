@@ -30,7 +30,7 @@ const PharmacyInvoice = () => {
     patient_name: "",
     age: "",
     gender: "",
-    doctor_name: "",
+    doctor: "",
     guest: "No",
   });
 
@@ -103,7 +103,7 @@ const PharmacyInvoice = () => {
         patient_name: "",
         age: "",
         gender: "",
-        doctor_name: "",
+        doctor: "",
         guest: "Yes",
       });
     } else {
@@ -327,13 +327,13 @@ const PharmacyInvoice = () => {
       console.log("Fetched patient details:", response.data.data);
 
       if (response.status === 200) {
-        const { patient_name, age, gender, doctor_name } = response.data.data;
+        const { patient_name, age, gender, doctor } = response.data.data;
         setPatientDetails((prev) => ({
           ...prev,
           patient_name,
           age,
           gender,
-          doctor_name,
+          doctor,
         }));
 
         const newInvoiceId = response.data.invoice_id || response.data.data?.id;
@@ -370,7 +370,7 @@ const PharmacyInvoice = () => {
       patient_name: patientDetails.patient_name,
       age: patientDetails.age,
       gender: patientDetails.gender,
-      doctor_name: patientDetails.doctor_name,
+      doctor: patientDetails.doctor,
       guest: selectedValue === "yes",
       typeof_transaction: invoiceData.typeof_transaction,
       description: invoiceData.description,
@@ -459,7 +459,7 @@ const PharmacyInvoice = () => {
             patient_name: "",
             age: "",
             gender: "",
-            doctor_name: "",
+            doctor: "",
             guest: "No",
           });
 
@@ -476,18 +476,19 @@ const PharmacyInvoice = () => {
   };
 
 
-  // useEffect(() => {
-  //   if (successMessage) {
-  //     const timer = setTimeout(() => {
-  //       console.log("getInvoice", getinvoice);
-  //       setSuccessMessage("");
-  //       // setShowModal(true)
-  //     }, 500); // 3000ms = 3 seconds
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        console.log("getInvoice", getinvoice);
+        setSuccessMessage("");
+        // setShowModal(true)
+      }, 4000); // 4000ms = 4 seconds
+ 
+      // Cleanup the timer on unmount or when message changes
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
-  //     // Cleanup the timer on unmount or when message changes
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [successMessage]);
 
   const headerStyle = { backgroundColor: "#002072", color: "white" };
   return (
@@ -703,12 +704,12 @@ const PharmacyInvoice = () => {
                   <Form.Label>Doctor Name</Form.Label>
                   <Form.Control
                     type="text"
-                    name="doctor_name"
-                    value={patientDetails.doctor_name || ""}
+                    name="doctor"
+                    value={patientDetails.doctor || ""}
                     onChange={(e) =>
                       setPatientDetails({
                         ...patientDetails,
-                        doctor_name: e.target.value,
+                        doctor: e.target.value,
                       })
                     }
                     className="w-50"

@@ -37,6 +37,7 @@ urlpatterns = [
     path('labs/',include('labs.urls')),
     path('invoice/',include('invoice.urls')),
     path('p_invoice/',include('p_invoice.urls')),
+    path('notifications/',include('notifications.urls')),
 ]
 
 if settings.DEBUG:

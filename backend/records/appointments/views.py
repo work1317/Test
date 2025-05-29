@@ -8,16 +8,17 @@ from django.db.models import Q
 from datetime import timedelta
 from core.messages import DATA_SAVED
 from django.utils.timezone import now
-from datetime import timedelta
 from django.db.models import Q
 from . import models, serializers as app_serializers, validators
 from doctors.models import DoctorAvailability
 from rest_framework.exceptions import NotFound
 from patients.models import Patient
-from datetime import datetime, date
 from rec_app.models import ProgressNote
 from datetime import datetime, time
 import calendar
+from rest_framework.exceptions import ValidationError
+from datetime import datetime, timedelta, date
+from . import models, serializers, validators
 
  
 # Create your views here.
@@ -47,34 +48,58 @@ class AppointmentCreateAPIView(APIView):
             if not doctor:
                 raise Exception("Doctor not found")
 
-            # Convert date string to datetime object if needed
-            if isinstance(req_params["date"], str):
-                appointment_date = datetime.strptime(req_params["date"], "%Y-%m-%d").date()
-            else:
-                appointment_date = req_params["date"]
+            # Convert date
+            appointment_date = req_params["date"]
+            if isinstance(appointment_date, str):
+                appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
 
-            # Check for past date
             if appointment_date < date.today():
                 raise Exception("Cannot book an appointment for a past date")
 
-            # Convert time string to datetime.time object if needed
-            if isinstance(req_params["time"], str):
-                appointment_time = datetime.strptime(req_params["time"], "%H:%M").time()
-            else:
-                appointment_time = req_params["time"]
+            # Convert time
+            appointment_time = req_params["time"]
+            if isinstance(appointment_time, str):
+                appointment_time = datetime.strptime(appointment_time, "%H:%M").time()
 
             # Validate appointment day
             day_name = calendar.day_name[appointment_date.weekday()]
             if day_name not in doctor.d_available_days:
                 raise Exception(f"Doctor is not available on {day_name}. Available only on {doctor.d_available_days}")
 
-            # Validate appointment time
-            if not (doctor.d_start_time <= appointment_time <= doctor.d_end_time):
+            # Combine shift start and end datetime
+            today = appointment_date
+            start_time = datetime.combine(today, doctor.d_start_time)
+            end_time = datetime.combine(today, doctor.d_end_time)
+
+            # Handle overnight shift
+            if doctor.d_end_time <= doctor.d_start_time:
+                end_time += timedelta(days=1)
+
+            # Combine appointment datetime
+            appointment_datetime = datetime.combine(today, appointment_time)
+            if doctor.d_end_time <= doctor.d_start_time and appointment_time < doctor.d_start_time:
+                appointment_datetime += timedelta(days=1)
+
+            if not (start_time <= appointment_datetime <= end_time):
                 raise Exception(
                     f"Doctor is only available between {doctor.d_start_time.strftime('%H:%M')} and "
                     f"{doctor.d_end_time.strftime('%H:%M')}"
                 )
 
+            # Calculate break time (1 hour break after every 4 hours)
+            duty_duration = (end_time - start_time).total_seconds() / 3600
+
+            if duty_duration >= 4:
+                break_start_dt = start_time + timedelta(hours=4)
+                break_end_dt = break_start_dt + timedelta(hours=1)
+
+                if break_start_dt <= appointment_datetime < break_end_dt:
+                    raise Exception(
+                        f"Doctor is unavailable during break time from {break_start_dt.time().strftime('%H:%M')} "
+                        f"to {break_end_dt.time().strftime('%H:%M')}"
+                    )
+
+            # Check if patient exists
             patient = models.Patient.objects.filter(
                 (Q(phno=req_params["phno"]) & Q(patient_name__iexact=req_params["patient_name"])) |
                 (Q(email=req_params["email"]) & Q(patient_name__iexact=req_params["patient_name"]))
@@ -97,6 +122,7 @@ class AppointmentCreateAPIView(APIView):
                     diagnosis=req_params.get("diagnosis"),
                 )
 
+            # Create appointment
             appointment = models.Appointment.objects.create(
                 patient=patient,
                 patient_name=req_params["patient_name"],
@@ -114,6 +140,7 @@ class AppointmentCreateAPIView(APIView):
 
             serializer = serializers.AppointmentSerializer(appointment, context={"request": request})
 
+            # Count appointment types
             inpatients = models.Appointment.objects.filter(appointment_type='inpatient').count()
             outpatients = models.Appointment.objects.filter(appointment_type='outpatient').count()
             casualty = models.Appointment.objects.filter(appointment_type='casuality').count()
@@ -134,6 +161,141 @@ class AppointmentCreateAPIView(APIView):
             context["message"] = str(e)
 
         return Response(context)
+
+
+
+
+# class AppointmentCreateAPIView(APIView):
+#     def get(self, request):
+#         return Response({"message": "Use POST to create an appointment"}, status=200)
+
+#     def post(self, request):
+#         context = {
+#             "success": 1,
+#             "message": "Data saved successfully",
+#             "data": {}
+#         }
+
+#         try:
+#             validator = validators.AppointmentValidator(data=request.data)
+#             if not validator.is_valid():
+#                 raise ValidationError(validator.errors)
+
+#             req_params = validator.validated_data
+
+#             doctor = models.DoctorAvailability.objects.filter(
+#                 d_name__iexact=req_params["doctor"], is_guest=False
+#             ).first()
+
+#             if not doctor:
+#                 raise Exception("Doctor not found")
+
+#             # Convert date string to datetime object if needed
+#             if isinstance(req_params["date"], str):
+#                 appointment_date = datetime.strptime(req_params["date"], "%Y-%m-%d").date()
+#             else:
+#                 appointment_date = req_params["date"]
+
+#             # Check for past date
+#             if appointment_date < date.today():
+#                 raise Exception("Cannot book an appointment for a past date")
+
+#             # Convert time string to datetime.time object if needed
+#             if isinstance(req_params["time"], str):
+#                 appointment_time = datetime.strptime(req_params["time"], "%H:%M").time()
+#             else:
+#                 appointment_time = req_params["time"]
+
+#             # Validate appointment day
+#             day_name = calendar.day_name[appointment_date.weekday()]
+#             if day_name not in doctor.d_available_days:
+#                 raise Exception(f"Doctor is not available on {day_name}. Available only on {doctor.d_available_days}")
+
+#             # Validate appointment time
+#             if not (doctor.d_start_time <= appointment_time <= doctor.d_end_time):
+#                 raise Exception(
+#                     f"Doctor is only available between {doctor.d_start_time.strftime('%H:%M')} and "
+#                     f"{doctor.d_end_time.strftime('%H:%M')}"
+#                 )
+            
+            
+#             # Dynamically calculate break time: 1 hour after 4 hours of duty
+#             start_time = datetime.combine(date.today(), doctor.d_start_time)
+#             end_time = datetime.combine(date.today(), doctor.d_end_time)
+#             duty_duration = (end_time - start_time).total_seconds() / 3600  # in hours
+
+#             if duty_duration >= 4:
+#                 break_start_dt = start_time + timedelta(hours=4)
+#                 break_end_dt = break_start_dt + timedelta(hours=1)
+
+#                 break_start = break_start_dt.time()
+#                 break_end = break_end_dt.time()
+
+#                 if break_start <= appointment_time < break_end:
+#                     raise Exception(
+#                         f"Doctor is unavailable during break time from {break_start.strftime('%H:%M')} "
+#                         f"to {break_end.strftime('%H:%M')}"
+#                     )
+
+#             patient = models.Patient.objects.filter(
+#                 (Q(phno=req_params["phno"]) & Q(patient_name__iexact=req_params["patient_name"])) |
+#                 (Q(email=req_params["email"]) & Q(patient_name__iexact=req_params["patient_name"]))
+#             ).first()
+
+#             if not patient:
+#                 patient = models.Patient.objects.create(
+#                     patient_name=req_params["patient_name"],
+#                     doctor=doctor,
+#                     date=appointment_date,
+#                     time=appointment_time,
+#                     age=req_params["age"],
+#                     appointment_type=req_params["appointment_type"],
+#                     notes=req_params.get("notes", ""),
+#                     gender=req_params["gender"],
+#                     phno=req_params["phno"],
+#                     email=req_params["email"],
+#                     blood_group=req_params.get("blood_group"),
+#                     ward_no=req_params.get("ward_no"),
+#                     diagnosis=req_params.get("diagnosis"),
+#                 )
+
+#             appointment = models.Appointment.objects.create(
+#                 patient=patient,
+#                 patient_name=req_params["patient_name"],
+#                 doctor=doctor,
+#                 date=appointment_date,
+#                 time=appointment_time,
+#                 age=req_params["age"],
+#                 appointment_type=req_params["appointment_type"],
+#                 notes=req_params.get("notes", ""),
+#                 gender=req_params["gender"],
+#                 phno=req_params["phno"],
+#                 email=req_params["email"],
+#                 blood_group=req_params.get("blood_group"),
+#             )
+
+#             serializer = serializers.AppointmentSerializer(appointment, context={"request": request})
+
+#             inpatients = models.Appointment.objects.filter(appointment_type='inpatient').count()
+#             outpatients = models.Appointment.objects.filter(appointment_type='outpatient').count()
+#             casualty = models.Appointment.objects.filter(appointment_type='casuality').count()
+#             total_active_cases = inpatients + outpatients + casualty
+
+#             context["data"] = {
+#                 "appointment": serializer.data,
+#                 "active_cases": {
+#                     "inpatients": inpatients,
+#                     "outpatients": outpatients,
+#                     "casualty": casualty,
+#                     "total": total_active_cases
+#                 }
+#             }
+
+#         except Exception as e:
+#             context["success"] = 0
+#             context["message"] = str(e)
+
+#         return Response(context)
 
 
  

@@ -7,15 +7,21 @@ import logo from "../../assets/images/sitelogo.svg";
 import { Icon } from "@iconify/react";
  
 const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
-  const totalAmount =
-    getinvoice?.items?.reduce((acc, item) => acc + item.amount, 0) || 0;
-  const totalDiscount =
-    getinvoice?.items?.reduce((acc, item) => acc + item.discount_amount, 0) ||
-    0;
-  const totalTax =
-    getinvoice?.items?.reduce((acc, item) => acc + item.tax_amount, 0) || 0;
-  const netAmount = totalAmount - totalDiscount + totalTax;
-  const paidAmount = getinvoice?.paid_amount || "0.00";
+  // const totalAmount =
+  //   getinvoice?.items?.reduce((acc, item) => acc + item.amount, 0) || 0;
+  // const totalDiscount =
+  //   getinvoice?.items?.reduce((acc, item) => acc + item.discount_amount, 0) ||
+  //   0;
+  // const totalTax =
+  //   getinvoice?.items?.reduce((acc, item) => acc + item.tax_amount, 0) || 0;
+  // const netAmount = totalAmount - totalDiscount + totalTax;
+  // const paidAmount = getinvoice?.paid_amount || "0.00";
+
+  const totalAmount = getinvoice?.items?.reduce((acc, item) => acc + (parseFloat(item.amount) || 0), 0) || 0;
+  const totalDiscount = getinvoice?.items?.reduce((acc, item) => acc + (parseFloat(item.discount_amount) || 0), 0) || 0;
+  const totalTax = getinvoice?.items?.reduce((acc, item) => acc + (parseFloat(item.tax_amount) || 0), 0) || 0;
+  const netAmount = totalAmount - totalDiscount;
+  const paidAmount = parseFloat(getinvoice?.paid_amount || 0);
  
   const printRef = useRef();
  
@@ -174,12 +180,12 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
  
             <div className="text-end pe-4 mt-3">
               <p>Total Amount: ₹{totalAmount}</p>
-              <p>Net Amount : ₹{netAmount}</p>
-              <p>paid Amount: ₹{paidAmount}</p>
-              <p>Discount: ₹{totalDiscount}</p>
-              <p>Tax: ₹{totalTax}</p>
+              <p> - Discount: ₹{totalDiscount}</p>
+              <p>Net Amount : ₹{(netAmount).toFixed(2)}</p>
+              <p> + Tax: ₹{totalTax}</p>
+              <p>Paid Amount: ₹{(paidAmount.toFixed(2))}</p>
               <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
-              <h5>Total Payable: ₹{netAmount}</h5>
+              <h5>Total Payable: ₹{paidAmount}</h5>
             </div>
  
             <div

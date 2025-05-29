@@ -29,7 +29,7 @@ function AddRecordModal({show,handleClose,patientId}) {
       category:"",
       duration: "",
       dosage: "",
-      description: "",
+      summary: "",
       report: FileList | File,
     },
     // imaging: {
@@ -219,46 +219,7 @@ function AddRecordModal({show,handleClose,patientId}) {
               />
             </Col>
           </Row>
-        
-          {/* {recordType === "LabResults" ? (
-            <>
-              <div className={styles.inputFields}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.HeadText}>Title</label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter record title"
-                    value={formData.lab_results.title}
-                    onChange={(e) => handleInputChange(e, "title")}
-                    className={styles.inputPosition}
-                    style={{ marginBottom: "10%" }}
-                  />
-                </div>
-
-                <div className={styles.inputGroup}>
-                  <label className={styles.HeadText}>Summery</label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    placeholder="Add a summery of the record"
-                    value={formData.lab_results.summary}
-                    onChange={(e) => handleInputChange(e, "summary")}
-                    className={styles.inputPosition}
-                    style={{ padding: "6% 6%" }}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.fileUpload}>
-              <DragAndDrop
-  section="LabResults"
-  name="report"
-  setFormData={setFormData}
-  clearPreview={clearPreview}
-  multiple={true}
-/> */}
-              {/* </div>
-            </> */}
+      
           { recordType === "prescription" ? (
             <>
               <p className={styles.HeadText}>Prescription</p>
@@ -305,8 +266,8 @@ function AddRecordModal({show,handleClose,patientId}) {
                         as="textarea"
                         rows={3}
                         placeholder="Enter medication description..."
-                        value={formData.prescription.description}
-                        onChange={(e) => handleInputChange(e, "description")}
+                        value={formData.prescription.summary}
+                        onChange={(e) => handleInputChange(e, "summary")}
                         className={styles.presDesInput}
                       />
                     </Col>
@@ -324,45 +285,7 @@ function AddRecordModal({show,handleClose,patientId}) {
               />
               </div>
             </>
-//           ) : recordType === "Imaging" ? (
-//             <>
-//               <div className={styles.inputFields}>
-//                 <div className={styles.inputGroup}>
-//                   <label className={styles.HeadText}>Title</label>
-//                   <Form.Control
-//                     type="text"
-//                     placeholder="Enter record title"
-//                     value={formData.imaging.title}
-//                     onChange={(e) => handleInputChange(e, "title")}
-//                     className={styles.inputPosition}
-//                     style={{ marginBottom: "10%" }}
-//                   />
-//                 </div>
 
-//                 <div className={styles.inputGroup}>
-//                   <label className={styles.HeadText}>Summery</label>
-//                   <Form.Control
-//                     as="textarea"
-//                     rows={4}
-//                     placeholder="Add a summery of the record"
-//                     value={formData.imaging.summary}
-//                     onChange={(e) => handleInputChange(e, "summary")}
-//                     className={styles.inputPosition}
-//                     style={{ padding: "6% 6%" }}
-//                   />
-//                 </div>
-//               </div>
-
-//               <div className={styles.fileUpload}>
-//               <DragAndDrop
-//   section ="imaging"
-//   name="report"
-//   setFormData={setFormData}
-//   clearPreview={clearPreview}
-//   multiple={false} 
-// />
-//               </div>
-//             </>
           ) : recordType === "vitals" ? (
             <>
               <p className={styles.HeadText}>Vitals Page</p>
@@ -484,7 +407,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.HeadText}>Summery</label>
+                  <label className={styles.HeadText}>Summary</label>
                   <Form.Control     
                     rows={4}
                     placeholder="Add a summery of the record"

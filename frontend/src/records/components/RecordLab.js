@@ -136,15 +136,27 @@ const RecordLab = () => {
   const lastVisitDate = getLastVisitDate(records);
   
  
+  // const filteredPatients = patients.filter(
+  //   (patient) =>
+  //     (filter === "all" || patient.appointment_type === filter) &&
+  //     (patient.patient_name.toLowerCase().includes(query.toLowerCase()) ||
+  //       patient.patient_id.toString().includes(query) ||
+  //       (patient.phno &&
+  //         patient.phno.toString().includes(query)))
+  // );
+ 
+ const lowerQuery = query.toLowerCase();
+ 
   const filteredPatients = patients.filter(
     (patient) =>
       (filter === "all" || patient.appointment_type === filter) &&
-      (patient.patient_name.toLowerCase().includes(query.toLowerCase()) ||
-        patient.patient_id.toString().includes(query) ||
-        (patient.phone_number &&
-          patient.phone_number.toString().includes(query)))
+      (
+        patient.patient_name?.toLowerCase().includes(lowerQuery) ||
+        patient.patient_id?.toString().toLowerCase().includes(lowerQuery) ||
+        patient.phone_number?.toString().toLowerCase().includes(lowerQuery)
+      )
   );
- 
+
   useEffect(() => {
     if (selectedPatient && activeTab && recordTypeMap[activeTab]) {
       fetchRecords();
