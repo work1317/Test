@@ -113,8 +113,8 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
             <h4 className="mb-3">Invoice Details</h4>
             <Row className="mb-2">
               {/* <Col>DL.No: {getinvoice.bill_no}</Col> */}
-              <Col>GST No: GST0123456</Col>
-              <Col>DL NO: GST0123456 </Col>
+              <Col>GST No: 36GXDPS8882J1ZH</Col>
+              <Col>DL NO: 135/RR2/AP/2010 </Col>
             </Row>
             <Row className="mb-3">
               <Col>Bill Date: {getinvoice.Bill_Date}</Col>
