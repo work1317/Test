@@ -49,7 +49,7 @@ const ProcessPrescription = ({ show, handleClose, patient_id, onUpdate }) => {
         `records/prescription/${patient_id}/`,
         updatedData
       );
- 
+       window.dispatchEvent(new Event("refreshProcessPrescription"));
       setMessage("Prescription(s) processed successfully.");
       if (onUpdate) onUpdate();
       handleClose();

@@ -52,6 +52,7 @@ function UpdateStock({ medicationId, show, handleClose }) {
       .then(res => {
         console.log('UpdateStock response',res);
         alert("Medication updated successfully!");
+         window.dispatchEvent(new Event("refreshUpdateStock"));
         handleClose();
       })
       .catch(err => {

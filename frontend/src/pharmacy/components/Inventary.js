@@ -38,9 +38,14 @@ function Inventary({ onMedicationAdded }) {
     const handleRefresh = () => fetchMedications(); // Refresh on event
  
     window.addEventListener("refreshAddMedication", handleRefresh);
+     window.addEventListener("refreshProcessPrescription", handleRefresh);
+     window.addEventListener("refreshUpdateStock", handleRefresh);
  
     return () => {
       window.removeEventListener("refreshAddMedication", handleRefresh);
+      window.removeEventListener("refreshProcessPrescription", handleRefresh);
+      window.removeEventListener("refreshUpdateStock", handleRefresh);
+      
     };
   }, []);
 
