@@ -7,17 +7,33 @@ import { Microscope } from 'lucide-react';
 import { File } from 'lucide-react';
 import { Download } from 'lucide-react';
 import { doctors } from './RecordLab';
+import api from '../../utils/axiosInstance';
 export const  transforImage  =  createContext()
 const BloodCount= ({ show, handleClose, user, selectedPatient, action, transformData}) => {
     const handleDownload = async () => {
-        const url = `http://127.0.0.1:8000/labs/labtests_download/${action}/`;
-        console.log(url);
-        const link = document.createElement('a');
-        link.href = url;
-      
-    
-        link.download = 'labtest_image.jpg'; 
-        link.click();
+       try {
+          const response = await api.get(`labs/labtests_download/${action}/`, {
+            responseType: 'blob', // Important to get image data correctly
+          });
+     
+          // Create a Blob from the image response
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+     
+          // Create a temporary link element
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'labtest_image.jpg'); // File name
+     
+          // Trigger the download
+          document.body.appendChild(link);
+          link.click();
+     
+          // Clean up
+          link.remove();
+          window.URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error('Error downloading the image:', error);
+        }
       };
      
   return (
