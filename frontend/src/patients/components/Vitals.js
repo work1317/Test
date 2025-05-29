@@ -113,6 +113,7 @@
 import React, { useState, useEffect } from "react";
 import { Thermometer, Activity, Heart, Droplet } from "lucide-react";
 import api from "../../utils/axiosInstance";
+import { Card } from "react-bootstrap";
 
 function Vitals({ patient_id }) {
   const [vitalsList, setVitalsList] = useState([]);
@@ -153,6 +154,7 @@ function Vitals({ patient_id }) {
     <div>
       <div className="vitals-section">
         {vitalsList.map((vital, index) => (
+        <Card.Body className="p-1">
           <div className="vitals-card" key={index}>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h5 className="vitals-title">Vitals Check</h5>
@@ -240,9 +242,11 @@ function Vitals({ patient_id }) {
               </div>
             </div>
           </div>
+      </Card.Body>
         ))}
       </div>
     </div>
+
   );
 }
 
