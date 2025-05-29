@@ -15,8 +15,9 @@ function GTreatmentChat({ patient }) {
         .get(`/records/get-treatment-chart/${patient.patient_id}`)
         .then((response) => {
           if (response.data.success === 1) {
-            setTreatmentData(response.data.data.treatment_chart_details || []);
+            setTreatmentData(response.data.data || []);
             setErrorMessage('');
+            console.log(response.data.data)
           } else {
             setTreatmentData([]);
             setErrorMessage(response.data.message || 'No treatment data available.');

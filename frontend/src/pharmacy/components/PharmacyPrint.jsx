@@ -7,16 +7,6 @@ import logo from "../../assets/images/sitelogo.svg";
 import { Icon } from "@iconify/react";
  
 const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
-  // const totalAmount =
-  //   getinvoice?.items?.reduce((acc, item) => acc + item.amount, 0) || 0;
-  // const totalDiscount =
-  //   getinvoice?.items?.reduce((acc, item) => acc + item.discount_amount, 0) ||
-  //   0;
-  // const totalTax =
-  //   getinvoice?.items?.reduce((acc, item) => acc + item.tax_amount, 0) || 0;
-  // const netAmount = totalAmount - totalDiscount + totalTax;
-  // const paidAmount = getinvoice?.paid_amount || "0.00";
-
   const totalAmount = getinvoice?.items?.reduce((acc, item) => acc + (parseFloat(item.amount) || 0), 0) || 0;
   const totalDiscount = getinvoice?.items?.reduce((acc, item) => acc + (parseFloat(item.discount_amount) || 0), 0) || 0;
   const totalTax = getinvoice?.items?.reduce((acc, item) => acc + (parseFloat(item.tax_amount) || 0), 0) || 0;
@@ -193,7 +183,7 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                 backgroundColor: "#A62855",
                 color: "white",
                 textAlign: "center",
-                padding: "1px",
+                // padding: "1px",
                 fontSize: "20px",
                 marginBottom: "-12px",
               }}

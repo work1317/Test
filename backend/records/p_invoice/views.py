@@ -46,7 +46,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "patient_name": patient.patient_name,
                 "age": patient.age,
                 "gender": patient.gender,
-                "doctor_name": patient.doctor.d_name,
+                "doctor": patient.doctor.d_name,
                 "appointment_type": patient.appointment_type
             }
             return Response({
