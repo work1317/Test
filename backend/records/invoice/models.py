@@ -11,14 +11,14 @@ class ServiceCharge(models.Model):
 
 
 class InvestigationCharge(models.Model):
-    from_date = models.DateField()
-    to_date = models.DateField()
+    from_date = models.DateField(blank=True, null=True)
+    to_date = models.DateField(blank=True, null=True)
     amount = models.DecimalField(max_digits=7, decimal_places=2)
 
 
 class PharmacyCharge(models.Model):
-    from_date = models.DateField()
-    to_date = models.DateField()
+    from_date = models.DateField(blank=True, null=True)
+    to_date = models.DateField(blank=True, null=True)
     amount = models.DecimalField(max_digits=7, decimal_places=2)
 
 
@@ -49,7 +49,7 @@ class Invoice(models.Model):
     due_on_receipt = models.CharField(max_length=5, choices=STATUS_CHOICES)
     payment_method = models.CharField(max_length=40, choices=PAYMENT_CHOICES)
     notes = models.TextField(max_length=100)
-    concession = models.DecimalField(max_digits=7, decimal_places=2)
+    concession = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
