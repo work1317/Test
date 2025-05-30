@@ -62,7 +62,7 @@ function InvoiceForm({ handlerClose, saveButtons }) {
                 />
               </div>
               <div className="col-md-6 mb-3">
-                <Form.Label>Status</Form.Label>
+                {/* <Form.Label>Status</Form.Label>
                 <Form.Control
                   className={styles.formsCon}
                   name="status"
@@ -71,7 +71,19 @@ function InvoiceForm({ handlerClose, saveButtons }) {
                   value={formsData1.status}
                   onChange={handlerForms}
                   required
-                />
+                /> */}
+                <Form.Label>Status</Form.Label>
+                  <Form.Select
+                    className={styles.formsCon}
+                    name="status"
+                    value={formsData1.status}
+                    onChange={(e) =>
+                      setFormsData1({ ...formsData1, status: e.target.value })
+                    }
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                  </Form.Select>
               </div>
               <div className="col-12 mb-3">
                 <Form.Label>Date</Form.Label>

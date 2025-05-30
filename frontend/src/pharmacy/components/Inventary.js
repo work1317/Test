@@ -186,8 +186,11 @@ function Inventary({ onMedicationAdded }) {
                       </Row>
                       <Row className="d-flex justify-content-between align-items-center mb-3">
                        <Col> <span className='text-muted'>Expiry</span></Col>
-                       <Col className='text-end'><span>{med.expiry_date}</span></Col>
-                        
+                       <Col className='text-end'><span>{med.expiry_date}</span></Col> 
+                      </Row>
+                      <Row className="d-flex justify-content-between align-items-center mb-3">
+                       <Col> <span className='text-muted'>Batch No</span></Col>
+                       <Col className='text-end'><span>{med.batch_no}</span></Col>
                       </Row>
                     </div>
 

@@ -7,8 +7,10 @@ import { Icon } from "@iconify/react";
 import InvoicePrint from "./InvoicePrint";
 import axios from "axios"; // Add axios for API call
 import api from "../../utils/axiosInstance";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
 
  export default function InvoiceGenerator() {
+  const {fetchNotifications, onNotificationClick} = useNotifications()
   const [paymentMethod, setPaymentMethod] = useState("");
   const [dueOnReceipt, setDueOnReceipt] = useState("");
   const[note,setNote]=useState("");
@@ -98,6 +100,8 @@ import api from "../../utils/axiosInstance";
       "invoice/create-invoice/",
       payload
     );
+    await fetchNotifications()
+    await onNotificationClick()
 
     const invoice = response.data.data;  // Use the response data directly
     setInvoiceData(invoice);             // Update invoiceData state
@@ -216,7 +220,7 @@ import api from "../../utils/axiosInstance";
                     <Col>
                       <Form.Label>Patient Id</Form.Label>
                       <Form.Control
-                        placeholder="Patient ID"
+                        placeholder="Enter Patient ID"
                         value={patientId}
                         onChange={(e) => setPatientId(e.target.value)} // Update patient ID
                       />

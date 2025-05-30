@@ -2,7 +2,7 @@ import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import RInvoice from '../css/RecentInvoice.module.css';
 import api from '../../utils/axiosInstance';
-
+ 
 const RecentInvoice = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const [fromDate, setFromDate] = useState('');
@@ -13,19 +13,19 @@ const RecentInvoice = () => {
   const [filteredInvoices, setFilteredInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ 
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalDiscountAmount, setTotalDiscountAmount] = useState(0);
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(0);
   const [totalNetAmount, setTotalNetAmount] = useState(0);
-
+ 
   const setTotalsFromBackend = (totals) => {
     setTotalAmount(totals.total_amount || 0);
     setTotalDiscountAmount(totals.total_discount_amount || 0);
-    setTotalAfterDiscount(totals.total_after_discount_amount || 0);
+    setTotalAfterDiscount(totals. total_net_amount|| 0);
     setTotalNetAmount(totals.total_net_amount || 0);
   };
-
+ 
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
@@ -33,7 +33,8 @@ const RecentInvoice = () => {
         const data = response.data?.data || [];
         setInvoices(data);
         setFilteredInvoices(data);
-
+        console.log(response.data)
+ 
         if (response.data?.totals) {
           setTotalsFromBackend(response.data.totals);
         } else {
@@ -46,34 +47,34 @@ const RecentInvoice = () => {
         console.error("Failed to fetch recent invoices:", err);
       }
     };
-
+ 
     fetchInvoices();
   }, []);
-
+ 
   const handleFilter = () => {
     const from = fromDate ? new Date(fromDate) : null;
     const to = toDate ? new Date(toDate) : null;
     let filtered = [...invoices];
-
+ 
     if (from && to) {
       filtered = filtered.filter(inv => {
         const billDate = new Date(inv.Bill_Date);
         return billDate >= from && billDate <= to;
       });
     }
-
+ 
     if (fromType) {
       filtered = filtered.filter(inv =>
         inv.appointment_type?.toLowerCase() === fromType.toLowerCase()
       );
     }
-
+ 
     if (paymentMode) {
       filtered = filtered.filter(inv =>
         (inv.typeof_transaction || '').toLowerCase() === paymentMode.toLowerCase()
       );
     }
-
+ 
     if (selectedOption === 'option1') {
       filtered.sort((a, b) => new Date(b.Bill_Date) - new Date(a.Bill_Date));
     } else if (selectedOption === 'option2') {
@@ -83,39 +84,39 @@ const RecentInvoice = () => {
         return totalB - totalA;
       });
     }
-
+ 
     setFilteredInvoices(filtered);
     calculateSummary(filtered);
   };
-
+ 
   const calculateSummary = (data) => {
     let amountSum = 0;
     let discountSum = 0;
     let afterDiscountSum = 0;
     let netSum = 0;
-
+ 
     data.forEach(inv => {
       inv.items.forEach(item => {
-        amountSum += parseFloat(item.amount || 0);
+        amountSum += parseFloat(item.final_amount || 0);
         discountSum += parseFloat(item.discount_amount || 0);
         afterDiscountSum += parseFloat(item.amount || 0) - parseFloat(item.discount_amount || 0);
         netSum += parseFloat(item.net_amount || 0);
       });
     });
-
+ 
     setTotalAmount(amountSum);
     setTotalDiscountAmount(discountSum);
     setTotalAfterDiscount(afterDiscountSum);
     setTotalNetAmount(netSum);
   };
-
+ 
   useEffect(() => {
     if (!loading && invoices.length > 0) {
       handleFilter();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption]);
-
+ 
   const handleClear = () => {
     setFromType('');
     setPaymentMode('');
@@ -125,15 +126,15 @@ const RecentInvoice = () => {
     setFilteredInvoices(invoices);
     calculateSummary(invoices);
   };
-
+ 
   const headercolor = {
     color: 'white',
     backgroundColor: '#002072',
   };
-
+ 
   if (loading) return <p>Loading recent invoices...</p>;
   if (error) return <p>{error}</p>;
-
+ 
   return (
     <Container>
       <Row>
@@ -147,7 +148,7 @@ const RecentInvoice = () => {
               placeholder="Enter appointment type"
             />
           </Form.Group>
-
+ 
           <Form.Group>
             <Form.Label>Pay Mode</Form.Label>
             <Form.Control
@@ -158,7 +159,7 @@ const RecentInvoice = () => {
               placeholder="Enter transaction mode"
             />
           </Form.Group>
-
+ 
           <Form.Group>
             <Form.Label>From Date</Form.Label>
             <Form.Control
@@ -168,7 +169,7 @@ const RecentInvoice = () => {
               onChange={(e) => setFromDate(e.target.value)}
             />
           </Form.Group>
-
+ 
           <Form.Group>
             <Form.Label>To Date</Form.Label>
             <Form.Control
@@ -180,7 +181,7 @@ const RecentInvoice = () => {
           </Form.Group>
         </Col>
       </Row>
-
+ 
       <Row className="justify-content-start">
         <Col md={6} className="mt-5 border border-secondary rounded mb-5 p-2">
           <div className="d-flex">
@@ -195,7 +196,7 @@ const RecentInvoice = () => {
               />{' '}
               From Date
             </label>
-
+ 
             <label className="ms-4">
               <input
                 type="radio"
@@ -209,7 +210,7 @@ const RecentInvoice = () => {
             </label>
           </div>
         </Col>
-
+ 
         <Col className={`mt-5 d-flex justify-content-end ${RInvoice.twobuttons}`}>
           <Button className={`h-50 px-5 text-dark border border-light ${RInvoice.clear}`} onClick={handleClear}>
             Clear
@@ -219,7 +220,7 @@ const RecentInvoice = () => {
           </Button>
         </Col>
       </Row>
-
+ 
       <Row>
         <div
           style={{
@@ -234,9 +235,9 @@ const RecentInvoice = () => {
                 <th style={headercolor}>Bill No</th>
                 <th style={headercolor}>Bill Date</th>
                 <th style={headercolor}>Pay Mode</th>
-                <th style={headercolor}>Appointment Type</th>
+                <th style={headercolor}>Form Type</th>
                 <th style={headercolor}>Patient Name</th>
-                <th style={headercolor}>Amount</th>
+                <th style={headercolor}> Paid Amt</th>
                 <th style={headercolor}>After Discount</th>
                 <th style={headercolor}>Discount Amount</th>
                 <th style={headercolor}>Net Amount</th>
@@ -246,11 +247,13 @@ const RecentInvoice = () => {
             </thead>
             <tbody>
               {filteredInvoices.map((invoice, index) => {
-                const totalAmount = invoice.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+                const totalAmount = invoice.items.reduce((sum, item) => sum + parseFloat(item.paid_amount || 0), 0);
+                const finalAmount = invoice.items.reduce((sum, item) => sum + parseFloat(item.final_amount || 0), 0);
+                  // const totalAfterDiscount = totalAmount - totalDiscount;
+                     const  totalAfterDiscount = invoice.items.reduce((sum, item) => sum + parseFloat(item.net_amount || 0), 0);
                 const totalDiscount = invoice.items.reduce((sum, item) => sum + parseFloat(item.discount_amount || 0), 0);
-                const totalAfterDiscount = totalAmount - totalDiscount;
                 const totalNetAmount = invoice.items.reduce((sum, item) => sum + parseFloat(item.net_amount || 0), 0);
-
+ 
                 return (
                   <tr key={invoice.id}>
                     <td>{index + 1}</td>
@@ -259,7 +262,7 @@ const RecentInvoice = () => {
                     <td>{invoice.typeof_transaction || ''}</td>
                     <td>{invoice.appointment_type || ''}</td>
                     <td>{invoice.patient_name || ''}</td>
-                    <td>{totalAmount.toFixed(2)}</td>
+                    <td>{finalAmount.toFixed(2)}</td>
                     <td>{totalAfterDiscount.toFixed(2)}</td>
                     <td>{totalDiscount.toFixed(2)}</td>
                     <td>{totalNetAmount.toFixed(2)}</td>
@@ -272,7 +275,7 @@ const RecentInvoice = () => {
           </Table>
         </div>
       </Row>
-
+ 
       <Row className="mb-3 mt-3">
         <Col md={4}>
           <Form.Group>
@@ -280,14 +283,14 @@ const RecentInvoice = () => {
             <Form.Control className="w-75" value={totalAmount.toFixed(2)} readOnly />
           </Form.Group>
         </Col>
-
+ 
         <Col md={4}>
           <Form.Group>
             <Form.Label>Total After Discount</Form.Label>
             <Form.Control className="w-75" value={totalAfterDiscount.toFixed(2)} readOnly />
           </Form.Group>
         </Col>
-
+ 
         <Col md={4}>
           <Form.Group>
             <Form.Label>Total Discount Amount</Form.Label>
@@ -298,5 +301,6 @@ const RecentInvoice = () => {
     </Container>
   );
 };
-
+ 
 export default RecentInvoice;
+ 

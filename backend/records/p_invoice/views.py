@@ -22,12 +22,10 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from patients.models import Patient
 from .serializers import RecentPharmacyInvoicesSerializer
-
-
+ 
+ 
 # # -------------------- CREATE -------------------------------------
-
-
-
+ 
 class CreatePharmacyInvoiceAPIView(APIView):
     def get(self, request, *args, **kwargs):
         patient_id = request.query_params.get("patient_id")
@@ -40,7 +38,6 @@ class CreatePharmacyInvoiceAPIView(APIView):
  
         try:
             patient = Patient.objects.get(patient_id=patient_id)
-            print("Received patient_id:", patient_id)
             data = {
                 "patient_id": patient.patient_id,
                 "patient_name": patient.patient_name,
@@ -60,39 +57,35 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "message": "No patient found with this ID.",
                 "data": {}
             }, status=status.HTTP_404_NOT_FOUND)
-
-
+ 
     def post(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
-                # Create invoice and nested items
                 serializer = PharmacyInvoiceSerializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
                 invoice = serializer.save()
-
-                # Finalize the invoice (calculates totals)
                 invoice.finalize_invoice()
-
+ 
             return Response({
                 "success": 1,
                 "message": "Invoice created and finalized successfully",
                 "data": PharmacyInvoiceSerializer(invoice).data
             }, status=status.HTTP_201_CREATED)
-
+ 
         except DjangoValidationError as ve:
             return Response({
                 "success": 0,
                 "message": f"Validation error: {ve.message}",
                 "data": {}
             }, status=status.HTTP_400_BAD_REQUEST)
-
+ 
         except DRFValidationError as ve:
             return Response({
                 "success": 0,
                 "message": f"Validation error: {ve.detail}",
                 "data": {}
             }, status=status.HTTP_400_BAD_REQUEST)
-
+ 
         except Exception as e:
             traceback.print_exc()
             return Response({
@@ -100,8 +93,9 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "message": f"An unexpected error occurred: {str(e)}",
                 "data": {}
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
+ 
+ 
+ 
 # -------------------- LIST ------------------------------------------
  
 class PharmacyInvoiceListAPIView(APIView):
@@ -168,14 +162,14 @@ class PharmacyInvoiceListAPIView(APIView):
         return Response(context, status=status.HTTP_200_OK)
  
 # -------------------- DETAIL / UPDATE -------------------------------
-
+ 
 class PharmacyInvoiceDetailAPIView(APIView):
     def get(self, request, invoice_id):
         context = {"success": 1, "message": "Invoice details fetched successfully.", "data": {}}
         try:
             invoice = PharmacyInvoice.objects.prefetch_related("items").get(id=invoice_id)
             items = invoice.items.all()
-
+ 
             summary = {
                 "total_amount": Decimal('0.00'),
                 "total_discount": Decimal('0.00'),
@@ -183,7 +177,7 @@ class PharmacyInvoiceDetailAPIView(APIView):
                 "total_net_amount": Decimal('0.00'),
                 "total_final_amount": Decimal('0.00')
             }
-
+ 
             item_list = []
             for item in items:
                 summary["total_amount"] += item.amount
@@ -191,7 +185,7 @@ class PharmacyInvoiceDetailAPIView(APIView):
                 summary["total_tax"] += item.tax_amount
                 summary["total_net_amount"] += item.net_amount
                 summary["total_final_amount"] += item.final_amount
-
+ 
                 item_list.append({
                     "medication_name": item.medication_name.medication_name,
                     "quantity": item.quantity,
@@ -205,7 +199,7 @@ class PharmacyInvoiceDetailAPIView(APIView):
                     "net_amount": float(item.net_amount),
                     "final_amount": float(item.final_amount),
                 })
-
+ 
             invoice_data = {
                 "invoice_id": invoice.id,
                 "bill_no": invoice.Bill_No,
@@ -218,7 +212,7 @@ class PharmacyInvoiceDetailAPIView(APIView):
                 "description": invoice.description,
                 "paid_amount": float(invoice.paid_amount),
             }
-
+ 
             context["data"] = {
                 "invoice": invoice_data,
                 "items": item_list,
@@ -227,50 +221,82 @@ class PharmacyInvoiceDetailAPIView(APIView):
                     "total_paid_amount": float(invoice.paid_amount),
                 }
             }
-
+ 
         except PharmacyInvoice.DoesNotExist:
             return Response({"success": 0, "message": "Invoice not found."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"success": 0, "message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response(context, status=status.HTTP_200_OK)
-
-# -------------------- SEARCH WITH MEDICATION NAME--------------------
  
+        return Response(context, status=status.HTTP_200_OK)
+    
+
+
 class MedicationSearchByNameAPIView(APIView):
     def get(self, request, medication_name=None):
+        batch_no = request.query_params.get("batch_no")
+ 
+        context = {
+            "success": 1,
+            "message": "Fetched Successfully",
+            "data": [],
+            "batches": []
+        }
+ 
         if not medication_name:
             return Response({"success": 0, "message": "Medication name is required."}, status=status.HTTP_400_BAD_REQUEST)
-
+ 
         try:
-            medications = Medication.objects.filter(medication_name__contains=medication_name)
-            if not medications.exists():
-                return Response({"success": 0, "message": "No medications found."}, status=status.HTTP_404_NOT_FOUND)
-
-            serializer = MedicationSerializer(medications, many=True)
-            return Response({"success": 1, "message": "Medicines fetched successfully.", "data": serializer.data}, status=status.HTTP_200_OK)
-
+            if batch_no:
+                # Return details for specific batch_no with that medication_name
+                medication = Medication.objects.filter(
+                    medication_name=medication_name,
+                    batch_no=batch_no
+                ).first()
+ 
+                if not medication:
+                    return Response({"success": 0, "message": "No medication found for given batch number."}, status=status.HTTP_404_NOT_FOUND)
+ 
+                serializer = MedicationSerializer(medication)
+                context["data"] = serializer.data
+                return Response(context, status=status.HTTP_200_OK)
+ 
+            else:
+                # Return all batches for medication_name
+                medications = Medication.objects.filter(medication_name=medication_name)
+                if not medications.exists():
+                    return Response({"success": 0, "message": "No medications found."}, status=status.HTTP_404_NOT_FOUND)
+ 
+                batches = [med.batch_no for med in medications]
+                serializer = MedicationSerializer(medications, many=True)
+                context["batches"] = batches
+                context["data"] = serializer.data
+ 
+                return Response(context, status=status.HTTP_200_OK)
+ 
         except Exception as e:
             return Response({"success": 0, "message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+ 
+ 
+ 
+ 
 #---------------------SEARCH WITH MEDICATION ID-----------------------
-
+ 
 class MedicationSearchByIdAPIView(APIView):
     def get(self, request, medication_id=None):
         if not medication_id:
             return Response({"success": 0, "message": "Medication ID is required."}, status=status.HTTP_400_BAD_REQUEST)
-
+ 
         try:
             medication = Medication.objects.filter(id=medication_id).first()
             if not medication:
                 return Response({"success": 0, "message": "Medication not found."}, status=status.HTTP_404_NOT_FOUND)
-
+ 
             serializer = MedicationSerializer(medication)
             return Response({"success": 1, "message": "Medication fetched successfully.", "data": serializer.data}, status=status.HTTP_200_OK)
-
+ 
         except Exception as e:
             return Response({"success": 0, "message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+ 
 # -------------------- PDF DOWNLOAD ----------------------------------
  
 class InvoiceDownloadAPIView(APIView):
@@ -325,7 +351,8 @@ class InvoiceDownloadAPIView(APIView):
         return FileResponse(buffer, as_attachment=True, filename=f"Invoice_{invoice.Bill_No}.pdf")
  
 # -------------------- RECENT ----------------------------------------
-
+ 
+ 
 class RecentPharmacyInvoicesAPIView(APIView):
     def get(self, request, *args, **kwargs):
         try:

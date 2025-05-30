@@ -8,6 +8,7 @@ import styles from "../css/MainDashboard.module.css";
 import { useNavigate } from "react-router-dom";
 import "../css/SearchBar.css";
 import AuthContext from "../../context/AuthProvider";
+import { useNotifications } from "./NotificationContext";
 
 const menuItems = [
   { icon: "circum:grid-4-2", label: "Dashboard", link: "dashboard" },
@@ -48,6 +49,7 @@ const LaoutPage = () => {
   const [searchInput, setSearchInput] = useState("");
   const [suggs, setSuggs] = useState([]);
   const [filteredSuggs, setFilteredSuggs] = useState([]);
+  const {read, showDot} = useNotifications()
   const [activeItem, setActiveItem] = useState(-1);
   const [showSuggs, setShowSuggs] = useState(false);
   const suggRef = useRef(null);
@@ -69,6 +71,8 @@ const LaoutPage = () => {
       setSelectedPage(currentItem.label);
     }
   }, [location]);
+
+
   
 
   const handleSearchInput = (e) => {
@@ -114,7 +118,7 @@ const LaoutPage = () => {
     setShowSuggs(false);
   };
   const handleBellClick = () => {
-    setHasNotification(!hasNotification);
+    // setHasNotification(!hasNotification);
     navigation("/dashboard/notifications");
   };
   const [inputText, setInputText] = useState("");
@@ -199,7 +203,7 @@ const LaoutPage = () => {
                 <div className={styles.navtitle}>{selectedPage}</div>
                 <div className={styles.navrightSection}>
                   <div className={styles.bellContainer}>
-                    <Icon
+                     <Icon
                       icon="f7:bell"
                       width="24"
                       height="24"
@@ -207,7 +211,7 @@ const LaoutPage = () => {
                       className={styles.bellIcon}
                       onClick={handleBellClick}
                     />
-                    {hasNotification && (
+                    { showDot && (
                       <span className={styles.notificationBadge}></span>
                     )}
                   </div>

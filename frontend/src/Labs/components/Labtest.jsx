@@ -23,9 +23,11 @@ import axios from "axios";
 import LabViewresult from "./LabViewresult";
 import InvoiceViewresult from "./InvocieViewresult";
 import api from "../../utils/axiosInstance";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
 
 export const forms = createContext();
 function Labtest() {
+  const {fetchNotifications, onNotificationClick} = useNotifications()
   const [page, setPage] = useState("labtest");
   const [opens, setOpens] = useState(false);
   const [showes, setShowes] = useState(false);
@@ -54,11 +56,12 @@ function Labtest() {
   const [formObj, setFormObj] = useState([]);
   const [search, setSearch] = useState();
 
+
   const [formsData1, setFormsData1] = useState({
     patient: "",
     testname: "",
     amount: "",
-    status: "",
+    status: "Pending",
     date: "",
   });
 
@@ -242,6 +245,8 @@ function Labtest() {
       try {
        const response =  await api.post('labs/create_lab_invoice/', formsData1);
         const saveData = response.data.data;
+        await fetchNotifications()
+        await onNotificationClick()
         console.log(saveData);
         setFormObj1([...formObj1, formsData1]);
         setFormsData1({

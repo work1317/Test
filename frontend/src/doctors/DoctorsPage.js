@@ -16,6 +16,7 @@ import { Icon } from "@iconify/react";
 import Vector from "../assets/images/Vector.svg";
 import axios from "axios";
 import api from "../utils/axiosInstance";
+import { FaPhone } from "react-icons/fa6";
 
 const DoctorsPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -142,7 +143,7 @@ const DoctorsPage = () => {
               </div>
               <div className={` mt-3 ${Doctorstyle.text}`}>
                 <p className={`${Doctorstyle.number}`}>{totalExpertise}</p>
-                <p className={`${Doctorstyle.content}`}>Specialties</p>
+                <p className={`${Doctorstyle.content}`}>Specialities</p>
               </div>
             </Card.Body>
           </Card>
@@ -214,6 +215,7 @@ const DoctorsPage = () => {
                 <option value="all">All</option>
                 <option value="Ophthalmology">Ophthalmology</option>
                 <option value="Neurology">Neurology</option>
+                <option value="Cardiology">Cardiology</option>
                 <option value="ENT">ENT</option>
                 <option value="Dentistry">Dentistry</option>
                 <option value="Dermtology">Dermtology</option>
@@ -237,16 +239,17 @@ const DoctorsPage = () => {
                 <Card.Body>
                   <h5>{doctor.d_name}</h5>
                   <div className="d-flex align-items-center">
-                    <CiStethoscope size={30} className="text-primary" />
+                    <p><CiStethoscope size={30} className="text-primary" /></p>
                     <p className="ms-2 text-muted">{doctor.d_department}</p>
                   </div>
                   <div className="d-flex align-items-center">
-                    <IoStarOutline size={25} className="text-warning" />
+                    <p><IoStarOutline size={25} className="text-warning" /></p>
                     <p className="ms-2 text-muted">
                       {index === 0 ? "4.8 Rating" : "4.9 Rating"}
                     </p>
                   </div>
                   <div className="d-flex align-items-center">
+                    <p><FaPhone size={20} className="text-secondary"/></p>
                     <p className="ms-2 text-muted">{doctor.d_phn_no}</p>
                   </div>
                 </Card.Body>
@@ -258,12 +261,12 @@ const DoctorsPage = () => {
                     <GoPeople size={20} className="text-muted pb-1" />
                     <p className="ms-2 mb-0" style={{ fontSize: "0.85rem" }}>{doctor.patient_count}</p>
                   </div>
-                    <div className="d-flex">
+                    {/* <div className="d-flex">
                     <CiCalendar size={25} className="text-muted pb-1" />
                     <p className="ms-2 mb-0" style={{ fontSize: "0.85rem" }}>
                       {index === 0 ? "25 Today" : "15 Today"}
                     </p>
-                  </div>
+                  </div> */}
                 </Card.Footer>
               </Card>
             </Col>

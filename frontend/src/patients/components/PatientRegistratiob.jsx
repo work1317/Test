@@ -10,8 +10,10 @@ import {
 } from "react-bootstrap";
 import api from "../../utils/axiosInstance";
 import PatientRegister from "../css/PatientRegistration.module.css";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
 
 const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
+  const {fetchNotifications, onNotificationClick} =  useNotifications()
   const [formData, setFormData] = useState({
     patient_name: "",
     doctor:"",
@@ -68,6 +70,8 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
       "/patients/create/",
       formData
     );
+    await fetchNotifications()
+    await onNotificationClick()
     console.log("API Response:", response);
     // window.location.href = "/notifications";
     if (

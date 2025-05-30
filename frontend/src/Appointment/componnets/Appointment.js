@@ -107,8 +107,8 @@ const Appointments = () => {
           <h1 className={styles.sectionTitle}>Appointments</h1>
           <p className={styles.para}>Manage and schedule patient appointments</p>
         </div>
-        <Button className={styles.buttonclick} onClick={() => setShowUserModal(true)}>
-          <CiCalendar className="mb-1" /> Schedule Appointments
+        <Button className={styles.buttonclick} onClick={() => setShowUserModal(true)} style={{padding:'10px'}}>
+          <CiCalendar className="mb-1 me-2" size={15}/> Schedule Appointments
         </Button>
       </div>
 
@@ -119,9 +119,9 @@ const Appointments = () => {
           <Card className="shadow-lg">
             <Card.Body>
               <CiCalendar className={`p-1 ${styles.icon}`} size={30} />
-              <p className={styles.statsCardText}>Total Patients</p>
+              <p className={styles.statsCardText}>Today Total Patients</p>
               <h2 className={styles.statsNumber}>{stats.total_patients_today}</h2>
-              <p className={styles.statsFooter}>+12% this month</p>
+              <p className={styles.statsFooter}>+{stats.increased_patients}% this month</p>
             </Card.Body>
           </Card>
         </Col>
@@ -188,8 +188,8 @@ const Appointments = () => {
         <Col md={7}>
           <Card className="shadow-md p-3">
             <div className="d-flex flex-row mb-3">
-              <div className={`${styles.search} p-3 d-flex`}>
-                <IoSearchOutline className="mt-1" />
+              <div className={`${styles.search} p-2 d-flex`}>
+                <IoSearchOutline className="mt-2" />
                 <input
                   className={`${styles.searchbar} ps-1 w-75`}
                   type="search"

@@ -140,4 +140,4 @@ class LabInvoice(models.Model):
     #     if not self.patient:
     #         raise ValidationError(_("Patient must be selected and must exist in the database."))
 
-    
+

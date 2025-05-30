@@ -3,8 +3,10 @@ import axios from "axios";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import styles from "../css/AddMedication.module.css";
 import api from "../../utils/axiosInstance";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
 
 const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
+  const {onNotificationClick, fetchNotifications} = useNotifications()
   const [formData, setFormData] = useState({
     medication_name: "",
     category: "",
@@ -47,6 +49,8 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
       if (response.data.success === 1) {
         alert("Medication successfully added!");
         window.dispatchEvent(new Event("refreshAddMedication"));
+        await fetchNotifications()
+        await onNotificationClick()
         if (onMedicationAdded) {
           onMedicationAdded(); // This will re-fetch stats in PharmacyDashboard
         }

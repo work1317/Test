@@ -10,7 +10,7 @@ class ServiceChargeSerializer(serializers.ModelSerializer):
         return value
 
     def validate_amount(self, value):
-        if value <= 0:
+        if value < 0:
             raise serializers.ValidationError("Service amount must be a positive number.")
         return value
 
@@ -24,7 +24,7 @@ class InvestigationChargeSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data['to_date'] < data['from_date']:
             raise serializers.ValidationError("To date cannot be earlier than from date in Investigation charges.")
-        if data['amount'] <= 0:
+        if data['amount'] < 0:
             raise serializers.ValidationError("Investigation amount must be positive.")
         return data
 
@@ -38,7 +38,7 @@ class PharmacyChargeSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data['to_date'] < data['from_date']:
             raise serializers.ValidationError("To date cannot be earlier than from date in Pharmacy charges.")
-        if data['amount'] <= 0:
+        if data['amount'] < 0:
             raise serializers.ValidationError("Pharmacy amount must be positive.")
         return data
 
@@ -55,7 +55,7 @@ class ConsultationChargeSerializer(serializers.ModelSerializer):
         return value
 
     def validate_amount_per_visit(self, value):
-        if value <= 0:
+        if value < 0:
             raise serializers.ValidationError("Consultation amount per visit must be positive.")
         return value
 

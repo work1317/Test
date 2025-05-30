@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import AddSupplier,AddNewTransaction
 from django.core.validators import RegexValidator,MinLengthValidator,MaxLengthValidator,EmailValidator
 import re
+from .models import Medication
+
 # Create the validators here
 
 class MedicationValidator(serializers.Serializer):
@@ -28,6 +30,25 @@ class MedicationValidator(serializers.Serializer):
     expiry_date = serializers.DateField(required=False, allow_null=True,default=None)
     description = serializers.CharField(required=False, allow_blank=True)
     batch_no = serializers.CharField(required=False, allow_blank=True, max_length=50) 
+
+    def validate(self, data):
+        """
+        Custom validation to check if a medication with the same medication_name and batch_no already exists.
+        """
+        medication_name = data.get("medication_name")
+        batch_no = data.get("batch_no")
+       
+        # Check if both medication_name and batch_no are provided
+        if medication_name and batch_no:
+            # Query the database to see if there's an existing Medication with the same name and batch_no
+            existing_medication = Medication.objects.filter(medication_name=medication_name, batch_no=batch_no).exists()
+           
+            if existing_medication:
+                raise serializers.ValidationError(
+                    f"A medication with the name '{medication_name}' and batch number '{batch_no}' already exists."
+                )
+       
+        return data 
 
 phone_no_validator=[
     MinLengthValidator(10, message = "Phone number must be 10 digits."),
@@ -90,4 +111,7 @@ class AddNewTransactionValidator(serializers.Serializer):
         "required": "Supplier is required.",
         "does_not_exist": "Supplier does not exist.",
     })
+
+
+
 

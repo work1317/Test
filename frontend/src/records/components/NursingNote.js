@@ -28,6 +28,7 @@ const NursingNote = ({ handleClose, patientId }) => {
       handleClose();
     } catch (error) {
       console.error("Error saving nursing note:", error);
+      alert(error.response.data.message)
     }
   };
 

@@ -577,17 +577,38 @@ class NursingNotesAPIView(APIView):
                 )
 
             # Ensure only one NursingNotes entry per patient
-            nursing_note, created = models.NursingNotes.objects.get_or_create(
-                patient=patient,
-                defaults={'description': req_params['description']}
-            )
+            # nursing_note, created = models.NursingNotes.objects.get_or_create(
+            #     patient=patient,
+            #     defaults={'description': req_params['description']}
+            # )
 
-            if not created:
-                nursing_note.description = req_params['description']
-                nursing_note.save()
+            # if not created:
+            #     nursing_note.description = req_params['description']
+            #     nursing_note.save()
+
+            # serializer = NursingNotesSerializer(nursing_note, context={"request": request})
+            # context['data'] = {"nursing_note_details": serializer.data}
+
+            # Check if a nursing note already exists for this patient
+            if models.NursingNotes.objects.filter(patient=patient).exists():
+                return Response(
+                    {
+                        "success": 0,
+                        "message": f"Nursing note already exists for patient ID {patient.patient_id}. Overwriting is not allowed.",
+                        "data": {}
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # If not exists, create a new nursing note
+            nursing_note = models.NursingNotes.objects.create(
+                patient=patient,
+                description=req_params['description']
+            )
 
             serializer = NursingNotesSerializer(nursing_note, context={"request": request})
             context['data'] = {"nursing_note_details": serializer.data}
+
 
         except SerializerError as e:
             context['success'] = 0
@@ -744,6 +765,15 @@ class CreateProgressNoteAPIView(APIView):
                 patient = Patient.objects.get(patient_id=patient_id)
             except Patient.DoesNotExist:
                 raise ValidationError({'patient_id': 'Invalid patient ID.'})
+            
+            if ProgressNote.objects.filter(patient=patient).exists():
+                return Response(
+                    {
+                        "success":0,
+                        "messsage":f"Progress note already exists for patient ID {patient.patient_id}.",
+                        "data":{}
+                    },status=status.HTTP_400_BAD_REQUEST
+                )
 
             data = request.data.copy()
             data['patient'] = patient.id

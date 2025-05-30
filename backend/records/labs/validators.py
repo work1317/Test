@@ -79,3 +79,6 @@ class LabInvoiceValidator(serializers.Serializer):
         return patient  # You can return the patient object if your view uses it
     
     
+
+
+

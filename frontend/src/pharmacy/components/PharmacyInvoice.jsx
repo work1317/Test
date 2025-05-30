@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import { Icon } from "@iconify/react";
-import axios from "axios";
+
 import RecentInvoice from "./RecentInvoice";
 import PharmacyPrint from "./PharmacyPrint";
 import api from "../../utils/axiosInstance";
@@ -19,7 +19,6 @@ const PharmacyInvoice = () => {
   const [discount, setDiscount] = useState(5);
   const [tax, setTax] = useState(5);
   const [paymentTerms, setPaymentTerms] = useState();
-
 
 
   const [suggestions, setSuggestions] = useState([]);
@@ -206,6 +205,7 @@ const PharmacyInvoice = () => {
           const response = await api.get(
             `p_invoice/pharmacy/search/${value}/`
           );
+          console.log(response.data)
           setSuggestions(response.data.data || []);
           setActiveRowIndex(index);
         } catch (error) {
@@ -213,7 +213,7 @@ const PharmacyInvoice = () => {
           setSuggestions([]);
           setActiveRowIndex(null);
         }
-      } else {
+      }else{
         setSuggestions([]);
         setActiveRowIndex(null);
       }
@@ -238,16 +238,24 @@ const PharmacyInvoice = () => {
     });
   };
 
-  const handleSuggestionClick = (medicine, index) => {
-    setInvoiceData((prev) => {
+ const handleSuggestionClick = (medicine, index) => {
+  // medicine here is a single batch object, but you want all batches for the medicine name
+  // Instead, when user clicks a suggestion, you should call API again with that medication_name to get all batches
+
+  // Example fetch all batches for that medicine_name:
+  api.get(`p_invoice/pharmacy/search/${medicine.medication_name}/`).then(response => {
+    const allBatches = response.data.data; // array of batch objects for this medicine
+
+    setInvoiceData(prev => {
       const updatedItems = [...prev.items];
       updatedItems[index] = {
         ...updatedItems[index],
         medication_name: medicine.medication_name,
-        expiry_date: medicine.expiry_date,
-        mrp: medicine.mrp,
-        unit_price: medicine.unit_price,
-        amount: (medicine.mrp || 0) * (updatedItems[index].quantity || 0),
+        batches: allBatches,
+        batch_no: allBatches[0]?.batch_no || "",
+        expiry_date: allBatches[0]?.expiry_date || "",
+        mrp: Number(allBatches[0]?.mrp) || 0,
+        amount: (Number(allBatches[0]?.mrp) || 0) * (updatedItems[index].quantity || 0),
       };
       return {
         ...prev,
@@ -255,61 +263,15 @@ const PharmacyInvoice = () => {
         summary: calculateSummary(updatedItems),
       };
     });
+  }).catch(err => {
+    console.error("Error fetching batches", err);
+  });
 
-    setSuggestions([]);
-    setActiveRowIndex(null);
-  };
+  setSuggestions([]);
+  setActiveRowIndex(null);
+};
 
-  const fetchData = async (index) => {
-    const input = invoiceData.items[index]?.medication_name?.trim();
-
-    if (!input || input.length < 2) return;
-
-    const isId = /^\d+$/.test(input);
-    const url = isId
-      ? `p_invoice/medications/search-by-id/${input}/`
-      : `p_invoice/pharmacy/search/${input}/`;
-
-    console.log(url);
-
-    try {
-      const res = await api.get(url);
-
-      let medicine;
-      if (isId) {
-        medicine = res.data.data;
-      } else {
-        medicine =
-          res.data.data && res.data.data.length > 0 ? res.data.data[0] : null;
-      }
-
-      if (!medicine) {
-        // Optionally clear the item or show message
-        console.warn("No medicine found for input:", input);
-        return;
-      }
-
-      setInvoiceData((prevData) => {
-        const updatedItems = [...prevData.items];
-        updatedItems[index] = {
-          ...updatedItems[index],
-          medication_name: medicine.medication_name,
-          expiry_date: medicine.expiry_date,
-          mrp: medicine.mrp,
-          unit_price: medicine.unit_price,
-          amount: (medicine.mrp || 0) * (updatedItems[index].quantity || 0),
-        };
-
-        return {
-          ...prevData,
-          items: updatedItems,
-          summary: calculateSummary(updatedItems),
-        };
-      });
-    } catch (err) {
-      console.error("Error fetching medicine:", err);
-    }
-  };
+  
 
   const handleChange = (e) => {
     setInvoiceData({ ...invoiceData, [e.target.name]: e.target.value });
@@ -354,11 +316,24 @@ const PharmacyInvoice = () => {
     }
   }, [patientDetails.patient_id, selectedValue]);
 
-  const handleBatchChange = (e, idx) => {
-    const updatedItems = [...invoiceData.items];
-    updatedItems[idx].batch_no = e.target.value;
-    setInvoiceData({ ...invoiceData, items: updatedItems });
-  };
+const handleBatchChange = (e, idx) => {
+  const selectedBatchNo = e.target.value;
+  const updatedItems = [...invoiceData.items];
+  const item = updatedItems[idx];
+
+  item.batch_no = selectedBatchNo;
+
+  const selectedBatch = item.batches?.find(batch => batch.batch_no === selectedBatchNo);
+
+  if (selectedBatch) {
+    item.expiry_date = selectedBatch.expiry_date;
+    item.mrp = Number(selectedBatch.mrp);
+    item.amount = (Number(selectedBatch.mrp) || 0) * (item.quantity || 0);
+  }
+
+  setInvoiceData({ ...invoiceData, items: updatedItems });
+};
+
 
   
   const handleSaveInvoice = async () => {
@@ -385,6 +360,7 @@ const PharmacyInvoice = () => {
 
         return {
           medication_name: item.medication_name,
+          batch_no: item.batch_no,
           quantity: parseInt(item.quantity, 10),
           mrp: parseFloat(item.mrp || 0),
           expiry_date: item.expiry_date,
@@ -793,17 +769,20 @@ const PharmacyInvoice = () => {
                         )}
                       </td>
 
-                      <td>
+                    <td>
                         <Form.Select
-                          value={item.batch_no}
+                          value={item.batch_no || ""}
                           onChange={(e) => handleBatchChange(e, idx)}
                         >
-                          <option>11240915</option>
-                          <option>11240916</option>
-                          <option>11240917</option>
-                          <option>11240918</option>
+                          <option value="">Select Batch</option>
+                          {item.batches?.map((batch, i) => (
+                            <option key={i} value={batch.batch_no}>
+                              {batch.batch_no}
+                            </option>
+                          ))}
                         </Form.Select>
                       </td>
+
                       <td>{item.expiry_date || "-"}</td>
                       <td>{item.mrp || "-"}</td>
                       <td>

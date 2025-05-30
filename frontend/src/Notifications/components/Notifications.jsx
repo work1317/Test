@@ -14,9 +14,12 @@ import axios from "axios";
 import PendingApprovals from "./PendingApprovals";
 import Discount from './Discount'
 import api from "../../utils/axiosInstance";
+import useNotification from "antd/es/notification/useNotification";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
  
  
 function Notifications() {
+  const {setShowDot} = useNotifications() 
   const [activeTab, setActiveTab] = useState("all");
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -129,18 +132,56 @@ useEffect(() => {
 }, []);
 
 
+// const handleNotificationClick = async (id) => {
+//   try {
+//     await api.post(`notifications/mark-as-read/${id}/`);
+//     setNotifications((prevNotifications) =>
+//       prevNotifications.map((note) =>
+//         note.id === id ? { ...note, isRead: true, bgColor: "#FFFFFF" } : note
+//       )
+//     );
+//     setCounts((prevCounts) => ({
+//       ...prevCounts,
+//       total_unread: Math.max(0, prevCounts.total_unread - 1),
+//     }));
+
+//     if(total_unread === 0){
+//       setShowDot(false);
+
+//     }
+
+//      return {
+//         ...prevCounts,
+//         total_unread: total_unread,
+//       };
+//   } catch (error) {
+//     console.error("Failed to mark notification as read", error);
+//   }
+// };
 const handleNotificationClick = async (id) => {
   try {
     await api.post(`notifications/mark-as-read/${id}/`);
+    
     setNotifications((prevNotifications) =>
       prevNotifications.map((note) =>
         note.id === id ? { ...note, isRead: true, bgColor: "#FFFFFF" } : note
       )
     );
-    setCounts((prevCounts) => ({
-      ...prevCounts,
-      total_unread: Math.max(0, prevCounts.total_unread - 1),
-    }));
+
+    setCounts((prevCounts) => {
+      const newUnread = Math.max(0, prevCounts.total_unread - 1);
+
+      // Hide dot if no unread left
+      if (newUnread === 0) {
+        setShowDot(false);
+      }
+
+      return {
+        ...prevCounts,
+        total_unread: newUnread,
+      };
+    });
+
   } catch (error) {
     console.error("Failed to mark notification as read", error);
   }
@@ -232,9 +273,6 @@ useEffect(() => {
               <Card.Body>
                 <Card.Subtitle className="mb-3 text-muted">{item.title}</Card.Subtitle>
                 <Card.Text className="fw-bold fs-3">{item.count}</Card.Text>
-                <p>
-                  <span className="text-success text-start">+12%</span> &nbsp;from yesterday
-                </p>
               </Card.Body>
             </Card>
           </Col>
@@ -246,7 +284,7 @@ useEffect(() => {
       <div className={Notificationstyle.fixedHeader}>
         <Row className="m-3 ms-3">
           <Col
-            className={`d-flex flex-wrap justify-content-start gap-5 ${Notificationstyle.buttonContainer}`}
+            className={`d-flex flex-wrap justify-content-start gap-3 ${Notificationstyle.buttonContainer}`}
           >
           {tabs.map((tab,idx) => (
           <Button

@@ -23,17 +23,19 @@ const ProgressNotes = ({ handleClose,patientId }) => {
     try {
       const response = await api.post("/records/create-progress-note/", {
         patient_id: patientId, status: status.toLocaleLowerCase(),
+       
       },
       { headers: { "Content-Type": "application/json" } }
      
     );
+    
     window.dispatchEvent(new Event("refreshProgressNotes"));
       console.log("API Response:", response.data);
       alert("Progress note saved successfully!");
       handleClose();
     } catch (error) {
       console.error("Error:", error);
-      alert("Failed to save progress note.");
+      alert(error.response.data.message);
     }
   };
 

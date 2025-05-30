@@ -56,7 +56,7 @@ function Addform({ handlerClose, saveForms,patients }) {
 
       if (selectedPatient) {
         updatedData.patient_name = selectedPatient.patient_name;
-        updatedData.requested_by =  selectedPatient.doctor
+        updatedData.requested_by =  selectedPatient.doctor_name
       }
     }
 
