@@ -9,15 +9,22 @@ import {
   Alert,
 } from "react-bootstrap";
 import { Icon } from "@iconify/react";
-
+import { useNavigate } from "react-router-dom";
 import RecentInvoice from "./RecentInvoice";
 import PharmacyPrint from "./PharmacyPrint";
 import api from "../../utils/axiosInstance";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
 
-const PharmacyInvoice = () => {
+const PharmacyInvoice = ({onBack}) => {
+  const {onNotificationClick, fetchNotifications} = useNotifications()
+  const navigate = useNavigate();
+  const handleBack = () => {
+    onBack()
+  };
+
   const [showRecentInvoices, setShowRecentInvoices] = useState(false);
-  const [discount, setDiscount] = useState(5);
-  const [tax, setTax] = useState(5);
+  const [discount, setDiscount] = useState(0);
+  const [tax, setTax] = useState(0);
   const [paymentTerms, setPaymentTerms] = useState();
 
 
@@ -385,6 +392,8 @@ const handleBatchChange = (e, idx) => {
       );
 
       if (response?.data?.success) {
+        await fetchNotifications()
+        await onNotificationClick()
         setSuccessMessage(response.data.message || "Invoice created!");
         window.dispatchEvent(new Event("refreshPharmacyInvoice"));
         console.log("✅ Invoice saved:", response.data);
@@ -469,6 +478,11 @@ const handleBatchChange = (e, idx) => {
   const headerStyle = { backgroundColor: "#002072", color: "white" };
   return (
     <Container className="p-4">
+      {!showRecentInvoices && (
+        <Button onClick={handleBack} variant="outline-secondary">
+          ← Back
+        </Button>
+      )}
       {successMessage && (
         <Alert
           variant="success"
@@ -807,39 +821,29 @@ const handleBatchChange = (e, idx) => {
               )}
               <div className="text-end mt-3">
                 <p>
-                  Discount Amount:
-                  <Form.Select
+                  Discount % 
+                  <Form.Control
                     type="number"
                     name="discount"
                     value={discount}
                     onChange={(e) => setDiscount(Number(e.target.value))} // convert string to number
                     style={{ display: "inline", width: "auto" }}
                   >
-                    <option value="5">5%</option>
-                    <option value="10">10%</option>
-                    <option value="15">15%</option>
-                    <option value="20">20%</option>
-                    <option value="25">25%</option>
-                    <option value="30">30%</option>
-                  </Form.Select>
+               
+                  </Form.Control>
                 </p>
                 <p>Net Amount: ₹{invoiceData.summary.net_amount}</p>
                 <p>
-                  Tax:
-                  <Form.Select
+                  Tax % 
+                  <Form.Control
                     type="number"
                     name="tax"
                     value={tax}
                     onChange={(e) => setTax(Number(e.target.value))}
                     style={{ display: "inline", width: "auto" }}
                   >
-                    <option value="5">5%</option>
-                    <option value="10">10%</option>
-                    <option value="15">15%</option>
-                    <option value="20">20%</option>
-                    <option value="25">25%</option>
-                    <option value="30">30%</option>
-                  </Form.Select>
+                
+                  </Form.Control>
                 </p>
                 <p>Final Amount: ₹{invoiceData.summary.final_amount}</p>
                 <h5>Paid Amount: ₹{invoiceData.summary.total_paid_amount}</h5>

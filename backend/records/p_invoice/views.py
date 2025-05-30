@@ -5,7 +5,7 @@ from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.http import FileResponse
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from io import BytesIO
 from reportlab.lib.pagesizes import A4  # type: ignore
 from reportlab.pdfgen import canvas      # type: ignore
@@ -22,10 +22,11 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from patients.models import Patient
 from .serializers import RecentPharmacyInvoicesSerializer
+from notifications.models import Notification
  
  
 # # -------------------- CREATE -------------------------------------
- 
+
 class CreatePharmacyInvoiceAPIView(APIView):
     def get(self, request, *args, **kwargs):
         patient_id = request.query_params.get("patient_id")
@@ -57,7 +58,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "message": "No patient found with this ID.",
                 "data": {}
             }, status=status.HTTP_404_NOT_FOUND)
- 
+        
     def post(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
@@ -65,27 +66,53 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 serializer.is_valid(raise_exception=True)
                 invoice = serializer.save()
                 invoice.finalize_invoice()
- 
+
+                # Format values to 2 decimal places
+                paid_amount = Decimal(invoice.paid_amount).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+                item_count = invoice.items.count()
+                typeof_transaction = invoice.typeof_transaction or "N/A"
+
+                # Optional patient instance if required
+                patient_instance = None
+                if invoice.patient_id:
+                    try:
+                        patient_instance = Patient.objects.get(patient_id=invoice.patient_id)
+                    except Patient.DoesNotExist:
+                        pass
+
+                # Create Notification
+                Notification.objects.create(
+                    title="Pharmacy Sale Completed",
+                    message=(
+                        f"Pharmacy sale (Patient ID: {invoice.patient_id}) for ₹{paid_amount} "
+                        f"has been completed for {invoice.patient_name}. "
+                        f"Items: {item_count} medications. "
+                        f"Payment: {typeof_transaction}"
+                    ),
+                    notification_type="bills",
+                    patient=patient_instance if patient_instance else None
+                )
+
             return Response({
                 "success": 1,
                 "message": "Invoice created and finalized successfully",
                 "data": PharmacyInvoiceSerializer(invoice).data
             }, status=status.HTTP_201_CREATED)
- 
+
         except DjangoValidationError as ve:
             return Response({
                 "success": 0,
                 "message": f"Validation error: {ve.message}",
                 "data": {}
             }, status=status.HTTP_400_BAD_REQUEST)
- 
+
         except DRFValidationError as ve:
             return Response({
                 "success": 0,
                 "message": f"Validation error: {ve.detail}",
                 "data": {}
             }, status=status.HTTP_400_BAD_REQUEST)
- 
+
         except Exception as e:
             traceback.print_exc()
             return Response({
@@ -93,8 +120,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "message": f"An unexpected error occurred: {str(e)}",
                 "data": {}
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- 
- 
+
  
 # -------------------- LIST ------------------------------------------
  

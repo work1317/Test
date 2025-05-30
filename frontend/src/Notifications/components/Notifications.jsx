@@ -34,16 +34,6 @@ function Notifications() {
  
   const notificationsPerPage = 15;
  
-  // const [visibleCount, setVisibleCount] = useState({
-  //   all: 3,
-  //   patients: 3,
-  //   invoices: 3,
-  //   discounts: 3,
-  //   user: 3,
-  //   sales: 3,
-  //   pharmacy: 3,
-  //   labs: 3,
-  // });
   const [pendingApprovals, setPendingApprovals] = useState([]);
   const [allnotifications, setNotifications] = useState([]);
   const getNotificationTitle = (type, originalTitle) => {
@@ -79,7 +69,8 @@ useEffect(() => {
       const {
         total_unread = 0,
         new_patients_today = 0,
-        invoices_today = 0
+        invoices_today = 0,
+        pharmacy_sales_today=0
       } = data[0] || {};
 
       // ✅ Remaining elements are notifications
@@ -99,7 +90,8 @@ useEffect(() => {
             expiry: <GiMedicalPack className={Notificationstyle.pharmacy} />,
             invoice: <BsCurrencyDollar className={Notificationstyle.invoices} />,
             others: <AiOutlineNotification className={Notificationstyle.others} />,
-            doctor: <AiOutlinePlus className={Notificationstyle.patients} />
+            doctor: <AiOutlinePlus className={Notificationstyle.patients} />,
+            bills:<BsCurrencyDollar className={Notificationstyle.sales}/>
           };
 
           return {
@@ -119,7 +111,7 @@ useEffect(() => {
         total_unread,
         new_patients_today,
         invoices_today,
-        pharmacy_sales: 0 // update later if needed
+       pharmacy_sales_today // update later if needed
       });
 
       setNotifications(notifications);
@@ -132,32 +124,6 @@ useEffect(() => {
 }, []);
 
 
-// const handleNotificationClick = async (id) => {
-//   try {
-//     await api.post(`notifications/mark-as-read/${id}/`);
-//     setNotifications((prevNotifications) =>
-//       prevNotifications.map((note) =>
-//         note.id === id ? { ...note, isRead: true, bgColor: "#FFFFFF" } : note
-//       )
-//     );
-//     setCounts((prevCounts) => ({
-//       ...prevCounts,
-//       total_unread: Math.max(0, prevCounts.total_unread - 1),
-//     }));
-
-//     if(total_unread === 0){
-//       setShowDot(false);
-
-//     }
-
-//      return {
-//         ...prevCounts,
-//         total_unread: total_unread,
-//       };
-//   } catch (error) {
-//     console.error("Failed to mark notification as read", error);
-//   }
-// };
 const handleNotificationClick = async (id) => {
   try {
     await api.post(`notifications/mark-as-read/${id}/`);
@@ -216,6 +182,7 @@ const tabs = [
   { key: "sales", label: "Sales" },
   { key: ["medication_add", "expiry","low_stock",'stagant'], label: "Pharmacy" },
   { key: "lab_invoice", label: "Labs" },
+  {key:"bills",label:"bills"}
 ];
 
 useEffect(() => {
@@ -266,7 +233,7 @@ useEffect(() => {
           { title: "Total Unread", count: counts.total_unread },
           { title: "New Patients Today", count: counts.new_patients_today },
           { title: "Invoices Generated", count: counts.invoices_today },
-          { title: "Pharmacy Sales", count: counts.pharmacy_sales },
+          { title: "Pharmacy Sales", count: counts.pharmacy_sales_today},
         ].map((item, index) => (
           <Col key={index} xs={12} sm={6} md={4} lg={3}>
             <Card className={Notificationstyle.firstcard}>

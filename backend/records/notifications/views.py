@@ -10,16 +10,7 @@ from .models import Notification
 from patients.models import Patient
 from pharmacy.models import Medication
 from invoice.models import Invoice
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.utils import timezone
-from datetime import timedelta
-from .models import Notification
-from patients.models import Patient
-from pharmacy.models import Medication
-from invoice.models import Invoice
-from . import serializers, validators
+from p_invoice.models import PharmacyInvoice
 
 # Create the Views Here
 
@@ -38,7 +29,9 @@ class CombinedDashboardNotificationAPIView(APIView):
             dashboard_summary = {
                 "total_unread": Notification.objects.filter(is_read=False).count(),
                 "new_patients_today": Patient.objects.filter(created_at__date=today).count(),
-                "invoices_today": Invoice.objects.filter(created_at__date=today).count()
+                "invoices_today": Invoice.objects.filter(created_at__date=today).count(),
+                "pharmacy_sales_today": PharmacyInvoice.objects.filter(Date=today).count(),
+ 
             }
 
             # Add dashboard summary as first item in data list
@@ -58,6 +51,7 @@ class CombinedDashboardNotificationAPIView(APIView):
                 'expiry': ['expiry'],
                 'invoice': ['invoice'], 
                 'sales': ['sales'],  
+                'bills':['bills']
             }
 
             if filter_type == 'read':
@@ -107,7 +101,8 @@ class CombinedDashboardNotificationAPIView(APIView):
                 patient=validated_data.get('patient'),
                 doctor=validated_data.get('doctor'),
                 medication=validated_data.get('medication'),
-                invoice=validated_data.get('invoice', None)
+                invoice=validated_data.get('invoice', None),
+                p_invoice=validated_data.get('p_invoice', None),
             )
             notification.clean()
             notification.save()
