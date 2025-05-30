@@ -25,23 +25,52 @@ const App = () => {
               <Navigate to="/dashboard" replace />
             </ProtectedRoute>
           } />
-          <Route path="login" element={<LoginPage />} />
+          <Route path="login" element={
+            <LoginPage />
+          } />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/dashboard" element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Doctor", "Receptionist", "Pharmacy", "Lab","Nurse", "DMO"]}>
               <LaoutPage />
             </ProtectedRoute>
           }>
-            <Route index element={<DashBoardPage />} />
+            <Route index element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Doctor", "Receptionist", "Pharmacy", "Lab","Nurse", "DMO"]}>
+              <DashBoardPage />
+              </ProtectedRoute>} />
             <Route path="dashboard" element={<Navigate to="/dashboard" replace />}/>
-            <Route path="doctors" element={<DoctorsPage />} />
-            <Route path="patients" element={<PatientManagement />} />
-            <Route path="records" element={<RecordLab />} />
-            <Route path="notifications" element={<Notifications />} />
-            <Route path="appointments" element={<AppointmentPage />} />
-            <Route path="lab" element={<LabsPage />} />
-            <Route path="pharmacy" element={<PharmacyDashboard/>}/>
-            <Route path="invoice" element={<Invoice/>}/>
+            <Route path="doctors" element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Doctor", "DMO"]}>
+              <DoctorsPage />
+              </ProtectedRoute>} />
+            <Route path="patients" element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Doctor","DMO"]} >
+              <PatientManagement />
+              </ProtectedRoute>} />
+            <Route path="records" element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Doctor", "Nurse","DMO"]}>
+              <RecordLab />
+              </ProtectedRoute>} />
+            <Route path="notifications" element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin"]}>
+              <Notifications />
+              </ProtectedRoute>} />
+            <Route path="appointments" element={
+              <ProtectedRoute allowedRoles={["Super Admin","Admin", "Receptionist"]}>
+              <AppointmentPage />
+              </ProtectedRoute>} />
+            <Route path="lab" element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Lab"]}>
+              <LabsPage />
+              </ProtectedRoute>} />
+            <Route path="pharmacy" element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Pharmacy"]}>
+              <PharmacyDashboard/>
+              </ProtectedRoute>}/>
+            <Route path="invoice" element={
+              <ProtectedRoute allowedRoles={["Super Admin", "Admin", "Receptionist"]}>
+              <Invoice/>
+              </ProtectedRoute>}/>
           </Route>
         </Routes>
       </AuthProvider>

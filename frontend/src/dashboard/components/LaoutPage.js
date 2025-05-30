@@ -17,13 +17,10 @@ const menuItems = [
   { icon: "uit:calender", label: "Appointments", link: "appointments" },
   { icon: "pepicons-pencil:file", label: "Records", link: "records" },
   { icon: "iconoir:pharmacy-cross-tag", label: "Pharmacy", link: "pharmacy" },
-  // { icon: "hugeicons:complaint", label: "Complaints", link: "complaints" },
   { icon: "guidance:medical-laboratory", label: "Lab", link: "lab" },
   { icon: "iconamoon:invoice-thin", label: "Invoice", link: "invoice" },
   { icon: "tabler:logout-2", label: "Logout", link: "logout" },
 ];
-
-const API = "https://mocki.io/v1/7c4677b8-fb89-40ab-9b25-705fbafae6c1";
 
 const searchSimilar = (str1, str2) => {
   if (!str1 || !str2) return 0;
@@ -54,6 +51,50 @@ const LaoutPage = () => {
   const [showSuggs, setShowSuggs] = useState(false);
   const suggRef = useRef(null);
   const auth = useContext(AuthContext);
+  //Keep it for future use
+  // const [allRoles, setRoles] = useState(["Admin","DMO","Doctor", "Labs", "Nurse", "Pharmacy", "Receptionist","Super Admin"])
+  // const { hasAnyRole } = useContext(AuthContext);
+  // let hasRole = hasAnyRole(allRoles);
+  const { userRoles } = useContext(AuthContext);
+  const isDoctor = userRoles.includes("Doctor");
+  const isAdmin = userRoles.includes("Super Admin");
+  const isSuperAdmin =  userRoles.includes("Admin");
+  const isReception  =  userRoles.includes("Receptionist")
+  const isPharma =  userRoles.includes("Pharmacy")
+  const isLabs  =  userRoles.includes("Lab")
+  const isNurse  =  userRoles.includes("Nurse")
+  const isDmo  =  userRoles.includes("DMO")
+
+const filteredMenu = isSuperAdmin
+  ? menuItems // Super Admin sees all
+  : isAdmin
+    ? menuItems // Admin sees all
+    : isDoctor
+      ? menuItems.filter(item =>
+          ["dashboard", "doctors", "patients", "records", "logout"].includes(item.link)
+        )
+      : isReception
+        ? menuItems.filter(item =>
+            ["dashboard", "appointments", "invoice", "logout"].includes(item.link)
+          )
+        : isPharma
+          ? menuItems.filter(item =>
+              ["dashboard", "pharmacy", "logout"].includes(item.link)
+            )
+
+            :isLabs
+          ? menuItems.filter(item =>
+              ["dashboard", "lab", "logout"].includes(item.link)
+            )
+             :isNurse
+          ? menuItems.filter(item =>
+              ["dashboard", "records", "logout"].includes(item.link)
+            )
+            :isDmo
+          ? menuItems.filter(item =>
+              ["dashboard", "doctors", "patients", "records", "logout"].includes(item.link)
+            )
+          : [];
 
   useEffect(() => {
     if (suggRef.current && activeItem >= 0) {
@@ -71,9 +112,6 @@ const LaoutPage = () => {
       setSelectedPage(currentItem.label);
     }
   }, [location]);
-
-
-  
 
   const handleSearchInput = (e) => {
     const value = e.target.value;
@@ -118,7 +156,6 @@ const LaoutPage = () => {
     setShowSuggs(false);
   };
   const handleBellClick = () => {
-    // setHasNotification(!hasNotification);
     navigation("/dashboard/notifications");
   };
   const [inputText, setInputText] = useState("");
@@ -135,9 +172,9 @@ const LaoutPage = () => {
     setInputText(lowerCase);
   };
   const renderMenuItems = () => {
-    return menuItems.map((item) => {
+    return filteredMenu.map((item) => {
       let isActive;
-      if (selectedPage === 'Logout') {
+      if (selectedPage === "Logout") {
         auth.logout();
       } else {
         isActive = location.pathname === `/dashboard/${item.link}`;
