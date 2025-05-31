@@ -134,7 +134,7 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                   <b>Sex:</b> {getinvoice.gender}
                 </Col>
                 <Col>
-                  <b>Doctor Name:</b> {getinvoice.doctor_name}
+                  <b>Doctor Name:</b> {getinvoice.doctor}
                 </Col>
               </Row>
             </Row>
