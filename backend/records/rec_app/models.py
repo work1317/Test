@@ -1,6 +1,7 @@
 from django.db import models
 from patients.models import Patient
 from doctors.models import DoctorAvailability
+from django.contrib.auth.models import User
 
 # create your models here
 
@@ -74,6 +75,7 @@ class ServiceProcedure(MedicalRecord):
 
 class NursingNotes(models.Model):
     patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
+    nurse = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

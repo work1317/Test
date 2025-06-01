@@ -17,6 +17,7 @@ function GNursingNotes({ patient }) {
           if (response.data.success === 1) {
             setNotes(response.data.data || []);
             setErrorMessage('');
+            console.log("Nursing Note : ", response.data)
           } else {
             setNotes([]);
             setErrorMessage(response.data.message || 'No nursing notes available.');
@@ -50,6 +51,9 @@ function GNursingNotes({ patient }) {
       ) : (
         notes.map((note, index) => (
           <div key={index} className="mb-3">
+            <Row>
+              <h4> {note.nurse} </h4>
+            </Row>
             <Row>
               <Col>
                 <span>

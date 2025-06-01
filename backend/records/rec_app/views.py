@@ -418,126 +418,6 @@ class PrescriptionDetailView(APIView):
  
  
 
-
-# class PrescriptionDetailView(APIView):
-#     def get(self, request, patient_id):
-#         context = {
-#             "success": 1,
-#             "message": "Fetched successfully",
-#             "data": {}
-#         }
-
-#         try:
-#             patient = Patient.objects.get(patient_id=patient_id)
-#             prescriptions = Prescription.objects.filter(patient=patient).distinct()
-
-#             serialized = []
-#             for pres in prescriptions:
-#                 # Try to find a matching medication
-#                 try:
-#                     medication = Medication.objects.get(medication_name=pres.medication_name)
-#                     stock_quantity = medication.stock_quantity
-#                 except Medication.DoesNotExist:
-#                     stock_quantity = None
-
-#                 # Build a dictionary manually (you could also customize a serializer)
-#                 serialized.append({
-#                     "id": pres.id,
-#                     "medication_name": pres.medication_name,
-#                     "dosage": pres.dosage,
-#                     "quantity": pres.quantity,
-#                     "duration": pres.duration,
-#                     "category": pres.category,
-#                     "summary": pres.summary,
-#                     "status":pres.status,
-#                     "report": pres.report.url if pres.report else None,
-#                     "created_at": pres.created_at,
-#                     "last_updated_at": pres.last_updated_at,
-#                     "stock_quantity": stock_quantity,
-#                     "doctor_name":pres.patient.doctor.d_name
-#                 })
-
-#             context["data"] = serialized
-#             return Response(context, status=status.HTTP_200_OK)
-
-#         except Exception as e:
-#             context["success"] = 0
-#             context["message"] = str(e)
-#             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-#     def put(self, request, patient_id):
-#         context = {
-#             "success": 1,
-#             "message": messages.DATA_UPDATED,
-#             "data": []
-#         }
-
-#         try:
-#             patient = Patient.objects.get(patient_id=patient_id)
-#             data = request.data
-
-#             prescriptions_data = data if isinstance(data, list) else [data]
-
-#             with transaction.atomic():
-#                 updated_prescriptions = []
-
-#                 for item in prescriptions_data:
-#                     medication_name = item.get("medication_name")
-
-#                     if not medication_name:
-#                         raise ValidationError("Each prescription must include 'medication_name'.")
-
-#                     try:
-#                         prescription = Prescription.objects.get(
-#                             patient=patient,
-#                             medication_name__iexact=medication_name
-#                         )
-#                     except Prescription.DoesNotExist:
-#                         raise ValidationError(f"Prescription for '{medication_name}' not found.")
-
-#                     new_quantity_raw = item.get("quantity", None)
-
-#                     if new_quantity_raw is not None:
-#                         # User entered a new quantity
-#                         new_quantity = int(new_quantity_raw)
-#                         try:
-#                             medication = Medication.objects.get(medication_name__iexact=medication_name)
-
-#                             if medication.stock_quantity is None or medication.stock_quantity == 0:
-#                                 item['status'] = 'pending'
-
-#                             elif new_quantity > medication.stock_quantity:
-#                                 item['status'] = 'pending'
-
-#                             else:
-#                                 # Sufficient stock, proceed and deduct
-#                                 medication.stock_quantity -= new_quantity
-#                                 item['status'] = 'completed'
-#                                 medication.save()
-
-#                         except Medication.DoesNotExist:
-#                             item['status'] = 'pending'
-#                     else:
-#                         # No new quantity submitted; do not deduct stock
-#                         item['status'] = prescription.status or 'pending'
-#                         item.pop('quantity', None)  # Prevent overwriting with None
-
-#                     # Update prescription regardless of stock deduction
-#                     serializer = PrescriptionSerializer(prescription, data=item, partial=True)
-#                     if not serializer.is_valid():
-#                         raise ValidationError(serializer.errors)
-
-#                     updated = serializer.save()
-#                     updated_prescriptions.append(PrescriptionSerializer(updated).data)
-
-#                 context["data"] = updated_prescriptions[0] if isinstance(data, dict) else updated_prescriptions
-#                 return Response(context, status=status.HTTP_200_OK)
-
-#         except Exception as e:
-#             context["success"] = 0
-#             context["message"] = str(e)
-#             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
         
 
 # Add Notes
@@ -566,6 +446,7 @@ class NursingNotesAPIView(APIView):
             # Check if patient exists
             try:
                 patient = Patient.objects.get(patient_id=req_params['patient'])
+                nurse = request.user
             except Patient.DoesNotExist:
                 return Response(
                     {
@@ -575,19 +456,6 @@ class NursingNotesAPIView(APIView):
                     },
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
-            # Ensure only one NursingNotes entry per patient
-            # nursing_note, created = models.NursingNotes.objects.get_or_create(
-            #     patient=patient,
-            #     defaults={'description': req_params['description']}
-            # )
-
-            # if not created:
-            #     nursing_note.description = req_params['description']
-            #     nursing_note.save()
-
-            # serializer = NursingNotesSerializer(nursing_note, context={"request": request})
-            # context['data'] = {"nursing_note_details": serializer.data}
 
             # Check if a nursing note already exists for this patient
             if models.NursingNotes.objects.filter(patient=patient).exists():
@@ -603,6 +471,7 @@ class NursingNotesAPIView(APIView):
             # If not exists, create a new nursing note
             nursing_note = models.NursingNotes.objects.create(
                 patient=patient,
+                nurse = nurse,
                 description=req_params['description']
             )
 
@@ -770,7 +639,7 @@ class CreateProgressNoteAPIView(APIView):
                 return Response(
                     {
                         "success":0,
-                        "messsage":f"Progress note already exists for patient ID {patient.patient_id}.",
+                        "message":f"Progress note already exists for patient ID {patient.patient_id}.",
                         "data":{}
                     },status=status.HTTP_400_BAD_REQUEST
                 )

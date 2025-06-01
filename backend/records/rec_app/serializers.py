@@ -46,6 +46,7 @@ def get_serializer_class(record_type):
 # Nursing Notes
 class NursingNotesSerializer(serializers.ModelSerializer):
     patient = serializers.CharField(source='patient.patient_id')
+    nurse = serializers.CharField(source = 'nurse.username')
 
     class Meta:
         model = NursingNotes
