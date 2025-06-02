@@ -32,8 +32,6 @@ class Patient(models.Model):
     patient_id = models.CharField(max_length=10,unique=True,editable=False)
     patient_name = models.CharField(max_length=100)
     doctor = models.ForeignKey(DoctorAvailability, on_delete=models.CASCADE)
-    date = models.DateField()
-    time = models.TimeField()
     age = models.IntegerField()
     appointment_type = models.CharField(
         max_length=20,
@@ -47,6 +45,7 @@ class Patient(models.Model):
     ward_no = models.CharField(max_length=10,null=True,blank=True)
     diagnosis = models.TextField(blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    last_updated_at = models.DateTimeField(auto_now=True)
 
     def can_update(self):
         return timezone.now() <= self.created_at + timedelta(hours=30)

@@ -118,15 +118,6 @@ class NursingNotesValidator(serializers.Serializer):
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
 
-# class NursingNotesUpdateValidator(serializers.Serializer):
-#     description = serializers.CharField(
-#         required=True,
-#         error_messages={
-#             "required": "Description is a required field.",
-#             "blank": "Description cannot be empty.",
-#         }
-#     )
-
 
 # Progress Notes
 

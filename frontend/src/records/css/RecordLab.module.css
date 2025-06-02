@@ -42,17 +42,9 @@
     font-weight: 600;
     font-size: 24px;
  }
- /* .anchor:hover{
-   text-decoration: underline;
- } */
- /* .customtabs1{
-   border: 1px solid #BEBEBE;
-   background-color: #ffffff;
-   border-radius: 5px;
- } */
   .tabButton {
    padding: 4px 10px;
-   margin-right: 4px;
+   margin-right: 2px;
    border: none;
    background: transparent;
    display: flex;
@@ -81,22 +73,6 @@
    gap: 0 !important; /* override default gap if needed */
  }
  
- 
- /* .scrollContainer {
-   max-height: 400px;
-   overflow-y: auto;
-   padding-right: 8px; 
- }
- 
- 
- .scrollContainer::-webkit-scrollbar {
-   width: 6px;
- }
- 
- .scrollContainer::-webkit-scrollbar-thumb {
-   background-color: rgba(0, 0, 0, 0.2);
-   border-radius: 4px;
- } */
  .scrollContainer {
    max-height: 400px; /* Adjust height as needed */
    overflow-y: auto;

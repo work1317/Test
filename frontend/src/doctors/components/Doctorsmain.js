@@ -41,10 +41,10 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
               </span>
             </div>
           </div>
-          <div className={`col-md-4`}>
-            <p className={`mt-4 w-25`} style={{ color: "#979797" }}>
+          <div className={`col-md-4 mt-5`}>
+            <span className={`mt-4 w-25`} style={{ color: "#979797" }}>
               {doctor.patient_count} Patients
-            </p>
+            </span>
           </div>
         </div>
         <hr></hr>
@@ -116,12 +116,14 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
           <div className={`col-md-6`}>
             <h5 className="mt-4">Education & Certifications</h5>
             <h5 style={{ color: "#484848" }}>Education</h5>
+            <div style={{ color: "#979797" }}>
             {doctor.d_education_info}
+            </div>
           </div>
 
           
           <div className={`col-md-6 mt-5`}>
-            <h5 style={{ color: "#484848" }}>Certifications</h5>
+            <h5  className="mt-3" style={{ color: "#484848" }}>Certifications</h5>
             <div style={{ color: "#979797" }}>
               {doctor.d_certifications}
             </div>

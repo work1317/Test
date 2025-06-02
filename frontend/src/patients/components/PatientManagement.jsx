@@ -172,12 +172,12 @@ function PatientManagement() {
               </div>
               
               {loading && 
-              <p className="text-center d-flex flex-column text-primary mt-5 mb-5">
+              <div className="text-center d-flex flex-column text-primary mt-5 mb-5">
               <Spinner animation="border" variant="primary" className="mx-auto" />
 
                 Loading patients...
                 
-                </p>
+                </div>
            
               }
 
@@ -226,9 +226,9 @@ function PatientManagement() {
                               {patient.appointment_type}
                             </Card.Link>
                           </div>
-                          <text className={PatientStyles.Subtitle}>
+                          <div className={PatientStyles.Subtitle}>
                             ID: {patient.patient_id}
-                          </text>
+                          </div>
                           <div className={PatientStyles.cardDetails}>
                             <Card.Text>{patient.age}</Card.Text>
                             <Card.Text>{patient.gender}</Card.Text>

@@ -3,6 +3,7 @@ from .models import AddSupplier,AddNewTransaction
 from django.core.validators import RegexValidator,MinLengthValidator,MaxLengthValidator,EmailValidator
 import re
 from .models import Medication
+from datetime import date
 
 # Create the validators here
 
@@ -48,7 +49,36 @@ class MedicationValidator(serializers.Serializer):
                     f"A medication with the name '{medication_name}' and batch number '{batch_no}' already exists."
                 )
        
-        return data 
+        return data
+     
+    def validate(self, data):
+        """
+        Custom validation:
+        1. Prevent duplicate medication_name + batch_no.
+        2. expiry_date should be today or in the future.
+        """
+        medication_name = data.get("medication_name")
+        batch_no = data.get("batch_no")
+        expiry_date = data.get("expiry_date")
+ 
+        #  1. Check for duplicate medication + batch_no
+        if medication_name and batch_no:
+            existing_medication = Medication.objects.filter(
+                medication_name=medication_name,
+                batch_no=batch_no
+            ).exists()
+            if existing_medication:
+                raise serializers.ValidationError(
+                    f"A medication with the name '{medication_name}' and batch number '{batch_no}' already exists."
+                )
+       
+        #  2. Validate expiry_date is not in the past
+        if expiry_date and expiry_date < date.today():
+            raise serializers.ValidationError(
+                {"expiry_date": "Expiry date cannot be in the past."}
+            )
+ 
+        return data
 
 phone_no_validator=[
     MinLengthValidator(10, message = "Phone number must be 10 digits."),
@@ -111,6 +141,17 @@ class AddNewTransactionValidator(serializers.Serializer):
         "required": "Supplier is required.",
         "does_not_exist": "Supplier does not exist.",
     })
+     #  Custom validator for 'date'
+    def validate_date(self, value):
+        if value < date.today():
+            raise serializers.ValidationError("Transaction date cannot be in the past.")
+        return value
+ 
+    #  Custom validator for 'due_date'
+    def validate_due_date(self, value):
+        if value is not None and value < date.today():
+            raise serializers.ValidationError("Due date cannot be in the past.")
+        return value
 
 
 

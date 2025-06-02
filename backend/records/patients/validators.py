@@ -12,8 +12,8 @@ phone_no_validator=[
 
 def email_com_validator(value):
     """Custom validator to allow only .com emails"""
-    if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$", value):
-        raise serializers.ValidationError("Only emails with .com domains are allowed.")
+    if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in)$", value):
+        raise serializers.ValidationError("Only emails with .com and .in domains are allowed.")
 
 
 class PatientValidator(serializers.Serializer):
@@ -28,8 +28,6 @@ class PatientValidator(serializers.Serializer):
             "max_length": "Doctor name cannot exceed 100 characters."
         }
     )
-    date = serializers.DateField()
-    time = serializers.TimeField()
     age = serializers.IntegerField()
     appointment_type = serializers.CharField(max_length=20)
     gender = serializers.CharField(max_length=20)

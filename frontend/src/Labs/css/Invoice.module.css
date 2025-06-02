@@ -62,30 +62,112 @@
   }
    
   /* Responsive styles */
-  @media (max-width: 700px) {
-    .modalContent {
-      width: 95%;
-      padding: 1rem;
-    }
-   
-    .formsCon,
-    .formsCon1 {
-      height: 2.6rem;
-    }
-   
-    .model h2 {
-      font-size: 1.4rem;
-    }
-   
-    .save1 {
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.5rem;
-    }
-   
-    .save1 span,
-    .save1 button {
-      width: 100%;
-      text-align: right;
-    }
+ @media (max-width: 800px) {
+  .modalContent {
+    width: 95%;
+    padding: 1.5rem;
   }
+
+  .model h2 {
+    font-size: 1.5rem;
+  }
+
+  .save1 {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .save1 button,
+  .save1 span {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .modalContent {
+    padding: 1rem;
+  }
+
+  .model h2 {
+    font-size: 1.3rem;
+  }
+
+  .formsCon,
+  .formsCon1 {
+    height: 2.8rem;
+    font-size: 0.9rem;
+  }
+
+  .save1 {
+    gap: 0.5rem;
+  }
+
+  .save1 button {
+    width: 100%;
+  }
+
+  .save1 span {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .modalContent {
+    padding: 0.8rem;
+  }
+
+  .model h2 {
+    font-size: 1.2rem;
+  }
+
+  .formsCon,
+  .formsCon1 {
+    height: 2.6rem;
+    font-size: 0.85rem;
+  }
+
+  .save1 button {
+    font-size: 0.9rem;
+  }
+
+  .save1 span {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .modalOverlay {
+    align-items: flex-start;
+    padding: 1rem 0.3rem;
+    overflow-y: auto;
+  }
+
+  .modalContent {
+    padding: 0.5rem;
+    width: 100%;
+  }
+
+  .model h2 {
+    font-size: 1rem;
+  }
+
+  .formsCon,
+  .formsCon1 {
+    height: 2.5rem;
+    font-size: 0.8rem;
+  }
+
+  .save1 {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.5rem;
+  }
+
+  .save1 button,
+  .save1 span {
+    font-size: 0.9rem;
+    width: 100%;
+  }
+}

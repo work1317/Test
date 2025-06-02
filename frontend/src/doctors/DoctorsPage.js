@@ -187,7 +187,7 @@ const DoctorsPage = () => {
           </Card>
         </Col>
       </Row>
-      <Row>
+      <Row className="mx-1">
         <Card className={` shadow-sm mt-3 p-2 pt-3 pb-3`}>
           <Col xs={12} sm={12} md={12} className="mt-2">
             <div className={`d-flex flex-row`}>
@@ -203,7 +203,7 @@ const DoctorsPage = () => {
                 />
               </div>
               <CiFilter
-                className="ms-1"
+                className="ms-1 mt-2"
                 size={40}
                 style={{ color: "#979797" }}
               />
@@ -235,6 +235,7 @@ const DoctorsPage = () => {
               <Card
                 className="shadow-sm mb-4"
                 onClick={() => handleDoctorClick(doctor)}
+                style={{cursor:'pointer'}}
               >
                 <Card.Body>
                   <h5>{doctor.d_name}</h5>
@@ -261,12 +262,6 @@ const DoctorsPage = () => {
                     <GoPeople size={20} className="text-muted pb-1" />
                     <p className="ms-2 mb-0" style={{ fontSize: "0.85rem" }}>{doctor.patient_count}</p>
                   </div>
-                    {/* <div className="d-flex">
-                    <CiCalendar size={25} className="text-muted pb-1" />
-                    <p className="ms-2 mb-0" style={{ fontSize: "0.85rem" }}>
-                      {index === 0 ? "25 Today" : "15 Today"}
-                    </p>
-                  </div> */}
                 </Card.Footer>
               </Card>
             </Col>

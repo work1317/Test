@@ -1,4 +1,3 @@
-
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -11,7 +10,7 @@
     align-items: center;
     z-index: 999;
     }
-    
+   
     .modalContent {
       background: #fff;
       padding: 2rem;
@@ -22,9 +21,155 @@
       gap: 1rem;
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.034);
-  
+ 
     }
     .modCos{
         float: right;
         cursor: pointer;
     }
+@media (max-width: 900px) {
+  .modalContent {
+    width: 90% !important;
+    padding: 1.5rem !important;
+    font-size: 1rem;
+  }
+ 
+  .modalContent h5 {
+    font-size: 1.1rem;
+  }
+ 
+  .modalContent p {
+    font-size: 1rem;
+  }
+ 
+  .modCos {
+    font-size: 1.3rem;
+  }
+ 
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+ 
+@media (max-width: 600px) {
+  .modalContent {
+    width: 95% !important;
+    padding: 1rem !important;
+    font-size: 0.9rem;
+  }
+ 
+  .modalContent h5 {
+    font-size: 1rem;
+  }
+ 
+  .modalContent p {
+    font-size: 0.9rem;
+  }
+ 
+  .modCos {
+    font-size: 1.2rem;
+  }
+}
+ 
+@media (max-width: 400px) {
+  .modalContent {
+    padding: 0.8rem !important;
+    font-size: 0.85rem;
+  }
+ 
+  .modalContent h5 {
+    font-size: 0.95rem;
+  }
+ 
+  .modalContent p {
+    font-size: 0.85rem;
+  }
+ 
+  .modCos {
+    font-size: 1rem;
+  }
+}
+ 
+@media (max-width: 330px) {
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 200vh;
+    background: rgba(0, 0, 0, 0.11);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    }
+  .modalContent {
+    padding: 0.8rem !important;
+    font-size: 0.85rem;
+  }
+ 
+  .modalContent h5 {
+    font-size: 0.95rem;
+  }
+ 
+  .modalContent p {
+    font-size: 0.85rem;
+  }
+ 
+  .modCos {
+    font-size: 1rem;
+  }
+}
+ 
+@media (max-width: 300px) {
+  .modalOverlay {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 1rem 0.3rem;
+  }
+ 
+  .modalContent {
+    width: 100% !important;
+    padding: 0.8rem !important;
+    font-size: 0.8rem;
+  }
+ 
+  .modalContent h5 {
+    font-size: 0.95rem;
+  }
+ 
+  .modalContent p {
+    font-size: 0.85rem;
+  }
+ 
+  .modCos {
+    font-size: 1rem;
+  }
+ 
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+ 
+ 
+@media (max-width: 900px) {
+  .modalOverlay {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 1rem 0.5rem;
+  }
+}
+ 
+@media (max-width: 480px) {
+  .modalOverlay {
+    padding: 1.5rem 0.5rem;
+  }
+}
+ 
+@media (max-width: 300px) {
+  .modalOverlay {
+    padding: 1rem 0.3rem;
+  }
+}

@@ -24,10 +24,11 @@ import LabViewresult from "./LabViewresult";
 import InvoiceViewresult from "./InvocieViewresult";
 import api from "../../utils/axiosInstance";
 import { useNotifications } from "../../dashboard/components/NotificationContext";
+import { FireExtinguisher } from "lucide-react";
 
 export const forms = createContext();
 function Labtest() {
-  const {fetchNotifications, onNotificationClick} = useNotifications()
+  const { fetchNotifications, onNotificationClick } = useNotifications()
   const [page, setPage] = useState("labtest");
   const [opens, setOpens] = useState(false);
   const [showes, setShowes] = useState(false);
@@ -38,7 +39,6 @@ function Labtest() {
   const [inSelectForm, setInSelectForm] = useState([]);
   const [patients, setPatients] = useState([]);
   const [formsData, setFormsData] = useState({
-    id: 40,
     patient: "",
     patient_name: "",
     requested_test: "",
@@ -48,6 +48,7 @@ function Labtest() {
     status: "Pending",
     notes: "",
     test_date: "",
+    username: "",
     summary: "",
     test_type: "",
     flag: false,
@@ -98,7 +99,7 @@ function Labtest() {
         const NewsData = response.data.data;
         setSelectResult(NewsData);
 
-        
+
 
         console.log("Data set to state:", selectedResult);
       }
@@ -151,69 +152,104 @@ function Labtest() {
   // lab test form
   const saveForms = async (e) => {
     e.preventDefault();
-    if (
-      formsData.patient.trim() === "" ||
-      formsData.patient_name.trim() === "" ||
-      formsData.requested_by === "" ||
-      formsData.requested_test.trim() === "" ||
-      formsData.requested_test.trim() === "" ||
-      formsData.notes.trim() === "" ||
-      formsData.summary.trim() === "" ||
-      !formsData.upload
-    ) {
-      alert("Complet your form");
-    } else {
-      // patient id form id match
-   
 
-      // patient name exit code
-   
+    if (formsData.patient.trim() === "") {
+      alert("Please complete the 'Patient ID' field.");
+      return;
+    }
+    if (formsData.patient_name.trim() === "") {
+      alert("Please complete the 'Patient Name' field.");
+      return;
+    }
+    if (formsData.requested_by === "") {
+      alert("Please select the 'Requested By' (Doctor) field.");
+      return;
+    }
+    if (formsData.requested_test.trim() === "") {
+      alert("Please enter the 'Requested Test'.");
+      return;
+    }
+    if (formsData.request_date === "") {
+      alert("Please select the 'Request Date'.");
+      return;
+    }
+    if (formsData.notes.trim() === "") {
+      alert("Please fill in the 'Notes' section.");
+      return;
+    }
+    if (formsData.summary.trim() === "") {
+      alert("Please provide a summary.");
+      return;
+    }
+    if (!formsData.upload) {
+      alert("Please upload the required document.");
+      return;
+    }
 
-      // patients Doctor name
-      try {
-        const formData = new FormData();
-        Object.keys(formsData).forEach((key) => {
-          const value = formsData[key];
-          if (key === "upload" && value) {
-            formData.append(key, value);
-          } else if (value !== undefined && value !== null) {
-            formData.append(key, value);
-          }
-        });
+    if (formsData.requested_test !== formsData.test_type) {
+      alert("Requested test and test type must be the same.")
+      return
+    }
 
-        console.log("Sending formData:", [...formData.entries()]);
 
-        const response = await api.post(
-          "labs/create_lab_test/",
-          formData
-        );
-        await fetchingData()
+    const selectedDate = new Date(formsData.request_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ensures comparison ignores time
 
-        // console.log("Full response:", response.data);
+    if (selectedDate < today) {
+      alert("Request date cannot be in the past.");
+      return;
+    }
 
-        const newData = response.data.data;
+    const testDate = new Date(formsData.test_date);
+    if (testDate < today) {
+      alert("Request date cannot be in the past.");
+      return;
+    }
 
-        setFormsData({
-          patient_id: "",
-          patient_name: "",
-          requested_by: "",
-          requested_test: "",
-          request_date: "",
-          notes: "",
-          user_id: "",
-          username: "",
-          test_date: "",
-          test_time: "",
-          summary: "",
-          upload: null,
-        });
-        handlerClose();
-      } catch (error) {
-        alert(
-          "Submission error:",
-          error.response?.data || error.message
-        );
-      }
+    if (!formsData.test_type) {
+      alert("Please Enter your test details ")
+    }
+
+    try {
+      const formData = new FormData();
+      Object.keys(formsData).forEach((key) => {
+        const value = formsData[key];
+        if (key === "upload" && value) {
+          formData.append(key, value);
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
+      });
+
+      console.log("Sending formData:", [...formData.entries()]);
+
+      const response = await api.post("labs/create_lab_test/", formData);
+      await fetchingData();
+
+      const newData = response.data.data;
+
+      setFormsData({
+        patient_id: "",
+        patient_name: "",
+        requested_by: "",
+        requested_test: "",
+        request_date: "",
+        notes: "",
+        user_id: "",
+        username: "",
+        test_date: "",
+        test_time: "",
+        summary: "",
+        upload: null,
+      });
+
+      handlerClose();
+    } catch (error) {
+      alert(
+        "Submission error: " +
+        (error.response?.data?.message || error.message)
+      );
     }
   };
 
@@ -228,41 +264,58 @@ function Labtest() {
       .catch((err) => console.log("error", err));
   }, []);
 
-  //serch in Invastaory
 
-  // this is ivoice post data
   const saveButtons = async (e) => {
-    e.preventDefault();
-    if (
-      formsData1.patient.trim() === "" ||
-      formsData1.testname.trim() === "" ||
-      formsData1.amount.trim() === "" ||
-      formsData1.status.trim() === "" ||
-      formsData1.date.trim() === ""
-    ) {
-      alert("Enter invoice dettails");
-    } else {
-      try {
-       const response =  await api.post('labs/create_lab_invoice/', formsData1);
-        const saveData = response.data.data;
-        await fetchNotifications()
-        await onNotificationClick()
-        console.log(saveData);
-        setFormObj1([...formObj1, formsData1]);
-        setFormsData1({
-          patient_name: "",
-          test_name: "",
-          amount: "",
-          status: "",
-          date: "",
-        });
+  e.preventDefault();
 
-        handlerClose();
-      } catch (error) {
-        alert("Patient don't not exited");
-      }
-    }
-  };
+  // Normalize date to compare only the day
+  const selectedDate = new Date(formsData1.date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  selectedDate.setHours(0, 0, 0, 0);
+
+  // Validation for required fields
+  if (
+    formsData1.patient.trim() === "" ||
+    formsData1.testname.trim() === "" ||
+    formsData1.amount.trim() === "" ||
+    formsData1.status.trim() === "" ||
+    formsData1.date.trim() === ""
+  ) {
+    alert("Please complete all invoice details.");
+    return;
+  }
+
+  // Check for past date
+  if (selectedDate < today) {
+    alert("Date cannot be in the past.");
+    return;
+  }
+
+  // Submit data
+  try {
+    const response = await api.post("labs/create_lab_invoice/", formsData1);
+    const saveData = response.data.data;
+    await fetchNotifications();
+    await onNotificationClick();
+    console.log(saveData);
+
+    setFormObj1([...formObj1, formsData1]);
+
+    setFormsData1({
+      patient_name: "",
+      test_name: "",
+      amount: "",
+      status: "",
+      date: "",
+    });
+
+    handlerClose();
+  } catch (error) {
+    alert("Patient does not exist.");
+  }
+};
+
   return (
     <div className="lab">
       <div id="lab" className="bg-light min-vh-100">

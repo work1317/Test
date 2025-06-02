@@ -61,7 +61,7 @@ const NursingNote = ({ handleClose, patientId }) => {
         </Row>
         <Row>
           <div className="d-flex justify-content-end gap- px-4 pb-5">
-            <Form>
+            
               <button
                 type="button"
                 className={`pl-4 mx-4 ${styles.cancel}`}
@@ -69,7 +69,7 @@ const NursingNote = ({ handleClose, patientId }) => {
               >
                 Cancel
               </button>
-            </Form>
+           
             <button type="submit" className={`pl-4 ${styles.savebutton}`}>
               Save
             </button>

@@ -1,6 +1,6 @@
 .menuGroup {
-  background-color: #E9ECF5; 
-  color: #002072; 
+  background-color: #E9ECF5;
+  color: #002072;
   cursor: pointer;
   font-weight: 500;
   font-size: 16px;
@@ -8,14 +8,14 @@
   display: flex;
   align-items: center;
   padding: 12px 16px;  
-  border-right: 4px solid #002072; 
-  border-radius: 6px 0 0 6px; 
-  transition: all 0.3s ease-in-out; 
+  border-right: 4px solid #002072;
+  border-radius: 6px 0 0 6px;
+  transition: all 0.3s ease-in-out;
 }
-
-.menuItem {
-  background-color: #E9ECF5; 
-  color: #002072; 
+ 
+.inactiveMenu {
+  background-color: transparent;
+  color: #9A9A9A;
   cursor: pointer;
   font-weight: 500;
   font-size: 16px;
@@ -23,26 +23,48 @@
   display: flex;
   align-items: center;
   padding: 12px 16px;  
-  border-right: 4px solid #002072; 
-  border-radius: 6px 0 0 6px; 
-  transition: all 0.3s ease-in-out; 
-} 
-
+  border-right: 4px solid transparent;
+  border-radius: 6px 0 0 6px;
+  transition: all 0.3s ease-in-out;
+}
+ 
+ 
+.inactiveMenu:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+ 
+ 
+.menuItem {
+  background-color: #E9ECF5;
+  color: #002072;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;  
+  border-right: 4px solid #002072;
+  border-radius: 6px 0 0 6px;
+  transition: all 0.3s ease-in-out;
+}
+ 
 .menuGroup:hover {
-  background-color: #dce3f4 !important; 
+  background-color: #dce3f4 !important;
   border-right: 4px solid #001860 !important;  
 }
-
+ 
 .menuGroup.active {
-  background-color: #dce3f4; 
-  border-right: 4px solid #001860; 
+  background-color: #dce3f4;
+  border-right: 4px solid #001860;
 }
 .menuGroup.active .menuIcon {
-  color: #001860; 
+  color: #001860;
 }
 .sidebar {
   height: 100vh;
-  width: 250px; 
+  width: 250px;
   position: fixed;
   top: 0;
   left: 0;
@@ -50,37 +72,37 @@
   z-index: 1050;
   transition: transform 0.3s ease-in-out;
 }
-
+ 
 .buttoncolor{
-  background-color: #E9ECF5 !important; 
-  color: #002072 !important; 
+  background-color: #E9ECF5 !important;
+  color: #002072 !important;
 }
-
-
+ 
+ 
 @media (max-width: 991px) {  
   .sidebar {
-    display: none; 
+    display: none;
   }
 }
-
+ 
 .offcanvas {
-  width: 250px; 
+  width: 250px;
 }
-
+ 
 .offcanvas.show {
   transform: translateX(0) !important;
 }
-
-
-
-
+ 
+ 
+ 
+ 
 .sidebar {
-  
-  width: 250px; 
+ 
+  width: 250px;
   transition: transform 0.3s ease;
 }
-
-@media (max-width: 992px) { 
+ 
+@media (max-width: 992px) {
   .sidebar {
     display: none;
   }

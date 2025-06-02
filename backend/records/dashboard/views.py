@@ -45,7 +45,7 @@ class DashboardAPIView(APIView):
             current = datetime.now()
             this = timezone.now()
             # Get the start of the current week (Monday)
-            start_of_week = this - timedelta(days=this.weekday())
+            start_of_week = (this - timedelta(days=this.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
 
             # Filter and count doctors added since the start of the week
             increased_doctors = DoctorAvailability.objects.filter(created_at__gte=start_of_week).count()

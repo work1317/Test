@@ -8,8 +8,6 @@ function Inedit({ show, handleClose, patientId }) {
   const [formValues, setFormValues] = useState({
     patient_name: "",
     doctor_name: "",
-    date: "",
-    time: "",
     appointment_type: "",
     diagnosis: "",
     notes: "",
@@ -33,8 +31,6 @@ function Inedit({ show, handleClose, patientId }) {
             setFormValues({
               patient_name: data.patient_name || "",
               doctor_name: data.doctor_name || "",
-              date: data.date || "",
-              time: data.time || "",
               appointment_type: data.appointment_type || "",
               diagnosis: data.diagnosis || "",
               notes: data.notes || "",
@@ -71,8 +67,6 @@ function Inedit({ show, handleClose, patientId }) {
     const updatePayload = {
       patient_name: formValues.patient_name,
       doctor_name: formValues.doctor_name,
-      date: formValues.date,
-      time: formValues.time,
       appointment_type: formValues.appointment_type,
       diagnosis: formValues.diagnosis,
       notes: formValues.notes,
@@ -140,30 +134,6 @@ function Inedit({ show, handleClose, patientId }) {
               </Col>
             </Row>
             <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="date"
-                    value={formValues.date}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Time</Form.Label>
-                  <Form.Control
-                    type="time"
-                    name="time"
-                    value={formValues.time}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
             </Row>
             <Row className="mb-3">
               <Col md={6}>

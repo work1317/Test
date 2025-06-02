@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import api from "../../utils/axiosInstance";
+import { useNotifications } from '../../dashboard/components/NotificationContext';
 
 function AppointmentReschedule ({ show, handleClose, appointmentId, onRescheduleSuccess }) {
   const [newDate, setNewDate] = useState('');
   const [newTime, setNewTime] = useState('');
+  const {fetchNotifications, onNotificationClick} = useNotifications()
 
   useEffect(() => {
     if (show) {
@@ -13,19 +15,22 @@ function AppointmentReschedule ({ show, handleClose, appointmentId, onReschedule
     }
   }, [show]);
 
-  const handleRescheduleSubmit = () => {
+  const handleRescheduleSubmit = async() => {
     if (!newDate || !newTime) {
       alert("Please provide both a new date and time.");
       return;
     }
 
-    api.post(`/appointments/reschedule-appointment/${appointmentId}/`, {
+    await api.post(`/appointments/reschedule-appointment/${appointmentId}/`, {
       date: newDate,
       time: newTime
     })
+
       .then((response) => {
-        alert("Appointment rescheduled successfully.");
-        onRescheduleSuccess?.(response.data.data); // 👈 Call parent with updated date/time
+        alert(response.data.message);
+        onRescheduleSuccess?.(response.data.data);
+          fetchNotifications() 
+          onNotificationClick()// 👈 Call parent with updated date/time
       })
       .catch(error => {
         alert("Failed to reschedule: " + (error.response?.data?.message || error.message));

@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from patients.models import Patient
 from datetime import date
- 
+from django.core.exceptions import ValidationError
+
 # Create the models here
  
 User = get_user_model()
@@ -90,6 +91,14 @@ class LabTest(models.Model):
         related_name='requested_tests',
         help_text="User who requested the test (taken from login credentials)"
     ) # FK to User model to capture who requested this test automatically
+
+    def clean(self):
+        today = date.today()
+        if self.request_date < today:
+            raise ValidationError({'request_date': "Request date cannot be in the past."})
+        if self.test_date < today:
+            raise ValidationError({'test_date': "Test date cannot be in the past."})
+    
  
     def __str__(self):
         return f"LabTest for {self.patient.patient_name} - {self.test_type}"
@@ -131,6 +140,11 @@ class LabInvoice(models.Model):
         default=date.today,
         help_text="Date of invoice creation"
     )
+    
+    def clean(self):
+        today = date.today()
+        if self.date < today:
+            raise ValidationError({'date': "Invoice date cannot be in the past."})
  
     def __str__(self):
         return f"Invoice for {self.patient.patient_name} - {self.testname}"

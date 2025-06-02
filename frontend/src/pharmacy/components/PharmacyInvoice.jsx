@@ -864,7 +864,7 @@ const handleBatchChange = (e, idx) => {
                     value={paymentTerms}
                     onChange={(e) => setPaymentTerms(e.target.value)}
                   >
-                    <option value="Select payment terms" selected>Select Payment Terms </option>
+                    <option value="Select payment terms">Select Payment Terms </option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </Form.Select>
@@ -882,7 +882,7 @@ const handleBatchChange = (e, idx) => {
                     }
                     disabled={paymentTerms === "Yes"}
                   >
-                    <option value= "select payment metho">Select Pyment Methos</option>
+                    <option value= "select payment methods">Select Pyment Methods</option>
                     <option value="Cash">Cash</option>
                     <option value="Debit/Credit">Debit/Credit</option>
                     <option value="UPI">UPI</option>

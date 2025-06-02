@@ -10,6 +10,7 @@ from django.core.cache import cache
 from django.db import transaction
 from rec_app.models import ProgressNote
 from .models import Patient
+from doctors.serializers import DoctorAvailabilitySerializer
 
 # Create your views here.
 
@@ -32,12 +33,18 @@ class PatientAPIView(APIView):
 
             doctor = models.DoctorAvailability.objects.filter(d_name__iexact=req_params["doctor"], is_guest=False).first()
 
+            if not doctor:
+                available = models.DoctorAvailability.objects.filter(is_guest=False)
+                doctors = [doctor.d_name for doctor in available]
+                return Response({
+                    "message": f"Doctor not found. Here are available doctors {doctors}.",
+                    # "available_doctors": doctors
+                })
+                
 
             patient = models.Patient(
                 patient_name = req_params['patient_name'],
                 doctor = doctor,  
-                date = req_params['date'],
-                time = req_params['time'],
                 age = req_params['age'],
                 appointment_type = req_params['appointment_type'],
                 notes = req_params.get('notes', ''),
@@ -90,7 +97,6 @@ class GetPatientAPIView(APIView):
             patient_id = request.query_params.get('id', None)
             appointment_type = request.query_params.get('appointment_type', None)
             gender = request.query_params.get('gender', None)
-            date = request.query_params.get('date', None)
             doctor_name = request.query_params.get('doctor_name', None)
 
             patients = models.Patient.objects.all()
@@ -115,9 +121,6 @@ class GetPatientAPIView(APIView):
             if gender:
                 patients = patients.filter(gender__iexact=gender)
 
-            if date:
-                patients = patients.filter(date=date)
-
             if doctor_name:
                 patients = patients.filter(doctor_name__icontains=doctor_name)  
 
@@ -129,7 +132,7 @@ class GetPatientAPIView(APIView):
             
 
 
-            if appointment_type and not any([search, gender, date, doctor_name, patient_id]):
+            if appointment_type and not any([search, gender, doctor_name, patient_id]):
                 count = patients.count()
                 context["data"] = {
                     "appointment_type": appointment_type,

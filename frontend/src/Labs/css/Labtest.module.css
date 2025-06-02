@@ -1,295 +1,297 @@
-/* Labtest.module.css */
- 
+.lab {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
 
 #lab {
-
   padding: 1rem;
-
 }
- 
+
 .Navbar {
-
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
-
   gap: 1rem;
-
   flex-wrap: wrap;
-
   background-color: white;
-
   padding: 1rem;
-
 }
- 
+
 .border {
-
   height: 3rem;
-
   font-weight: bold;
-
   border-color: lightgray;
-
 }
- 
+
 .profile {
-
   display: flex;
-
   justify-content: center;
-
   align-items: center;
-
   gap: 1rem;
-
 }
- 
+
 .profile img {
-
   width: 3rem;
-
   height: 3rem;
-
   border-radius: 50%;
-
 }
- 
-/* Responsive styles (media queries remain unchanged) */
 
-@media (max-width: 768px) {
-
-  .Navbar {
-
-    flex-direction: column;
-
-    align-items: flex-start;
-
-  }
- 
-  .InputGroup {
-
-    width: 100% !important;
-
-    margin-top: 0.5rem;
-
-  }
- 
-  .border {
-
-    display: none;
-
-  }
- 
-  .profile {
-
-    width: 100%;
-
-    justify-content: flex-start;
-
-  }
- 
-  .profile img {
-
-    width: 2.5rem;
-
-    height: 2.5rem;
-
-  }
-
-}
- 
-/* More responsive rules omitted for brevity — keep them as they are */
-
-/* Now lab test specific styles: */
- 
+/* Tab styles */
 .Tab {
-
   padding: 1rem;
-
   margin-top: 2rem;
-
 }
- 
+
 .tabContainer {
-
   display: flex;
-
   background-color: rgba(162, 170, 169, 0.37);
-
   padding: 0.5rem;
-
   width: 17rem;
-
-}
- 
-.tab {
-
-  width: 7rem;
-
-  height: 3rem;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  cursor: pointer;
-
-  color: gray;
-
-  font-weight: 500;
-
-  transition: all 0.2s ease-in-out;
-
-  margin-left: 0.5rem;
-
-}
- 
-.tabActive {
-
-  background-color: white;
-
-  color: #333;
-
-  font-weight: 600;
-
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-}
- 
-/* Button styles */
- 
-.AddNote {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  margin-top: 2rem;
-
-}
- 
-.AddNoteButton {
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  background-color: #002072;
-
-  color: white;
-
-  outline: none;
-
-  border: none;
-
-  padding: 0.7rem;
-
-  width: 13rem;
-
-  font-size: 1.1rem;
-
-}
- 
-.fa {
-
-  font-size: 1.5rem;
-
-  margin-right: 1rem;
- 
-
-}
- 
-/* Table */
- 
-.tableList {
-
-  margin-top: 2rem;
-
-}
- 
-.th {
-
-  color: rgb(156, 153, 153);
-
-  font-weight: 500;
-
-  font-size: 1.1rem;
-
-}
- 
-.tbody {
-
-  padding: 1rem;
-
-  margin-top: 1rem;
-
-}
- 
-.tr {
-
-  padding: 1rem;
-
-}
- 
-.td {
-
-  font-size: 1.1rem;
-
-  padding: 0.8rem;
-
-  font-weight: 500;
-
-}
- 
-.btns {
-
-  padding: 0.3rem;
-
-  width: 7rem;
-
-  font-size: 1.1rem;
-
-}
-
-
-.tabContainer {
-  display: flex;
   gap: 8px;
 }
 
 .tab {
+  width: 7rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: gray;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  margin-left: 0.5rem;
   padding: 10px 20px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  background-color: transparent #EAEAF3;  /* no background by default */
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-weight: 500;
-  color: #333;
+  background-color: transparent;
 }
 
-/* .tab:hover {
-  background-color: transparent; } */
+.tab:hover {
+  color: #007bff;
+}
 
+.tabActive,
 .active {
-  background-color: white;      
-  /* color: #0d47a1; */
-  font-weight: bold;
-  /* border-color: #90caf9; */
+  background-color: white;
+  color: #333;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-.notebtn{
+
+/* Button styles */
+.AddNote {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.AddNoteButton,
+.notebtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #002072;
   color: white;
+  outline: none;
   border: none;
-  width: 200px;
+  padding: 0.7rem;
+  font-size: 1.1rem;
   border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.AddNoteButton {
+  width: 13rem;
+}
+
+.notebtn {
+  width: 200px;
+}
+
+.AddNoteButton:hover,
+.notebtn:hover {
+  background-color: #001a58;
+}
+
+.fa {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+/* Table container for horizontal scrolling */
+.table-list,
+.tableList {
+  margin-top: 2rem;
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Table styling */
+.table-list table,
+.tableList table {
+  width: 100%;
+  min-width: 800px; /* Forces horizontal overflow on smaller screens */
+  border-collapse: collapse;
+  table-layout: fixed; /* Keeps columns equal width */
+}
+
+.th,
+.table-list th {
+  color: rgb(156, 153, 153);
+  font-weight: 500;
+  font-size: 1.1rem;
+  background-color: #f7f7f7;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
+}
+
+.tbody {
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.tr {
+  padding: 1rem;
+}
+
+.td,
+.table-list td {
+  font-size: 1.1rem;
+  padding: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
+}
+
+.btns {
+  padding: 0.3rem;
+  width: 7rem;
+  font-size: 1.1rem;
+}
+
+/* Responsive styles */
+
+/* Tablets and below */
+@media (max-width: 768px) {
+  .Navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .InputGroup {
+    width: 100% !important;
+    margin-top: 0.5rem;
+  }
+
+  .border {
+    display: none;
+  }
+
+  .profile {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .profile img {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .tabContainer {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .tab {
+    width: 100%;
+    margin-left: 0;
+    padding: 0.75rem 1rem;
+  }
+
+  .AddNoteButton,
+  .notebtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .table-list,
+  .tableList {
+    margin-top: 1rem;
+  }
+
+  .th,
+  .td {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* Mobile phones and below */
+@media (max-width: 480px) {
+  .lab,
+  #lab {
+    padding: 0.5rem;
+  }
+
+  .Tab {
+    padding: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .AddNote {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .table-list {
+    overflow-x: auto;
+  }
+
+  th,
+  td,
+  .th,
+  .td {
+    padding: 0.5rem 0.3rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Very small devices */
+@media (max-width: 320px) {
+  .tab {
+    height: auto;
+    padding: 0.5rem;
+  }
+
+  .fa {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+
+  .AddNoteButton,
+  .notebtn {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .table-list th,
+  .table-list td,
+  .th,
+  .td {
+    padding: 0.3rem;
+    font-size: 0.8rem;
+  }
 }

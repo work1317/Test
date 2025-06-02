@@ -52,10 +52,10 @@ const GRiskAssesment = ({ patient }) => {
     fetchRiskFactors();
     const handleRefresh = () => fetchRiskFactors(); // Refresh on event
  
-    window.addEventListener("refreshRiskAssessment ", handleRefresh);
+    window.addEventListener("refreshRiskAssessment", handleRefresh);
  
     return () => {
-      window.removeEventListener("refreshRiskAssessment ", handleRefresh);
+      window.removeEventListener("refreshRiskAssessment", handleRefresh);
     };
 
   }, [patient]);

@@ -45,6 +45,27 @@ class LabTestValidator(serializers.Serializer):
     flag = serializers.BooleanField(required=False, default=False)
    
     upload = serializers.FileField(required=False, allow_null=True)
+    
+    def validate(self, data):
+        requested_test = data.get('requested_test', '').strip().lower()
+        test_type = data.get('test_type', '').strip().lower()
+ 
+        if requested_test != test_type:
+            raise serializers.ValidationError("Requested test and test type must be the same.")
+ 
+        return data
+   
+    def validate(self, data):
+        if data['requested_test'].strip().lower() != data['test_type'].strip().lower():
+            raise serializers.ValidationError("Requested test and test type must be the same.")
+ 
+        if data['request_date'] < date.today():
+            raise serializers.ValidationError({"request_date": "Request date cannot be in the past."})
+ 
+        if data['test_date'] < date.today():
+            raise serializers.ValidationError({"test_date": "Test date cannot be in the past."})
+ 
+        return data
  
  
 class LabInvoiceValidator(serializers.Serializer):
@@ -77,7 +98,12 @@ class LabInvoiceValidator(serializers.Serializer):
         except Patient.DoesNotExist:
             raise serializers.ValidationError("Patient with this name does not exist.")
         return patient  # You can return the patient object if your view uses it
-    
+
+    def validate(self, data):
+        if 'date' in data and data['date'] < date.today():
+            raise serializers.ValidationError({"date": "Invoice date cannot be in the past."})
+        return data
+        
     
 
 

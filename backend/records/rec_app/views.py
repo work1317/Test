@@ -1015,7 +1015,13 @@ class CreatePainAssessmentAPIView(APIView):
 
             # Check if the pain assessment already exists
             if PainAssessment.objects.filter(patient=patient).exists():
-                raise ValidationError({'patient_id': 'Pain assessment already exists for this patient.'})
+                return Response(
+                    {
+                        "success":0,
+                        "message":f"Pain Assessment already exists for patient ID {patient.patient_id}.",
+                        "data":{}
+                    },status=status.HTTP_400_BAD_REQUEST
+                )
 
             data = request.data.copy()
             data['patient'] = patient.id
@@ -1151,7 +1157,13 @@ class CreateInitialAssessmentAPIView(APIView):
 
             # Check if Initial Assessment already exists
             if InitialAssessment.objects.filter(patient=patient).exists():
-                raise ValidationError({'patient_id': 'Initial assessment already exists for this patient.'})
+                return Response(
+                    {
+                        "success":0,
+                        "message":f"Initial Assessment already exists for patient ID {patient.patient_id}.",
+                        "data":{}
+                    },status=status.HTTP_400_BAD_REQUEST
+                )
 
             data = request.data.copy()
             data['patient'] = patient.id
@@ -1259,22 +1271,22 @@ class UpdateInitialAssessmentAPIView(APIView):
 class CarePlanFeedbackAPIView(APIView):
     def get(self, request):
         return Response({"message": "Use POST to create care plan feedback"}, status=status.HTTP_200_OK)
-
+ 
     def post(self, request):
         context = {
             "success": 1,
             "message": "Data saved successfully",
             "data": {}
         }
-
+ 
         try:
             # Validate request data
             validator = validators.CarePlanFeedbackValidator(data=request.data)
             if not validator.is_valid():
                 raise ValueError(validator.errors)
-
+ 
             req_params = validator.validated_data
-
+ 
             # Check if patient exists
             try:
                 patient = models.Patient.objects.get(patient_id=req_params['patient'])
@@ -1287,39 +1299,41 @@ class CarePlanFeedbackAPIView(APIView):
                     },
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
-            # Ensure only one CarePlanFeedback entry per patient
-            feedback, created = models.CarePlanFeedback.objects.get_or_create(
+ 
+            # Check if feedback already exists
+            if models.CarePlanFeedback.objects.filter(patient=patient).exists():
+                return Response(
+                    {
+                        "success": 0,
+                        "message": f"Care plan feedback already exists for patient ID {req_params['patient']}.",
+                        "data": {}
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+ 
+            # Create new feedback entry
+            feedback = models.CarePlanFeedback.objects.create(
                 patient=patient,
-                defaults={
-                    "feedback_on_services": req_params["feedback_on_services"],
-                    "provisional_feedback": req_params["provisional_feedback"],
-                    "feedback_plan": req_params["feedback_plan"],
-                    "expected_outcome": req_params["expected_outcome"],
-                    "preventive_feedback_aspects": req_params["preventive_feedback_aspects"]
-                }
+                feedback_on_services=req_params["feedback_on_services"],
+                provisional_feedback=req_params["provisional_feedback"],
+                feedback_plan=req_params["feedback_plan"],
+                expected_outcome=req_params["expected_outcome"],
+                preventive_feedback_aspects=req_params["preventive_feedback_aspects"]
             )
-
-            if not created:
-                feedback.feedback_on_services = req_params["feedback_on_services"]
-                feedback.provisional_feedback = req_params["provisional_feedback"]
-                feedback.feedback_plan = req_params["feedback_plan"]
-                feedback.expected_outcome = req_params["expected_outcome"]
-                feedback.preventive_feedback_aspects = req_params["preventive_feedback_aspects"]
-                feedback.save()
-
+ 
             serializer = CarePlanFeedbackSerializer(feedback, context={"request": request})
             context["data"] = {"care_plan_feedback_details": serializer.data}
-
+ 
         except ValueError as e:
             context["success"] = 0
             context["message"] = str(e)
         except Exception as e:
             context["success"] = 0
-            context["message"] = str(e)
-
+            context["message"] = "An unexpected error occurred: " + str(e)
+ 
         return Response(context, status=status.HTTP_201_CREATED if context["success"] else status.HTTP_400_BAD_REQUEST)
-
+    
+    
 class CarePlanFeedbackListAPIView(APIView):
     def get(self, request, patient_id):
         care_plan_feedbacks = models.CarePlanFeedback.objects.filter(patient__patient_id=patient_id)

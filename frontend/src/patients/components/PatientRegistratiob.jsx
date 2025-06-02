@@ -20,8 +20,6 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
     age: "",
     gender: "",
     email: "",
-    date: "",
-    time: "",
     phno: "",
     appointment_type: "",
     blood_group: "",
@@ -41,8 +39,6 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.email.match(/^\S+@\S+\.\S+$/)) newErrors.email = "Enter a valid email address";
     if (!formData.doctor.trim()) newErrors.doctor = "Doctor name is required";
-    if (!formData.date) newErrors.date = "Select an appointment date";
-    if (!formData.time) newErrors.time = "Select an appointment time";
     if (!formData.phno.match(/^\d{10}$/)) newErrors.phno = "Enter a valid 10-digit mobile number";
     if (!formData.appointment_type.trim()) newErrors.appointment_type = "Select appointment type";
     if (!formData.blood_group.trim()) newErrors.blood_group = "Select blood group";
@@ -73,6 +69,7 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
     await fetchNotifications()
     await onNotificationClick()
     console.log("API Response:", response);
+    alert(response.data.message)
     // window.location.href = "/notifications";
     if (
       (response.status === 200 || response.status === 201) &&
@@ -94,8 +91,6 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
         age: "",
         gender: "",
         email: "",
-        date: "",
-        time: "",
         phno: "",
         appointment_type: "",
         blood_group: "",
@@ -103,15 +98,17 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
       });
 
       handleClose();
-    } else {
-      setError("Something went wrong. Please try again.");
     }
+    //  else {
+    //   setError("Something went wrong. Please try again.");
+    // }
   } catch (error) {
     console.error(
       "Error:",
       error.response ? error.response.data : error.message
     );
     setError("Registration failed. Please check the details and try again.");
+    alert(error.response.data)
   } finally {
     setLoading(false);
   }
@@ -189,7 +186,7 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
             </Row>
 
             <Row className="mb-3">
-              <Col xs={12} md={4}>
+              <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label>Age</Form.Label>
                   <InputGroup>
@@ -204,7 +201,7 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
                   </InputGroup>
                 </Form.Group>
               </Col>
-              <Col xs={12} md={4}>
+              <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label>Gender</Form.Label>
                   <Form.Select name="gender" value={formData.gender} onChange={handleChange} isInvalid={!!error.gender}>
@@ -216,25 +213,10 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
                 <Form.Control.Feedback type="invalid">{error.gender}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Time</Form.Label>
-                  <InputGroup>
-                    <Form.Control
-                      type="time"
-                      name="time"
-                      value={formData.time}
-                      onChange={handleChange}
-                      isInvalid={!!error.time}
-                    />
-                <Form.Control.Feedback type="invalid">{error.time}</Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-              </Col>
             </Row>
 
             <Row className="mb-3">
-              <Col xs={12} md={4}>
+              <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label>Appointment Type</Form.Label>
                   <Form.Select name="appointment_type" value={formData.appointment_type} onChange={handleChange}  isInvalid={!!error.appointment_type}>
@@ -246,7 +228,7 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
                 <Form.Control.Feedback type="invalid">{error.appointment_type}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              <Col md={4}>
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>Blood Group</Form.Label>
                   <Form.Select name="blood_group" value={formData.blood_group} onChange={handleChange} isInvalid={!!error.blood_group}>
@@ -261,22 +243,6 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
                     <option value="O-">O-</option>
                   </Form.Select>
                 <Form.Control.Feedback type="invalid">{error.blood_group}</Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Date</Form.Label>
-                  <InputGroup>
-                    <Form.Control
-                      type="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleChange}
-                     isInvalid={!!error.date}
-                    />
-                  <Form.Control.Feedback type="invalid">{error.date}</Form.Control.Feedback>
-
-                  </InputGroup>
                 </Form.Group>
               </Col>
             </Row>

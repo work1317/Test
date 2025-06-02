@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
+import { CiCalendar, CiFilter } from "react-icons/ci";
+import { GoClock } from "react-icons/go";
 import {
-  CiCalendar, CiFilter
-} from "react-icons/ci";
-import {
-  GoClock
-} from "react-icons/go";
-import { 
   IoIosCheckmarkCircleOutline,
-  IoIosCloseCircleOutline
+  IoIosCloseCircleOutline,
 } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 
@@ -40,10 +36,12 @@ const Appointments = () => {
       .get(`/appointments/get-appointments-list/?filter=${filterType}`)
       .then((response) => {
         setAppointments(response.data.data.appointments);
-        console.log(response.data)
+        console.log(response.data);
         setStats(response.data.data.stats);
       })
-      .catch((error) => console.error("Error fetching appointment data:", error));
+      .catch((error) =>
+        console.error("Error fetching appointment data:", error)
+      );
   };
 
   const fetchAppointmentsByDate = (date) => {
@@ -53,6 +51,7 @@ const Appointments = () => {
       .then((response) => {
         setAppointments(response.data.data.appointments);
         setStats(response.data.data.stats);
+        console.log(response.data.data);
       })
       .catch((error) => console.error("Error fetching by date:", error));
   };
@@ -68,7 +67,9 @@ const Appointments = () => {
 
   const filteredAppointments = appointments.filter((item) => {
     const lowerQuery = query.toLowerCase();
-    const matchesType = filter === "all" || (item.appointment_type?.toLowerCase() === filter.toLowerCase());
+    const matchesType =
+      filter === "all" ||
+      item.appointment_type?.toLowerCase() === filter.toLowerCase();
     const matchesQuery =
       item.patient_name?.toLowerCase().includes(lowerQuery) ||
       item.appointment_id?.toString().toLowerCase().includes(lowerQuery) ||
@@ -105,23 +106,36 @@ const Appointments = () => {
       <div className={styles.header}>
         <div>
           <h1 className={styles.sectionTitle}>Appointments</h1>
-          <p className={styles.para}>Manage and schedule patient appointments</p>
+          <p className={styles.para}>
+            Manage and schedule patient appointments
+          </p>
         </div>
-        <Button className={styles.buttonclick} onClick={() => setShowUserModal(true)} style={{padding:'10px'}}>
-          <CiCalendar className="mb-1 me-2" size={15}/> Schedule Appointments
+        <Button
+          className={styles.buttonclick}
+          onClick={() => setShowUserModal(true)}
+          style={{ padding: "10px" }}
+        >
+          <CiCalendar className="mb-1 me-2" size={15} /> Schedule Appointments
         </Button>
       </div>
 
-      <ScheduleAppointments show={showUserModal} handleClose={() => setShowUserModal(false)} />
+      <ScheduleAppointments
+        show={showUserModal}
+        handleClose={() => setShowUserModal(false)}
+      />
 
       <Row className="g-3 mb-4">
         <Col md={3}>
           <Card className="shadow-lg">
             <Card.Body>
               <CiCalendar className={`p-1 ${styles.icon}`} size={30} />
-              <p className={styles.statsCardText}>Today Total Patients</p>
-              <h2 className={styles.statsNumber}>{stats.total_patients_today}</h2>
-              <p className={styles.statsFooter}>+{stats.increased_patients}% this month</p>
+              <p className={styles.statsCardText}>Today's Total Patients</p>
+              <h2 className={styles.statsNumber}>
+                {stats.total_patients_today}
+              </h2>
+              <p className={styles.statsFooter}>
+                +{stats.increased_patients}% this month
+              </p>
             </Card.Body>
           </Card>
         </Col>
@@ -131,16 +145,23 @@ const Appointments = () => {
               <GoClock className={`p-1 ${styles.icon1}`} size={30} />
               <p className={styles.statsCardText}>Doctors</p>
               <h2 className={styles.statsNumber}>{stats.doctors_available}</h2>
-              <p className={`${styles.statsFooter} text-secondary`}>Total Appointments</p>
+              <p className={`${styles.statsFooter} text-secondary`}>
+                Total Appointments
+              </p>
             </Card.Body>
           </Card>
         </Col>
         <Col md={3}>
           <Card className="shadow-lg">
             <Card.Body>
-              <IoIosCheckmarkCircleOutline className={`p-1 ${styles.icon2}`} size={30} />
-              <p className={styles.statsCardText}>Today's Appointment</p>
-              <h2 className={styles.statsNumber}>{stats.todays_appointments}</h2>
+              <IoIosCheckmarkCircleOutline
+                className={`p-1 ${styles.icon2}`}
+                size={30}
+              />
+              <p className={styles.statsCardText}>Today's Appointments</p>
+              <h2 className={styles.statsNumber}>
+                {stats.todays_appointments}
+              </h2>
               <p className={styles.statsFooter}>{stats.urgent} Urgent</p>
             </Card.Body>
           </Card>
@@ -148,10 +169,17 @@ const Appointments = () => {
         <Col md={3}>
           <Card className="shadow-lg">
             <Card.Body>
-              <IoIosCloseCircleOutline className={`p-1 ${styles.icon3}`} size={30} />
+              <IoIosCloseCircleOutline
+                className={`p-1 ${styles.icon3}`}
+                size={30}
+              />
               <p className={styles.statsCardText}>Active Cases</p>
-              <h2 className={styles.statsNumber}>{stats.active_cases?.total}</h2>
-              <p className={styles.statsFooter}>{stats.total_appointments} Critical</p>
+              <h2 className={styles.statsNumber}>
+                {stats.active_cases?.total}
+              </h2>
+              <p className={styles.statsFooter}>
+                {stats.total_appointments} Critical
+              </p>
             </Card.Body>
           </Card>
         </Col>
@@ -162,7 +190,10 @@ const Appointments = () => {
           <Card className="shadow-lg">
             <Card.Body>
               <div className="text-center text-muted">
-                <CalendarComponent onDateSelect={handleDateSelect} className={`w-75`}/>
+                <CalendarComponent
+                  onDateSelect={handleDateSelect}
+                  className={`w-75`}
+                />
               </div>
               <div className="mt-3 text-secondary">
                 {["all", "upcoming_week", "this_month"].map((type) => (
@@ -198,57 +229,55 @@ const Appointments = () => {
                   placeholder="  Search appointments...."
                 />
               </div>
-              <CiFilter className="ms-1 mt-2" size={40} style={{ color: "#979797" }} />
-              <select
-                className={`${styles.selection} ms-1 w-50 me-2`}
-                value={filter}
-                onChange={handleFilterChange}
-              >
-                <option value="all">All Status</option>
-                <option value="InPatient">InPatient</option>
-                <option value="OutPatient">OutPatient</option>
-                <option value="Casuality">Casuality</option>
-              </select>
+              <CiFilter
+                className="ms-1 mt-2"
+                size={40}
+                style={{ color: "#979797" }}
+              />
             </div>
-                          <div className={styles.scrollContainer}>
-                {filteredAppointments.length > 0 ? (
-                  filteredAppointments.map((item) => (
-                    <Card
-                      key={item.id}
-                      className={styles.appointmentCard + " shadow-lg"}
-                      onClick={() => handleAppointmentClick(item)}
-                    >
-                      <Card.Body className={styles.appointmentDetails}>
-                        <div>
-                          <h5 className={styles.patientName}>{item.patient_name}</h5>
-                          <p className={styles.patientMeta}>{item.doctor_name}</p>
-                          <p className={styles.patientDate}>
-                            <CiCalendar className={`mb-1 ${styles.calendar}`} /> {item.date}
-                          </p>
-                          <p className={styles.patientNote}>{item.notes}</p>
-                        </div>
-                        <div>
-                          <span className={styles.timeText}>
-                            <GoClock className="mb-1" size={20} /> {item.time}
-                          </span>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  ))
-                ) : (
-                  <p className="text-center mt-3">No appointments found.</p>
-                )}
-              </div>
-
+            <div className={styles.scrollContainer}>
+              {filteredAppointments.length > 0 ? (
+                filteredAppointments.map((item) => (
+                  <Card
+                    key={item.appointment_id || `appt-${item.patient_name}-${item.date}`}
+                    className={styles.appointmentCard + " shadow-lg"}
+                    onClick={() => handleAppointmentClick(item)}
+                  >
+                    <Card.Body className={styles.appointmentDetails}>
+                      <div>
+                        <h5 className={styles.patientName}>
+                          {item.patient_name}
+                        </h5>
+                        <p className={styles.patientMeta}>
+                          Dr.{item.doctor_name}
+                        </p>
+                        <p className={styles.patientDate}>
+                          <CiCalendar className={`mb-1 ${styles.calendar}`} />{" "}
+                          {item.date}
+                        </p>
+                        <p className={styles.patientNote}>{item.notes}</p>
+                      </div>
+                      <div>
+                        <span className={styles.timeText}>
+                          <GoClock className="mb-1" size={20} /> {item.time}
+                        </span>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                ))
+              ) : (
+                <p className="text-center mt-3">No appointments found.</p>
+              )}
+            </div>
 
             {/* <AppointmentDetailsModal show={showModal1} handleClose={() => setShowModal1(false)} appointmentId={'12345'} /> */}
             {showModal1 && selectedAppointment && (
-        <AppointmentDetailsModal
-          show={showModal1}
-          handleClose={() => setShowModal1(false)}
-          appointmentId={selectedAppointment}
-        />
-      )}
+              <AppointmentDetailsModal
+                show={showModal1}
+                handleClose={() => setShowModal1(false)}
+                appointmentId={selectedAppointment}
+              />
+            )}
           </Card>
         </Col>
       </Row>

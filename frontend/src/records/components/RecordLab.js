@@ -35,18 +35,18 @@ const tabData = [
   { name: "Lab Results", icon: Microscope, tab: "lab" },
   { name: "Prescription", icon: FileText, tab: "prescription" },
   { name: "Imaging", icon: FileText, tab: "Imaging" },
-  { name: "Vital", icon: Heart, tab: "vitals" },
+  { name: "Vitals", icon: Heart, tab: "vitals" },
   { name: "Services & Procedures", icon: Stethoscope, tab: "services" },
 ];
  
 const notesData = [
   { name: "Nursing Notes", tab: "nursing Note" },
   { name: "Progress Notes", tab: "progress Note" },
-  { name: "TreatmentChart", tab: "treatmentchart" },
-  { name: "PainAssesment", tab: "painassesment" },
-  { name: "IntitialAssesment", tab: "initialassesment" },
-  { name: "Careplan", tab: "careplan" },
-  { name: "RiskAssesment", tab:"riskassesment"}
+  { name: "Treatment Chart", tab: "treatmentchart" },
+  { name: "Pain Assessment", tab: "painassesment" },
+  { name: "Intitial Assesment", tab: "initialassesment" },
+  { name: "Care plan", tab: "careplan" },
+  { name: "Risk Assessment", tab:"riskassesment"}
 ]
  
 export const doctors  = createContext()

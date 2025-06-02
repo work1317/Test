@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import  LabTest,LabInvoice
 from patients.models import Patient
+from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework.exceptions import ValidationError as DRFValidationError
+
 # Create the Seralizers over here
 
 class LabTestSerializer(serializers.ModelSerializer):
@@ -32,6 +35,14 @@ class LabTestSerializer(serializers.ModelSerializer):
         validated_data['test_time'] = datetime.datetime.now().time()
 
         return super().create(validated_data)
+    
+    def validate(self, attrs):
+        instance = LabTest(**attrs)
+        try:
+            instance.clean()
+        except DjangoValidationError as e:
+            raise DRFValidationError(e.message_dict)
+        return attrs
 
 class LabInvoiceSerializer(serializers.ModelSerializer):
     # Override patient field to show patient_name instead of ID
@@ -40,3 +51,12 @@ class LabInvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = LabInvoice
         fields = '__all__'
+
+    def validate(self, attrs):
+        instance = LabInvoice(**attrs)
+        try:
+            instance.clean()
+        except DjangoValidationError as e:
+            raise DRFValidationError(e.message_dict)
+        return attrs
+ 

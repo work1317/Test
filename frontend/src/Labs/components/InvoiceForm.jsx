@@ -62,16 +62,6 @@ function InvoiceForm({ handlerClose, saveButtons }) {
                 />
               </div>
               <div className="col-md-6 mb-3">
-                {/* <Form.Label>Status</Form.Label>
-                <Form.Control
-                  className={styles.formsCon}
-                  name="status"
-                  type="text"
-                  placeholder="Pending"
-                  value={formsData1.status}
-                  onChange={handlerForms}
-                  required
-                /> */}
                 <Form.Label>Status</Form.Label>
                   <Form.Select
                     className={styles.formsCon}

@@ -44,6 +44,7 @@ const CarePlan= ({ show, handleClose,patientId })  =>{
     } catch (error) {
       console.error("Error submitting form:", error);
       setMessage("Failed to register patient");
+      alert(error.response.data.message);
     }
 
     handleClose();

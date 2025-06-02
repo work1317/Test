@@ -50,7 +50,7 @@ function GNursingNotes({ patient }) {
         <Alert variant="warning">{errorMessage}</Alert>
       ) : (
         notes.map((note, index) => (
-          <div key={index} className="mb-3">
+          <div key={index} className="mb-3 px-4">
             <Row>
               <h4> {note.nurse} </h4>
             </Row>

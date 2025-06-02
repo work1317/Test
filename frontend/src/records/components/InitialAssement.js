@@ -89,7 +89,7 @@ const InitialAssessment = ({ handleClose, patientId }) => {
       handleClose();
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Failed to submit the form.");
+      alert(error.response.data.message);
     }
   };
 

@@ -24,7 +24,7 @@ function AddRecordModal({show,handleClose,patientId}) {
     //   category:"",
     //   report: FileList | File,
     // },
-    prescription: {
+    Prescription: {
       medication_name: "",
       category:"",
       duration: "",
@@ -38,7 +38,7 @@ function AddRecordModal({show,handleClose,patientId}) {
     //   summary: "",
     //   report: FileList | File,
     // },
-    vitals: {
+    Vitals: {
       category:"",
       height: "",
       weight: "",
@@ -50,7 +50,7 @@ function AddRecordModal({show,handleClose,patientId}) {
       cns: "",
       report: FileList | File ,
     },
-    service_procedure: {
+    Service_procedure: {
       title: "",
       category:"",
       summary: "",
@@ -60,9 +60,9 @@ function AddRecordModal({show,handleClose,patientId}) {
 
 
   const recordTypes = [
-    "prescription",
-    "vitals",
-    "service_procedure",
+    "Prescription",
+    "Vitals",
+    "Service_procedure",
   ];
 
   const handleInputChange = (e, field) => {
@@ -201,7 +201,7 @@ function AddRecordModal({show,handleClose,patientId}) {
             </Col>
           </Row>
       
-          { recordType === "prescription" ? (
+          { recordType === "Prescription" ? (
             <>
               <p className={styles.HeadText}>Prescription</p>
 
@@ -211,7 +211,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="Enter medication name"
-                    value={formData.prescription.medication_name}
+                    value={formData.Prescription.medication_name}
                     onChange={(e) => handleInputChange(e, "medication_name")}
                     className={styles.medInput}
                   />
@@ -222,7 +222,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                     <Form.Control
                       type="text"
                       placeholder="Enter duration"
-                      value={formData.prescription.duration}
+                      value={formData.Prescription.duration}
                       onChange={(e) => handleInputChange(e, "duration")}
                       className={styles.presInput}
                     />
@@ -232,7 +232,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                     <Form.Control
                       type="text"
                       placeholder="e.g.500mg"
-                      value={formData.prescription.dosage}
+                      value={formData.Prescription.dosage}
                       onChange={(e) => handleInputChange(e, "dosage")}
                       className={styles.presInput}
                     />
@@ -247,7 +247,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                         as="textarea"
                         rows={3}
                         placeholder="Enter medication description..."
-                        value={formData.prescription.summary}
+                        value={formData.Prescription.summary}
                         onChange={(e) => handleInputChange(e, "summary")}
                         className={styles.presDesInput}
                       />
@@ -258,7 +258,7 @@ function AddRecordModal({show,handleClose,patientId}) {
 
               <div className={styles.fileUpload}>
               <DragAndDrop
-                section='prescription'
+                section='Prescription'
                 name="report"
                 setFormData={setFormData}
                 clearPreview={clearPreview}
@@ -267,7 +267,7 @@ function AddRecordModal({show,handleClose,patientId}) {
               </div>
             </>
 
-          ) : recordType === "vitals" ? (
+          ) : recordType === "Vitals" ? (
             <>
               <p className={styles.HeadText}>Vitals Page</p>
               <Row className={styles.prescriptionInputs}>
@@ -276,7 +276,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="Height rating"
-                    value={formData.vitals.height}
+                    value={formData.Vitals.height}
                     onChange={(e) => handleInputChange(e, "height")}
                     className={styles.presInput}
                   />
@@ -286,7 +286,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="Weight Rating"
-                    value={formData.vitals.weight}
+                    value={formData.Vitals.weight}
                     onChange={(e) => handleInputChange(e, "weight")}
                     className={styles.presInput}
                   />
@@ -298,7 +298,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="BP Rating"
-                    value={formData.vitals.blood_pressure}
+                    value={formData.Vitals.blood_pressure}
                     onChange={(e) => handleInputChange(e, "blood_pressure")}
                     className={styles.presInput}
                   />
@@ -308,7 +308,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="BMI Rating"
-                    value={formData.vitals.bmi}
+                    value={formData.Vitals.bmi}
                     onChange={(e) => handleInputChange(e, "bmi")}
                     className={styles.presInput}
                   />
@@ -320,7 +320,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="GRBS Rating"
-                    value={formData.vitals.grbs}
+                    value={formData.Vitals.grbs}
                     onChange={(e) => handleInputChange(e, "grbs")}
                     className={styles.presInput}
                   />
@@ -330,7 +330,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="CVS Rating"
-                    value={formData.vitals.cvs}
+                    value={formData.Vitals.cvs}
                     onChange={(e) => handleInputChange(e, "cvs")}
                     className={styles.presInput}
                   />
@@ -342,7 +342,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="RR Rating"
-                    value={formData.vitals.respiratory_rate}
+                    value={formData.Vitals.respiratory_rate}
                     onChange={(e) => handleInputChange(e, "respiratory_rate")}
                     className={styles.presInput}
                   />
@@ -352,7 +352,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="CNS Rating"
-                    value={formData.vitals.cns}
+                    value={formData.Vitals.cns}
                     onChange={(e) => handleInputChange(e, "cns")}
                     className={styles.presInput}
                   />
@@ -362,7 +362,7 @@ function AddRecordModal({show,handleClose,patientId}) {
               <div className={styles.fileUpload}>
               <div>
               <DragAndDrop
-              section="vitals"
+              section="Vitals"
               name="report"
               setFormData={setFormData}
               clearPreview={clearPreview}
@@ -380,7 +380,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control
                     type="text"
                     placeholder="Enter record title"
-                    value={formData.service_procedure.title}
+                    value={formData.Service_procedure.title}
                     onChange={(e) => handleInputChange(e, "title")}
                     className={styles.inputPosition}
                     style={{ marginBottom: "10%" }}
@@ -392,7 +392,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <Form.Control     
                     rows={4}
                     placeholder="Add a summery of the record"
-                    value={formData.service_procedure.summary}
+                    value={formData.Service_procedure.summary}
                     onChange={(e) => handleInputChange(e, "summary")}
                     className={styles.inputPosition}
                     style={{ padding: "6% 6%" }}
@@ -402,7 +402,7 @@ function AddRecordModal({show,handleClose,patientId}) {
 
               <div className={styles.fileUpload}>
               <DragAndDrop
-              section="service_procedure"
+              section="Service_procedure"
               name="report"
               setFormData={setFormData}
               clearPreview={clearPreview}

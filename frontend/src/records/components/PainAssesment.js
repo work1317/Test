@@ -128,6 +128,7 @@ const PainAssessment = ({ handleClose, patientId }) => {
     } catch (error) {
       console.error("Error saving nursing note:", error);
       setMessage("Something went wrong while saving.");
+      alert(error.response.data.message);
     } finally {
       setLoading(false);
     }

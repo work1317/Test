@@ -255,7 +255,7 @@ const RecentInvoice = () => {
                 const totalNetAmount = invoice.items.reduce((sum, item) => sum + parseFloat(item.net_amount || 0), 0);
  
                 return (
-                  <tr key={invoice.id}>
+                  <tr key={invoice.id || `${invoice.Bill_No}-${index}`}>
                     <td>{index + 1}</td>
                     <td>{invoice.Bill_No || ''}</td>
                     <td>{invoice.Bill_Date}</td>

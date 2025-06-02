@@ -8,55 +8,49 @@ function GProgressNotes({ patient }) {
   const [progress, setProgress] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    const fectgingData = () => {
-    if (patient && patient.patient_id) {
-      api
-        .get(`/records/get-progress-note/${patient.patient_id}`)
-        .then((response) => {
-          if (response.data.success === 1) {
-            setProgress(response.data.data || []);
-            setErrorMessage('');
-          } else {
-            setProgress([]);
-            setErrorMessage(response.data.message || 'No progress notes available.');
-          }
-        })
-        .catch((error) => {
-          if (error.response?.data?.message) {
-            setErrorMessage(error.response.data.message);
-          } else {
-            setErrorMessage('Error fetching progress notes.');
-          }
-          setProgress([]);
-        });
-    }
-    
-  }
-  
-  fectgingData()
+  const fetchProgressNotes = async (patientId) => {
+    if (!patientId) return;
 
-    const handleRefresh = () => fectgingData(); // Refresh on event
- 
-    window.addEventListener("refreshNursingNote", handleRefresh);
- 
-    return () => {
-      window.removeEventListener("refreshNursingNote", handleRefresh);
+    try {
+      const response = await api.get(`/records/get-progress-note/${patientId}`);
+      if (response.data.success === 1) {
+        setProgress(response.data.data || []);
+        setErrorMessage('');
+      } else {
+        setProgress([]);
+        setErrorMessage(response.data.message || 'No progress notes available.');
+      }
+    } catch (error) {
+      setProgress([]);
+      setErrorMessage(error.response?.data?.message || 'Error fetching progress notes.');
+    }
+  };
+
+  useEffect(() => {
+    if (patient?.patient_id) {
+      fetchProgressNotes(patient.patient_id);
+    }
+
+    const handleRefresh = () => {
+      if (patient?.patient_id) {
+        fetchProgressNotes(patient.patient_id);
+      }
     };
-  }, [patient]);
+
+    window.addEventListener("refreshProgressNotes", handleRefresh);
+    return () => window.removeEventListener("refreshProgressNotes", handleRefresh);
+  }, [patient?.patient_id]); // tightly scoped
 
   return (
     <div className='mb-4'>
       {errorMessage ? (
-        <div>
-                    <Alert variant="warning">{errorMessage}</Alert>
-          </div>
+        <Alert variant="warning">{errorMessage}</Alert>
       ) : (
         progress.map((note, index) => (
           <div key={index} className="mx-4 mb-4">
             <Row>
-          <h5>Dr. {patient?.doctor_name || 'Unknown Doctor'}</h5>
-        </Row>
+              <h5>Dr. {patient?.doctor_name || 'Unknown Doctor'}</h5>
+            </Row>
             <Row>
               <Col>
                 <span><Icon icon="weui:time-outlined" width="16" /> {note.created_at}</span>

@@ -336,62 +336,95 @@ class AppointmentRescheduleAPIView(APIView):
         }
 
         try:
-            appointment = get_object_or_404(models.Appointment, appointment_id=appointment_id)
+            # Get and validate date
+            date_str = request.data.get("date")
+            time_str = request.data.get("time")
 
-            new_date = request.data.get("date")
-            new_time = request.data.get("time")
+            if not date_str or not time_str:
+                raise ValidationError("Both 'date' and 'time' are required for rescheduling.")
 
-            if not new_date or not new_time:
-                context["success"] = 0
-                context["message"] = "Both 'date' and 'time' are required to reschedule"
-                return Response(context, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                appointment_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            except ValueError:
+                raise ValidationError("Invalid date format. Expected YYYY-MM-DD.")
 
-            # Parse date
-            if isinstance(new_date, str):
-                parsed_date = datetime.strptime(new_date, "%Y-%m-%d").date()
-            else:
-                parsed_date = new_date
+            try:
+                appointment_time = datetime.strptime(time_str, "%H:%M").time()
+            except ValueError:
+                raise ValidationError("Invalid time format. Expected HH:MM.")
+            
+            appointment_datetime = datetime.combine(appointment_date, appointment_time)
 
-            # Parse time
-            if isinstance(new_time, str):
-                parsed_time = datetime.strptime(new_time, "%H:%M").time()
-            else:
-                parsed_time = new_time
+            # ✅ BLOCK if rescheduling to a past datetime
+            if appointment_date==date.today() and appointment_datetime < datetime.now():
+                raise ValidationError("Cannot reschedule to a time earlier than the current time.")
 
-            # Get the day of the week
-            day_name = calendar.day_name[parsed_date.weekday()]
+            if appointment_date < date.today():
+                raise ValidationError("Cannot reschedule to a past date.")
+
+            appointment = models.Appointment.objects.filter(appointment_id=appointment_id).first()
+            if not appointment:
+                raise ValidationError("Appointment not found.")
 
             doctor = appointment.doctor
 
-            # Check if the doctor is available on the new date
+            # Validate doctor's available day
+            day_name = calendar.day_name[appointment_date.weekday()]
             if day_name not in doctor.d_available_days:
-                context["success"] = 0
-                context["message"] = f"Doctor is not available on {day_name}"
-                return Response(context, status=status.HTTP_400_BAD_REQUEST)
+                raise ValidationError(
+                    f"Doctor is not available on {day_name}. Available only on {doctor.d_available_days}"
+                )
 
-            # Check if the time is within doctor's working hours
-            if not (doctor.d_start_time <= parsed_time <= doctor.d_end_time):
-                context["success"] = 0
-                context["message"] = (
+            # Validate time within working hours
+            today = appointment_date
+            start_time = datetime.combine(today, doctor.d_start_time)
+            end_time = datetime.combine(today, doctor.d_end_time)
+            appointment_datetime = datetime.combine(today, appointment_time)
+
+            # Overnight shift
+            if doctor.d_end_time <= doctor.d_start_time:
+                end_time += timedelta(days=1)
+                if appointment_time < doctor.d_start_time:
+                    appointment_datetime += timedelta(days=1)
+
+            if not (start_time <= appointment_datetime <= end_time):
+                raise ValidationError(
                     f"Doctor is only available between {doctor.d_start_time.strftime('%H:%M')} and "
                     f"{doctor.d_end_time.strftime('%H:%M')}"
                 )
-                return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
-            # Update appointment
-            appointment.date = parsed_date
-            appointment.time = parsed_time
+            # Break time validation
+            duty_duration = (end_time - start_time).total_seconds() / 3600
+            if duty_duration >= 4:
+                break_start = start_time + timedelta(hours=4)
+                break_end = break_start + timedelta(hours=1)
+
+                if break_start <= appointment_datetime < break_end:
+                    raise ValidationError(
+                        f"Doctor is unavailable during break from {break_start.time().strftime('%H:%M')} "
+                        f"to {break_end.time().strftime('%H:%M')}"
+                    )
+
+            # Update only date and time
+            appointment.date = appointment_date
+            appointment.time = appointment_time
             appointment.save()
 
-            serializer = app_serializers.AppointmentSerializer(appointment, context={"request": request})
+            serializer = serializers.AppointmentSerializer(appointment, context={"request": request})
             context["data"] = serializer.data
 
+        except ValidationError as ve:
+            context["success"] = 0
+            if isinstance(ve.detail, (list, dict)):
+                context["message"] = ve.detail[0] if isinstance(ve.detail, list) else next(iter(ve.detail.values()))[0]
+            else:
+                context["message"] = str(ve.detail)
         except Exception as e:
             context["success"] = 0
-            context["message"] = str(e)
-            return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            context["message"] = "Error while rescheduling appointment: " + str(e)
 
-        return Response(context, status=status.HTTP_200_OK)
+        return Response(context)
+
 
 
 

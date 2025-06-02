@@ -5,7 +5,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import SideMenuStyle from "../css/SideMenu.module.css";
 
 const menuItems = [
-  { icon: "circum:grid-4-2", label: "Dashboard", link: "Dashboard" },
+  { icon: "circum:grid-4-2", label: "Dashboard", link: "dashboard" },
   { icon: "mingcute:group-line", label: "Patients", link: "patients" },
   { icon: "hugeicons:doctor-03", label: "Doctors", link: "doctors" },
   { icon: "uit:calender", label: "Appointments", link: "appointments" },

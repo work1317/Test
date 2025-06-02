@@ -7,7 +7,7 @@ class PatientUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = [
-            'patient_name', 'doctor', 'date', 'time', 'age',
+            'patient_name', 'doctor', 'age',
             'appointment_type', 'notes', 'gender', 'phno', 'ward_no','diagnosis'
         ]
         extra_kwargs = {'phno': {'required': False}}
