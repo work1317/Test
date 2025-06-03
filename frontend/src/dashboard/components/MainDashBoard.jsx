@@ -226,7 +226,7 @@ const MainDashBoard = () => {
           {statistics.map((stat, index) => (
             <div key={index} className={styles.gridcard}>
               <div className={`${styles.caricon} ${stat.color}`}>
-                <Icon icon={stat.icon} width="28" height="28" />
+                <Icon icon={stat.icon} width="24" height="24" className="mt-4 ms-3" />
               </div>
               <div className={styles.cartextContainer}>
                 <p className={styles.carTitle}>{stat.title}</p>
@@ -265,7 +265,7 @@ const MainDashBoard = () => {
                   </div>
                 </div>
               </div>
-            ))
+            ))  
           ) : (
             <p className="text-center mt-3">No appointments found.</p>
           )}

@@ -48,6 +48,7 @@ function Service() {
                             <div className='d-flex flex-column'>
                                 <span className={`ms-2 ${ServiceStyle.content}`} >{items.title}</span>
                                 <span style={{fontSize:'13px',color:'#808080'}}  className='ms-2'>{items.category}</span>
+                                <p style={{fontSize:'13px',color:'#808080'}}  className='ms-2'>{items.summary}</p>
                                 <p style={{fontSize:'13px',color:'#808080'}} className='mt-3 me-5'>{selectedPatient.date}</p>
                             </div>
                         </div>

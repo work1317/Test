@@ -64,7 +64,7 @@ const LaoutPage = () => {
         <Link
           to={item.link === "logout" ? "#" : item.link}
           key={item.label}
-          className={`d-flex align-items-center gap-2 px-3 py-3 text-decoration-none ${
+          className={`d-flex align-items-center gap-2 px-1 py-3 text-decoration-none ${
             isActive ? SideMenuStyle.menuGroup : SideMenuStyle.inactiveMenu
           }`}
           onClick={() => {

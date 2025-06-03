@@ -109,8 +109,6 @@ class AppointmentCreateAPIView(APIView):
                 patient = models.Patient.objects.create(
                     patient_name=req_params["patient_name"],
                     doctor=doctor,
-                    date=appointment_date,
-                    time=appointment_time,
                     age=req_params["age"],
                     appointment_type=req_params["appointment_type"],
                     notes=req_params.get("notes", ""),

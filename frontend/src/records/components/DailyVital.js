@@ -69,7 +69,7 @@ function DailyVital() {
                   <div>
                     <p className={`p-1 me-5 mt-4 pe-2 ps-2 ${DailyVitalStyle.complete}`}>
                       {/* Some text if needed */}
-                      Complete
+                      Completed
                     </p>
                   </div>
                 </div>
