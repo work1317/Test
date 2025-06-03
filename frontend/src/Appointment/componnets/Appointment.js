@@ -240,7 +240,7 @@ const Appointments = () => {
                 filteredAppointments.map((item) => (
                   <Card
                     key={item.appointment_id || `appt-${item.patient_name}-${item.date}`}
-                    className={styles.appointmentCard + " shadow-lg"}
+                    className={styles.appointmentCard}
                     onClick={() => handleAppointmentClick(item)}
                   >
                     <Card.Body className={styles.appointmentDetails}>

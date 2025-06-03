@@ -79,12 +79,11 @@
 
 .appointmentCard {
   margin-bottom: 1rem;
-  transition: box-shadow 0.3s ease;
 }
 
-.appointmentCard:hover {
+/* .appointmentCard:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .appointmentDetails {
   display: flex;
