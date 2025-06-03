@@ -194,15 +194,15 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
 </tbody>
 </Table>
  
-            <div className="text-end pe-4 mt-3">
-<p>Total Amount: ₹{totalAmount}</p>
-<p>- Discount: ₹{totalDiscount}</p>
-<p>Net Amount: ₹{netAmount.toFixed(2)}</p>
-<p>+ Tax: ₹{totalTax}</p>
-<p>Paid Amount: ₹{paidAmount.toFixed(2)}</p>
-<hr style={{ height: "3px", backgroundColor: "#ccc" }} />
-<h5>Total Payable: ₹{paidAmount.toFixed(2)}</h5>
-</div>
+    <div className="text-end pe-4 mt-3">
+        <p>Total Amount: ₹{totalAmount}</p>
+        <p>- Discount: ₹{totalDiscount}</p>
+        <p>Net Amount: ₹{netAmount.toFixed(2)}</p>
+        <p>+ Tax: ₹{totalTax}</p>
+        <p>Paid Amount: ₹{paidAmount.toFixed(2)}</p>
+        <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
+        <h5>Total Payable: ₹{paidAmount.toFixed(2)}</h5>
+      </div>
  
             <div
               style={{

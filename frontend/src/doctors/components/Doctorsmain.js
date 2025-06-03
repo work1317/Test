@@ -28,14 +28,17 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
         <div className={`row`}>
           <div className={`col-md-8 d-flex flex-row`}>
             <div className={`ps-5`}>
+              <div className="d-flex">
               <h4>{doctor.d_name}</h4>
+                <h5 className="mt-1 ms-1">(ID: {doctor.d_id})</h5>
+                </div>
               <div className={`d-flex flex-row`}>
                 <CiStethoscope size={25} style={{ color: "#2564EB" }} />
                 &nbsp;&nbsp;
                 <p style={{ color: "#979797" }}>{doctor.d_department}</p>
               </div>
               <span className="rating">
-                <IoStarOutline size={25} style={{ color: "#CA8A04" }} />
+                <IoStarOutline size={25} style={{ color: "#CA8A04" }}  className="mb-2"/>
                 &nbsp;&nbsp; 4.8
                 <span style={{ color: "#979797" }}> ({doctor.patient_count} Patients)</span>
               </span>

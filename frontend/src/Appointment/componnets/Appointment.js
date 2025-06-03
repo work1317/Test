@@ -245,12 +245,30 @@ const Appointments = () => {
                   >
                     <Card.Body className={styles.appointmentDetails}>
                       <div>
-                        <h5 className={styles.patientName}>
-                          {item.patient_name}
-                        </h5>
-                        <p className={styles.patientMeta}>
-                          Dr.{item.doctor_name}
-                        </p>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div>
+                            <h5 className={styles.patientName}>{item.patient_name}</h5>
+                            <p className={styles.patientMeta}>Dr.{item.doctor_name}</p>
+                          </div>
+
+                          <div
+                            style={{
+                              backgroundColor: "#EFF6FF",
+                              color: "#2578F0",
+                              padding: "4px 12px",
+                              borderRadius: "15px",
+                              minWidth: "80px",
+                              textAlign: "center",
+                              position:"absolute",
+                              top:"10px",
+                              right:"10px",
+                              fontSize:"12px"
+                            }}
+                          >
+                            Scheduled
+                          </div>
+                        </div>
+
                         <p className={styles.patientDate}>
                           <CiCalendar className={`mb-1 ${styles.calendar}`} />{" "}
                           {item.date}
