@@ -258,50 +258,53 @@ class PharmacyInvoiceDetailAPIView(APIView):
 
 
 class MedicationSearchByNameAPIView(APIView):
-    def get(self, request, medication_name=None):
+    def get(self, request):
+        medication_name = request.query_params.get("medication_name")
         batch_no = request.query_params.get("batch_no")
- 
+        query = request.query_params.get("q")
         context = {
             "success": 1,
-            "message": "Fetched Successfully",
-            "data": [],
-            "batches": []
+            "message": "",
+            "suggestions": [],
+            "batches": [],
+            "data": {}
         }
- 
-        if not medication_name:
-            return Response({"success": 0, "message": "Medication name is required."}, status=status.HTTP_400_BAD_REQUEST)
- 
         try:
-            if batch_no:
-                # Return details for specific batch_no with that medication_name
-                medication = Medication.objects.filter(
-                    medication_name=medication_name,
+            if query:
+                # Autocomplete suggestions (case-insensitive substring match)
+                suggestions = Medication.objects.filter(
+                    medication_name__icontains=query
+                ).values_list("medication_name", flat=True).distinct()
+                context["suggestions"] = list(suggestions)
+                context["message"] = "Suggestions fetched."
+                return Response(context, status=status.HTTP_200_OK)
+            if medication_name and not batch_no:
+                # Get batch numbers for a medication name (partial match too)
+                meds = Medication.objects.filter(medication_name__icontains=medication_name)
+                if not meds.exists():
+                    return Response({"success": 0, "message": "No medications found."}, status=status.HTTP_404_NOT_FOUND)
+                context["batches"] = list(meds.values_list("batch_no", flat=True).distinct())
+                context["message"] = "Batches fetched."
+                return Response(context, status=status.HTTP_200_OK)
+            if medication_name and batch_no:
+                # Get specific batch details
+                med = Medication.objects.filter(
+                    medication_name__icontains=medication_name,
                     batch_no=batch_no
                 ).first()
- 
-                if not medication:
-                    return Response({"success": 0, "message": "No medication found for given batch number."}, status=status.HTTP_404_NOT_FOUND)
- 
-                serializer = MedicationSerializer(medication)
-                context["data"] = serializer.data
+                if not med:
+                    return Response({"success": 0, "message": "No such batch."}, status=status.HTTP_404_NOT_FOUND)
+                context["data"] = {
+                    "mrp": med.mrp,
+                    "expiry_date": med.expiry_date,
+                    "manufacturer": med.manufacturer,
+                    "strength": med.strength,
+                }
+                context["message"] = "Details fetched."
                 return Response(context, status=status.HTTP_200_OK)
- 
-            else:
-                # Return all batches for medication_name
-                medications = Medication.objects.filter(medication_name=medication_name)
-                if not medications.exists():
-                    return Response({"success": 0, "message": "No medications found."}, status=status.HTTP_404_NOT_FOUND)
- 
-                batches = [med.batch_no for med in medications]
-                serializer = MedicationSerializer(medications, many=True)
-                context["batches"] = batches
-                context["data"] = serializer.data
- 
-                return Response(context, status=status.HTTP_200_OK)
- 
+            return Response({"success": 0, "message": "Invalid request."}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({"success": 0, "message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- 
+            return Response({"success": 0, "message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
  
  
  
