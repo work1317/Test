@@ -7,7 +7,7 @@ import { useState, useEffect, useContext } from 'react';
 import { vitalDatas } from './DailyVital';
 const RecordeVital= ({ show, handleClose, store}) => {
     const { selectedPatient, patients}  =  useContext(doctors)
- 
+    console.log("selected patient : ", selectedPatient)
    
   return (
     <div>
@@ -19,7 +19,8 @@ const RecordeVital= ({ show, handleClose, store}) => {
                     <Heart className={`p-1 ms-2 mt-3 ${RecordStyle.heart}`} />
                     <div className='mt-2 ms-2 d-flex flex-column'>
                         <span>Daily Vitals Check</span>
-                        <span style={{fontSize:'13px',color:'#808080'}}>Vitals - {selectedPatient.date}</span>
+                        <span style={{fontSize:'13px',color:'#808080'}}>Vitals - {new Date(selectedPatient.created_at).toLocaleDateString('en-CA')}</span>
+                        
                     </div>
                 </div>
             </div>

@@ -44,31 +44,65 @@ function GNursingNotes({ patient }) {
     };
   }, [patient]);
 
+
   return (
     <div className='mb-4'>
       {errorMessage ? (
         <Alert variant="warning">{errorMessage}</Alert>
       ) : (
-        notes.map((note, index) => (
-          <div key={index} className="mb-3 px-4">
-            <Row>
-              <h4> {note.nurse} </h4>
-            </Row>
-            <Row>
-              <Col>
-                <span>
-                  <Icon icon="weui:time-outlined" width="16" /> {note.created_at}
-                </span>
-              </Col>
-            </Row>
-            <Row>
-              <p className={styles.nurseNote}>{note.description}</p>
-            </Row>
-          </div>
-        ))
+        notes.map((note, index) => {
+          const [date, timeWithZone] = note.created_at.split('T');
+          const time = timeWithZone.split('.')[0].slice(0, 5); // "HH:MM"
+
+          return (
+            <div key={index} className="mb-3 px-4">
+              <Row>
+                <h4>{note.nurse}</h4>
+              </Row>
+              <Row>
+                <Col>
+                  <span>
+                    <Icon icon="weui:time-outlined" width="16" />{' '}
+                     {date}  {time}
+                  </span>
+                </Col>
+              </Row>
+              <Row>
+                <p className={styles.nurseNote}>{note.description}</p>
+              </Row>
+            </div>
+          );
+        })
       )}
     </div>
   );
+
+
+  // return (
+  //   <div className='mb-4'>
+  //     {errorMessage ? (
+  //       <Alert variant="warning">{errorMessage}</Alert>
+  //     ) : (
+  //       notes.map((note, index) => (
+  //         <div key={index} className="mb-3 px-4">
+  //           <Row>
+  //             <h4> {note.nurse} </h4>
+  //           </Row>
+  //           <Row>
+  //             <Col>
+  //               <span>
+  //                 <Icon icon="weui:time-outlined" width="16" /> {note.created_at}
+  //               </span>
+  //             </Col>
+  //           </Row>
+  //           <Row>
+  //             <p className={styles.nurseNote}>{note.description}</p>
+  //           </Row>
+  //         </div>
+  //       ))
+  //     )}
+  //   </div>
+  // );
 }
 
 export default GNursingNotes;

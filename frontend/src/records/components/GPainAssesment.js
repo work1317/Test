@@ -46,7 +46,7 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
   return (
     <div className="mx-5 mt-4">
       <h5 className="fw-bold">Pain Assessment</h5>
-      <p className="text-muted">Pain Intensity (0-10)</p>
+      <p className="text-muted">Pain Intensity <span className="badge bg-secondary text-info">{painIntensity} </span> </p>
 
       <div className="d-flex justify-content-between mb-4 mx-2">
         {[...Array(21).keys()].map((num) => {
@@ -146,6 +146,7 @@ const GPainAssesment = ({ patient }) => {
           .then((response) => {
             if (response.data.success === 1 && response.data.data) {
               const data = response.data.data;
+              console.log(data)
               setAssessment(data);
               setPainIntensity(data.pain_intensity);
               setMessage("");

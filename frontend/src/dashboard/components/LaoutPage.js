@@ -29,12 +29,51 @@ const LaoutPage = () => {
   const { read, showDot } = useNotifications();
   const auth = useContext(AuthContext);
   const navigation = useNavigate();
+  const { userRoles } = useContext(AuthContext);
+
+  const isDoctor = userRoles.includes("Doctor");
+  const isAdmin = userRoles.includes("Super Admin");
+  const isSuperAdmin =  userRoles.includes("Admin");
+  const isReception  =  userRoles.includes("Receptionist")
+  const isPharma =  userRoles.includes("Pharmacy")
+  const isLabs  =  userRoles.includes("Lab")
+  const isNurse  =  userRoles.includes("Nurse")
+  const isDmo  =  userRoles.includes("DMO")
  
   // User roles logic omitted here for brevity, keep your existing role filtering code
  
   // Filter menu based on user roles (keep your existing logic)
   // Example:
-  const filteredMenu = menuItems; // Replace with your filteredMenu logic as needed
+ const filteredMenu = isSuperAdmin
+  ? menuItems // Super Admin sees all
+  : isAdmin
+    ? menuItems // Admin sees all
+    : isDoctor
+      ? menuItems.filter(item =>
+          ["dashboard", "doctors", "patients", "records", "logout"].includes(item.link)
+        )
+      : isReception
+        ? menuItems.filter(item =>
+            ["dashboard", "appointments", "invoice", "logout"].includes(item.link)
+          )
+        : isPharma
+          ? menuItems.filter(item =>
+              ["dashboard", "pharmacy", "logout"].includes(item.link)
+            )
+ 
+            :isLabs
+          ? menuItems.filter(item =>
+              ["dashboard", "lab", "logout"].includes(item.link)
+            )
+             :isNurse
+          ? menuItems.filter(item =>
+              ["dashboard", "records", "logout"].includes(item.link)
+            )
+            :isDmo
+          ? menuItems.filter(item =>
+              ["dashboard", "doctors", "patients", "records", "logout"].includes(item.link)
+            )
+          : [];
  
   useEffect(() => {
     const path = location.pathname.split("/").pop();

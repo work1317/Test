@@ -57,7 +57,7 @@ function GTreatmentChat({ patient }) {
         <Row>
           <Col>
             <span>Age: {patient?.age || '--'} years </span>
-            <span className='pl-3'> Date: {patient?.date || '--'}</span>
+            <span className='pl-3'> Date: {new Date(patient?.created_at).toLocaleDateString('en-GB')}</span>
           </Col>
         </Row>
       </div>

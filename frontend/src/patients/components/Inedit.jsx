@@ -81,7 +81,8 @@ function Inedit({ show, handleClose, patientId }) {
       .then((res) => {
         console.log("PUT response:", res);
         if (res.data.success === 1) {
-          alert("Patient updated successfully.");
+          console.log(res.data.message)
+          alert(res.data.message);
           handleClose();
         } else {
           setError(res.data.message || "Failed to update.");
@@ -116,7 +117,7 @@ function Inedit({ show, handleClose, patientId }) {
                     name="patient_name"
                     value={formValues.patient_name}
                     onChange={handleChange}
-                    required
+                    required readOnly
                   />
                 </Form.Group>
               </Col>
@@ -128,7 +129,7 @@ function Inedit({ show, handleClose, patientId }) {
                     name="doctor_name"
                     value={formValues.doctor_name}
                     onChange={handleChange}
-                    required
+                    required readOnly
                   />
                 </Form.Group>
               </Col>
@@ -172,7 +173,7 @@ function Inedit({ show, handleClose, patientId }) {
                     type="text"
                     name="gender"
                     value={formValues.gender}
-                    onChange={handleChange}
+                    onChange={handleChange} readOnly
                   />
                 </Form.Group>
               </Col>
@@ -183,7 +184,7 @@ function Inedit({ show, handleClose, patientId }) {
                     type="text"
                     name="phno"
                     value={formValues.phno}
-                    onChange={handleChange}
+                    onChange={handleChange} readOnly
                   />
                 </Form.Group>
               </Col>
@@ -204,7 +205,7 @@ function Inedit({ show, handleClose, patientId }) {
                 name="notes"
                 value={formValues.notes}
                 onChange={handleChange}
-                rows={3}
+                rows={3} readOnly
               />
             </Form.Group>
             <div className="d-flex justify-content-end gap-3">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Doctorstyle from "./css/Doctorspage.module.css";
 import { GoPeople } from "react-icons/go";
 import { IoSearchOutline } from "react-icons/io5";
@@ -17,6 +17,7 @@ import Vector from "../assets/images/Vector.svg";
 import axios from "axios";
 import api from "../utils/axiosInstance";
 import { FaPhone } from "react-icons/fa6";
+import AuthContext from "../context/AuthProvider";
 
 const DoctorsPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -32,6 +33,9 @@ const DoctorsPage = () => {
   const [totalDoctors, setTotalDoctors] = useState(0);
   const [totalPatients, setTotalPatients] = useState(0);
   const [totalExpertise, setTotalExpertise] = useState(0);
+  const {userRoles} =  useContext(AuthContext)
+  const isAdmin = userRoles.includes("Super Admin");
+  const isSuperAdmin =  userRoles.includes("Admin")
   
     const getDoctors = async () => {
       setLoading(true);
@@ -93,18 +97,22 @@ const DoctorsPage = () => {
         </Col>
         <Col xs={12} md={4} className=" d-flex justify-content-end mt-2">
           <div>
-            <button
-              className={`${Doctorstyle.buttonContent} mt-2 p-2 pe-3`}
-              onClick={handleClose}
-            >
-              <CirclePlus className="me-2" />
-              Add Staff
-            </button>
-            <AddDoctor
-              show={showModal2}
-              handleClose={() => setShowModal2(false)}
-              refreshDoctor={getDoctors}
-            />
+             {(isAdmin || isSuperAdmin) && (
+              <>
+                <button
+                  className={`${Doctorstyle.buttonContent} mt-2 p-2 pe-3`}
+                  onClick={handleClose}
+                >
+                  <CirclePlus className="me-2" />
+                  Add Staff
+                </button>
+                <AddDoctor
+                  show={showModal2}
+                  handleClose={() => setShowModal2(false)}
+                  refreshDoctor={getDoctors}
+                />
+              </>
+            )}
           </div>
         </Col>
       </Row>

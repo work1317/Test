@@ -44,7 +44,7 @@ const notesData = [
   { name: "Progress Notes", tab: "progress Note" },
   { name: "Treatment Chart", tab: "treatmentchart" },
   { name: "Pain Assessment", tab: "painassesment" },
-  { name: "Intitial Assesment", tab: "initialassesment" },
+  { name: "Intitial Assessment", tab: "initialassesment" },
   { name: "Care plan", tab: "careplan" },
   { name: "Risk Assessment", tab:"riskassesment"}
 ]

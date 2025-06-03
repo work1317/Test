@@ -58,7 +58,10 @@ class DashboardAPIView(APIView):
                 increased_patients = 0 
             doctors = DoctorAvailability.objects.count()
             todays_appointments = Appointment.objects.filter(date=now().date()).count()
-            critical_cases = ProgressNote.objects.filter(status="critical").count()
+
+            casualty = Appointment.objects.filter(appointment_type='casuality').count()
+            progress = ProgressNote.objects.filter(status="critical").count()
+            critical_cases = casualty+progress
             urgent_appointments = Appointment.objects.filter(date=end_date, notes__icontains='urgent').count()
             cardiology_id = Department.objects.get(name='Cardiology').id
             ent_id = Department.objects.get(name='ENT').id

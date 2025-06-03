@@ -23,6 +23,7 @@ function DailyVital() {
              
                 if (response.data?.data) {
                     setStore(response.data.data[0]);
+                    console.log(response.data)
                 } else {
                     console.log("No data in response");
                     setStore(null)
@@ -42,7 +43,7 @@ function DailyVital() {
     }, []);
    
    
- 
+    const dateOnly = selectedPatient.created_at.split('T')[0];
  
     return (
        
@@ -59,10 +60,10 @@ function DailyVital() {
                     <div className="d-flex flex-column">
                       <span className={`ms-2 ${DailyVitalStyle.text}`}>Daily Vitals Check</span>
                       <span style={{ fontSize: '13px', color: '#808080' }} className="ms-2">
-                        Dr. {selectedPatient.doctor_name} - {selectedPatient.date} - {store.blood_pressure}
+                        Dr. {selectedPatient.doctor_name} - {dateOnly}
                       </span>
                       <p style={{ fontSize: '1rem', color: '#808080' }} className="mt-3 me-5">
-                        {selectedPatient.statusMessage}
+                        {selectedPatient.summary}
                       </p>
                     </div>
                   </div>

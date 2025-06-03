@@ -283,7 +283,8 @@ class AppointmentListAPIView(APIView):
             total_patients_today = Patient.objects.filter(created_at__date=today).count()
             todays_appointments = models.Appointment.objects.filter(date=today).count()
             urgent_appointments = models.Appointment.objects.filter(notes__isnull=False, notes__icontains='urgent').count()
-            critical_cases = ProgressNote.objects.filter(status="critical").count()
+            progress = ProgressNote.objects.filter(status="critical").count()
+            critical_cases = casualty+progress
             total_appointments = models.Appointment.objects.count()
 
 

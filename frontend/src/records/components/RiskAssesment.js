@@ -113,30 +113,53 @@ const RiskAssessment = ({ handleClose, patientId }) => {
     };
 
     try {
-      const response = await api.post("/records/create-multiple-risk-factors/", payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = response.data;
-      if (response.status === 200 && data.success === 1) {
-        window.dispatchEvent(new Event("refreshRiskAssessment"));
-        console.log("Saved successfully:", data);
-        handleClose();
-      } else {
-        console.error("Error:", data.message);
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error("Server error:", error.response.data);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Submission error:", error.message);
-      }
+  const response = await api.post("/records/create-multiple-risk-factors/", payload, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+ 
+  const data = response.data;
+ 
+  if (response.status === 200 && data.success === 1) {
+    // Check if any risk factors failed due to duplication
+    const alreadyExists = data.data.filter(item => item.success === 0);
+ 
+    if (alreadyExists.length === 0) {
+      // All risk factors created successfully
+      window.dispatchEvent(new Event("refreshRiskAssessment"));
+      console.log("Saved successfully:", );
+      alert(data.message);
+      handleClose();
+    } else {
+      // Some already exist
+      const existingMessages = alreadyExists.map(item => {
+        const patientErrors = item.message?.patient?.join(", ") || "Already exists.";
+        return `Risk factor ${item.risk_factor_id}: ${patientErrors}`;
+      }).join("\n");
+ 
+      alert(`Some risk factors already exist:\n${existingMessages}`);
+      console.warn("Some risk factors already existed:", alreadyExists);
     }
-  };
+  } else {
+    // Handle general error
+    console.error("Error:", data.message);
+    alert("Failed to create risk factors.");
+  }
+} catch (error) {
+  if (error.response) {
+    console.error("Server error:", error.response.data);
+    alert("Server error occurred.");
+  } else if (error.request) {
+    console.error("No response received:", error.request);
+    alert("No response from server.");
+  } else {
+    console.error("Submission error:", error.message);
+    alert("Error occurred while submitting.");
+  }
+}
+ 
+   };
 
   return (
     <Container className={`mt-4 ${riskStyles.main}`}>

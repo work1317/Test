@@ -11,6 +11,7 @@ from django.db import transaction
 from rec_app.models import ProgressNote
 from .models import Patient
 from doctors.serializers import DoctorAvailabilitySerializer
+from appointments.models import Appointment
 
 # Create your views here.
 
@@ -128,7 +129,9 @@ class GetPatientAPIView(APIView):
             total_outpatients = models.Patient.objects.filter(appointment_type='outpatient').count()
             total_casualty = models.Patient.objects.filter(appointment_type='casualty').count()
             total_patients = models.Patient.objects.all().count()
-            critical_cases = ProgressNote.objects.filter(status="critical").count()
+            casualty = Appointment.objects.filter(appointment_type='casuality').count()
+            progress = ProgressNote.objects.filter(status="critical").count()
+            critical_cases = casualty+progress
             
 
 
@@ -211,7 +214,7 @@ class PatientUpdateAPIView(APIView):
                 
             total_inpatients = models.Patient.objects.filter(appointment_type='inpatient').count()
             total_outpatients = models.Patient.objects.filter(appointment_type='outpatient').count()
-            total_casualty = models.Patient.objects.filter(appointment_type='casualty').count()
+            total_casualty = models.Patient.objects.filter(appointment_type='casuality').count()
 
             context['message'] = "Patient details updated successfully"
             context['previous_data'] = current_data  
