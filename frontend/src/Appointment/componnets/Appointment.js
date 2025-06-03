@@ -178,7 +178,7 @@ const Appointments = () => {
                 {stats.active_cases?.total}
               </h2>
               <p className={styles.statsFooter}>
-                {stats.total_appointments} Critical
+                {stats.critical_cases} Critical
               </p>
             </Card.Body>
           </Card>
