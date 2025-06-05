@@ -57,7 +57,7 @@ const handleSubmit = async (e) => {
     console.log('Doctor created:', response.data.message);
     window.dispatchEvent(new Event('refreshAddDoctor'));
     alert("Doctor added");
- 
+    
     await refreshDoctor();
     handleClose();
  
@@ -99,7 +99,7 @@ const handleSubmit = async (e) => {
     const updatedDays = formData.d_available_days.includes(day)
       ? formData.d_available_days.filter((d) => d !== day)
       : [...formData.d_available_days, day];
- 
+      setErrors(" ")
     setFormData({ ...formData, d_available_days: updatedDays });
   };
  

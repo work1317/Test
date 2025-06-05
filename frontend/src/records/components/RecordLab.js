@@ -44,7 +44,7 @@ const notesData = [
   { name: "Progress Notes", tab: "progress Note" },
   { name: "Treatment Chart", tab: "treatmentchart" },
   { name: "Pain Assessment", tab: "painassesment" },
-  { name: "Intitial Assessment", tab: "initialassesment" },
+  { name: "Initial Assessment", tab: "initialassesment" },
   { name: "Care plan", tab: "careplan" },
   { name: "Risk Assessment", tab:"riskassesment"}
 ]
@@ -201,7 +201,7 @@ const RecordLab = () => {
       </Row>
  
       <Row className="mt-3 ms-2">
-        <Col xs={12} md={6}>
+        <Col xs={12} md={6} style={{backgroundColor:"#FFFFFF", borderRadius:"12px"}} className="p-2 mb-4">
           <div className={`${Recordstyle.search} mt-2 p-2 d-flex`}>
             <IoSearchOutline className="mt-1 ms-4" />
             <input
@@ -215,7 +215,7 @@ const RecordLab = () => {
           {filteredPatients.length > 0 && (
             <div className={`mt-2 ${Recordstyle.scrollContainer}`}>
             {filteredPatients.slice(0, 3).map((patient, index) => (
-                <Row className="d-flex justify-content-around" key={index} onClick={() => handlePatientSelect(patient)}>
+                <Row className="d-flex justify-content-around" key={index} onClick={() => handlePatientSelect(patient)} >
                   <Col xs={6} md={4} className="d-flex">
                     <div className="d-flex mt-2 align-items-center">
                       <UserRound className={`m-3 ${Recordstyle.iconCss} p-1`} size={30} style={{ color: "#262872" }} />

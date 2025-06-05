@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'notifications.middleware.CurrentUserMiddleware',
 ]
 
 ROOT_URLCONF = 'rec_pro.urls'

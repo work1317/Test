@@ -45,13 +45,14 @@ const Appointments = () => {
   };
 
   const fetchAppointmentsByDate = (date) => {
-    setCurrentFilter("date");
+    setCurrentFilter("date"); 
     api
       .get(`/appointments/get-appointments-list/?date=${date}`)
       .then((response) => {
         setAppointments(response.data.data.appointments);
         setStats(response.data.data.stats);
         console.log(response.data.data);
+        // alert(response.data.message)
       })
       .catch((error) => console.error("Error fetching by date:", error));
   };
@@ -219,8 +220,8 @@ const Appointments = () => {
         <Col md={7}>
           <Card className="shadow-md p-3">
             <div className="d-flex flex-row mb-3">
-              <div className={`${styles.search} p-2 d-flex`}>
-                <IoSearchOutline className="mt-2" />
+              <div className={`${styles.search} p-3 d-flex`}>
+                <IoSearchOutline className="mt-1" />
                 <input
                   className={`${styles.searchbar} ps-1 w-75`}
                   type="search"
@@ -229,11 +230,17 @@ const Appointments = () => {
                   placeholder="  Search appointments...."
                 />
               </div>
-              <CiFilter
-                className="ms-1 mt-2"
-                size={40}
-                style={{ color: "#979797" }}
-              />
+              <CiFilter className="ms-1 mt-2" size={40} style={{ color: "#979797" }} />
+              <select
+                className={`${styles.selection} ms-1 w-50 me-2`}
+                value={filter}
+                onChange={handleFilterChange}
+              >
+                <option value="all">All Status</option>
+                <option value="InPatient">InPatient</option>
+                <option value="OutPatient">OutPatient</option>
+                <option value="Casuality">Casuality</option>
+              </select>
             </div>
             <div className={styles.scrollContainer}>
               {filteredAppointments.length > 0 ? (

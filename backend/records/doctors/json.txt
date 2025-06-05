@@ -3,7 +3,7 @@ Doctor Availability
 
 {
   "d_name": "Dr. Priya Mehta",
-  "d_department": 2,
+  "d_department": "Cardiology",
   "d_phn_no": "9876543210",
   "d_email": "priya.mehta@example.com",
   "d_ward_no": "Ward-7",

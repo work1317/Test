@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import {Container,Row,Col,Button,Card,Pagination,} from "react-bootstrap";
 import Notificationstyle from "../css/Notiification.module.css";
 import { CiSearch } from "react-icons/ci";
-//import { FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { MdDateRange } from "react-icons/md";
 import { FaMicroscope } from "react-icons/fa";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { FaPercent } from "react-icons/fa";
 import { GiMedicalPack } from "react-icons/gi";
 import { AiOutlinePlus,AiOutlineUser,AiOutlineNotification, } from "react-icons/ai";
-// import { MdLocalHospital } from "react-icons/md";
+import { MdLocalHospital } from "react-icons/md";
 import axios from "axios";
 import PendingApprovals from "./PendingApprovals";
 import Discount from './Discount'
@@ -19,16 +19,16 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
  
  
 function Notifications() {
-  const {setShowDot} = useNotifications() 
+  const {setShowDot} = useNotifications()
   const [activeTab, setActiveTab] = useState("all");
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [counts, setCounts] = useState({
   total_unread: 0,
   new_patients_today: 0,
-  pharmacy_sales: 0,
+  pharmacy_sales_today: 0,
   invoices_today:0
-
+ 
   });
   const [showPatientModal, setShowPatientModal] = useState(false); // ✅ Modal state
  
@@ -56,15 +56,16 @@ function Notifications() {
       return originalTitle || "Notification";
   }
 };
-
-
-
+ 
+ 
+ 
 useEffect(() => {
   const fetchNotifications = async () => {
     try {
       const response = await api.get("notifications/list/");
       const data = response.data.data;
-
+      console.log(response.data.data)
+ 
       // ✅ Extract counts from first element
       const {
         total_unread = 0,
@@ -72,14 +73,14 @@ useEffect(() => {
         invoices_today = 0,
         pharmacy_sales_today=0
       } = data[0] || {};
-
+ 
       // ✅ Remaining elements are notifications
       const notifications = data.slice(1)
         .filter(note => note.id && note.created_at)
         .map(note => {
           const isRead = note.is_read;
           const category = note.notification_type || "others";
-
+ 
           const iconMap = {
             patient: <AiOutlinePlus className={Notificationstyle.patients} />,
             lab_invoice: <FaMicroscope className={Notificationstyle.labInvoice} />,
@@ -93,7 +94,7 @@ useEffect(() => {
             doctor: <AiOutlinePlus className={Notificationstyle.patients} />,
             bills:<BsCurrencyDollar className={Notificationstyle.sales}/>
           };
-
+ 
           return {
             id: note.id,
             category,
@@ -106,73 +107,83 @@ useEffect(() => {
             isRead,
           };
         });
-
+ 
       setCounts({
         total_unread,
         new_patients_today,
         invoices_today,
        pharmacy_sales_today // update later if needed
       });
-
+      
+ 
       setNotifications(notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
   };
-
+ 
   fetchNotifications();
+ 
+ 
+   const handleRefresh = () =>  fetchNotifications(); // Refresh on event
+ 
+    window.addEventListener("refreshPendingApprovals", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshPendingApprovals", handleRefresh);
+    };
 }, []);
-
-
+ 
+ 
 const handleNotificationClick = async (id) => {
   try {
     await api.post(`notifications/mark-as-read/${id}/`);
-    
+   
     setNotifications((prevNotifications) =>
       prevNotifications.map((note) =>
         note.id === id ? { ...note, isRead: true, bgColor: "#FFFFFF" } : note
       )
     );
-
+ 
     setCounts((prevCounts) => {
       const newUnread = Math.max(0, prevCounts.total_unread - 1);
-
+ 
       // Hide dot if no unread left
       if (newUnread === 0) {
         setShowDot(false);
       }
-
+ 
       return {
         ...prevCounts,
         total_unread: newUnread,
       };
     });
-
+ 
   } catch (error) {
     console.error("Failed to mark notification as read", error);
   }
 };
-
-
+ 
+ 
 const filteredNotifications = allnotifications.filter((note) => {
   const matchesTab =
     activeTab === "all" ||
     (Array.isArray(activeTab)
       ? activeTab.includes(note.category)
       : note.category === activeTab);
-
+ 
   const matchesSearch =
     query === "" ||
     note.title.toLowerCase().includes(query.toLowerCase()) ||
     note.description1.toLowerCase().includes(query.toLowerCase()) ||
     note.description2.toLowerCase().includes(query.toLowerCase());
-
+ 
   return matchesTab && matchesSearch;
 });
-
-
-
-
+ 
+ 
+ 
+ 
 const tabs = [
   { key: "all", label: "All Notifications" },
   { key: "patient", label: "Patients" },
@@ -184,11 +195,11 @@ const tabs = [
   { key: "lab_invoice", label: "Labs" },
   {key:"bills",label:"bills"}
 ];
-
+ 
 useEffect(() => {
   setCurrentPage(1);
 }, [activeTab, query]);
-
+ 
  
   const totalPages = Math.ceil(filteredNotifications.length / notificationsPerPage);
   const paginatedNotifications = filteredNotifications.slice(
@@ -244,7 +255,7 @@ useEffect(() => {
             </Card>
           </Col>
         ))}
-
+ 
         </Row>
       </div>
  
@@ -294,7 +305,7 @@ useEffect(() => {
  
       <div className={`${Notificationstyle.notificationList}`}>
         {paginatedNotifications
-          
+         
           .map((note) => (
             <div
               key={note.id}
@@ -359,7 +370,3 @@ useEffect(() => {
 }
  
 export default Notifications;
-
-
-
-

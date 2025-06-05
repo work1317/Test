@@ -67,7 +67,7 @@ class InvoiceFilter(admin.SimpleListFilter):
 class NotificationAdmin(admin.ModelAdmin):
     list_display = ('id','title', 'notification_type', 'is_read', 'created_at')
     list_filter = ('notification_type', 'is_read', PatientFilter, DoctorFilter, MedicationFilter,InvoiceFilter)
-    search_fields = ('title', 'message')
+    search_fields = ('title', 'message','patient__patient_name','patient__patient_id','patient__phno')
 
     
 

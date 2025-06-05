@@ -8,6 +8,8 @@ from invoice.models import Invoice
 from p_invoice.models import PharmacyInvoice
 
 
+
+
 class Notification(models.Model):
     NOTIFICATION_TYPES = [
         ('info', 'Info'),
@@ -34,6 +36,7 @@ class Notification(models.Model):
     medication = models.ForeignKey(Medication, on_delete=models.CASCADE, null=True, blank=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True, blank=True, related_name='billing_notifications')
     p_invoice = models.ForeignKey(PharmacyInvoice, on_delete=models.CASCADE, null=True, blank=True, related_name='pharmacy_notifications')
-
+    
+    
     def __str__(self):
         return f"{self.title}"

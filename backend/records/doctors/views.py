@@ -14,6 +14,7 @@ from django.core.cache import cache
 from patients.models import Patient
 from doctors.models import Department
 from appointments.models import Appointment
+from notifications.signals import set_current_user
 
 # create your views here
 
@@ -173,7 +174,8 @@ class DoctorAvailabilityCreateView(APIView):
             serializer = DoctorAvailabilitySerializer(data=request.data)
             if not serializer.is_valid():
                 raise ValidationError(serializer.errors)
-
+            
+            set_current_user(request.user)
             doctor = serializer.save()
             context["data"] = DoctorAvailabilitySerializer(doctor).data
         except ValidationError as e:

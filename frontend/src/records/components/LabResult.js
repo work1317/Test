@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from "react";
-import { Microscope } from "lucide-react";
 import BloodCount from "./BloodCount";
 import { useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import axios from "axios";
 import { doctors } from "./RecordLab";
 import api from "../../utils/axiosInstance";
+import { Icon } from '@iconify/react';
 function LabResult({ transformData }) {
   const { selectedPatient } = useContext(doctors);
   const [showModal, setShowModal] = useState(false);
@@ -49,23 +49,44 @@ function LabResult({ transformData }) {
         transformData
           .filter((lab) => lab.patient_id === selectedPatient.patient_id)
           .map((lab, index) => (
-            <Card key={index} className="shadow-sm mb-3">
+            <Card key={index} className="shadow-sm mb-3 mx-4">
               <Card.Body>
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex align-items-center">
-                    <Microscope className="p-1 me-3 text-primary" size={40} />
+                    {/* <Microscope className="p-1 me-3 text-primary" size={40} /> */}
+                   <div className="rounded-circle  p-2 me-2">
+                                     <div
+                                       style={{
+                                         width: "40px",
+                                         height: "40px",
+                                         borderRadius: "50%",
+                                         backgroundColor: "#e6eaf2",
+                                         display: "flex",
+                                         justifyContent: "center",
+                                         alignItems: "center",
+                                       }}
+                                     >
+                                       {/* <FaMicroscope size={32} color="#3f51b5" /> */}
+                                         <Icon width="24" height="24" color="#262872" icon="uit:microscope" />
+                                     </div>
+                                   </div>
                     <div>
                       <h6>{lab.test_name}</h6>
                       <p className="text-muted mb-1">
-                        Dr.{selectedPatient.doctor_name} - {selectedPatient.date}
+                        Dr.{selectedPatient.doctor_name} - {lab.date}
                       </p>
                       <p className="text-muted">{lab.summary}</p>
                     </div>
                   </div>
-                  <span
-                    className={`badge ${
-                      lab.status === "Pending" ? "bg-warning" : "bg-success"
-                    }`}
+                <span
+                    style={{
+                      backgroundColor: lab.status === "Pending" ? "#FEF9C3" : "#DCFCE7",
+                      color: lab.status === "Pending" ? "#79700D" :"#23C55E" , // darker shades for contrast
+                      padding: "5px 20px",
+                      borderRadius: "18px",
+                      fontWeight: "500",
+                      display: "inline-block",
+                    }}
                   >
                     {lab.status}
                   </span>
@@ -79,8 +100,9 @@ function LabResult({ transformData }) {
                       handlerShow(lab.action);
                       setAction(lab.action);
                     }}
+                    className="text-decoration-none"
                   >
-                    View Details
+                    View Files
                   </Button>
                 </div>
               </Card.Body>

@@ -8,6 +8,8 @@ import { File } from 'lucide-react';
 import { Download } from 'lucide-react';
 import { doctors } from './RecordLab';
 import api from '../../utils/axiosInstance';
+import { Icon } from '@iconify/react';
+
 export const  transforImage  =  createContext()
 const BloodCount= ({ show, handleClose, user, selectedPatient, action, transformData}) => {
     const handleDownload = async () => {
@@ -46,7 +48,25 @@ const BloodCount= ({ show, handleClose, user, selectedPatient, action, transform
         <Modal.Header closeButton >
             <div className='row'>
                 <div className='d-flex'>
-                     <Microscope className={`p-1 mt-2 ms-2 ${RecordStyle.heart}`} />
+                     {/* <Microscope className={`p-1 mt-2 ms-2 ${RecordStyle.heart}`} /> */}
+
+                          <div className="rounded-circle  p-2 me-2">
+                                                              <div
+                                                                style={{
+                                                                  width: "40px",
+                                                                  height: "40px",
+                                                                  borderRadius: "50%",
+                                                                  backgroundColor: "#e6eaf2",
+                                                                  display: "flex",
+                                                                  justifyContent: "center",
+                                                                  alignItems: "center",
+                                                                }}
+                                                              >
+                                                                {/* <FaMicroscope size={32} color="#3f51b5" /> */}
+                                                                  <Icon width="24" height="24" color="#262872" icon="uit:microscope" />
+                                                              </div>
+                                                            </div>
+
                     <div className='ms-2 d-flex flex-column'>
                         <h5>{item.test_name}</h5>
                         <span style={{fontSize:'13px',color:'#808080'}}>Lab Result - {user.test_date} </span>
@@ -81,8 +101,7 @@ const BloodCount= ({ show, handleClose, user, selectedPatient, action, transform
                         <p ><File className='me-2' size={15} style={{color:"#9A9A9A"}}/> {user.result_filename} <span className='ms-3' style={{color:"#9A9A9A"}}>(2.4 MB)</span></p>
                         </div>
                         <div onClick={handleDownload}>
-                            <Download className='me-2' style={{color:"#002072"}} size={20}/>
-                        </div>
+                             <Icon icon="material-symbols:download" width="24" height="24" color="#002072"/>                        </div>
                     </div>
                 </div>
           </div>
