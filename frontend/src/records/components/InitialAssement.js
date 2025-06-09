@@ -9,7 +9,6 @@ const InitialAssessment = ({ handleClose, patientId }) => {
   const [formData, setFormData] = useState({
     rating_title: "",
     relationship_to_feedback: "",
-    feedback_date: "",
     duration_of_experience: "",
     present_illness: "",
     past_illness: "",
@@ -55,7 +54,6 @@ const InitialAssessment = ({ handleClose, patientId }) => {
       patient_id: patientId,
       rating_title: formData.rating_title,
       relationship_to_feedback: formData.relationship_to_feedback,
-      feedback_date: formData.feedback_date,
       duration_of_experience: formData.duration_of_experience,
       present_illness: formData.present_illness,
       past_illness: formData.past_illness,
@@ -121,16 +119,6 @@ const InitialAssessment = ({ handleClose, patientId }) => {
               value={formData.relationship_to_feedback}
               onChange={handleChange}
               placeholder="Relation to Patient"
-              required
-            />
-          </Form.Group>
-          <Form.Group as={Col} controlId="feedbackDate">
-            <Form.Label>Feedback Date</Form.Label>
-            <Form.Control
-              type="date"
-              name="feedback_date"
-              value={formData.feedback_date}
-              onChange={handleChange}
               required
             />
           </Form.Group>

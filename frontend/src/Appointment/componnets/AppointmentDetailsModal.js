@@ -82,7 +82,7 @@ function AppointmentDetailsModal({ show, handleClose, appointmentId }) {
           <Row className={styles.infoRow}>
             <Col className={styles.infoCol}>
               <span className={styles.label}>Notes</span>
-              <span className={styles.value}>{appointmentDetails.notes || 'N/A'}</span>
+              <span className={`text-break ${styles.value}`}>{appointmentDetails.notes || 'N/A'}</span>
             </Col>
           </Row>
         </Modal.Body>

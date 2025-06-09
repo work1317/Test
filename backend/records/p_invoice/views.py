@@ -23,11 +23,21 @@ from rest_framework.exceptions import ValidationError as DRFValidationError
 from patients.models import Patient
 from .serializers import RecentPharmacyInvoicesSerializer
 from notifications.models import Notification
+from django.db import models
+from django.utils.timezone import now
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.utils.timezone import now
+from decimal import Decimal
+from django.db import models
+from django.db.models import Max
  
  
 # # -------------------- CREATE -------------------------------------
 
 class CreatePharmacyInvoiceAPIView(APIView):
+
     def get(self, request, *args, **kwargs):
         patient_id = request.query_params.get("patient_id")
         if not patient_id:
@@ -36,7 +46,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "message": "patient_id is required in query parameters",
                 "data": {}
             }, status=status.HTTP_400_BAD_REQUEST)
- 
+
         try:
             patient = Patient.objects.get(patient_id=patient_id)
             data = {
@@ -44,7 +54,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "patient_name": patient.patient_name,
                 "age": patient.age,
                 "gender": patient.gender,
-                "doctor": patient.doctor.d_name,
+                "doctor": patient.doctor.d_name if hasattr(patient.doctor, 'd_name') else str(patient.doctor),
                 "appointment_type": patient.appointment_type
             }
             return Response({
@@ -58,68 +68,209 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "message": "No patient found with this ID.",
                 "data": {}
             }, status=status.HTTP_404_NOT_FOUND)
-        
+
     def post(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
                 serializer = PharmacyInvoiceSerializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                invoice = serializer.save()
-                invoice.finalize_invoice()
 
-                # Format values to 2 decimal places
-                paid_amount = Decimal(invoice.paid_amount).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-                item_count = invoice.items.count()
-                typeof_transaction = invoice.typeof_transaction or "N/A"
+                discount_requires_approval = serializer.validated_data.get('discount_requires_approval', False)
+                discount_approved = serializer.validated_data.get('discount_approved', False)
 
-                # Optional patient instance if required
-                patient_instance = None
-                if invoice.patient_id:
-                    try:
-                        patient_instance = Patient.objects.get(patient_id=invoice.patient_id)
-                    except Patient.DoesNotExist:
-                        pass
+                patient = serializer.validated_data.get('patient', None)
+                patient_id = patient.patient_id if patient else ''
+                patient_name = serializer.validated_data.get('patient_name', '')
 
-                # Create Notification
-                Notification.objects.create(
-                    title="Pharmacy Sale Completed",
-                    message=(
-                        f"Pharmacy sale (Patient ID: {invoice.patient_id}) for ₹{paid_amount} "
-                        f"has been completed for {invoice.patient_name}. "
-                        f"Items: {item_count} medications. "
-                        f"Payment: {typeof_transaction}"
-                    ),
-                    notification_type="bills",
-                    patient=patient_instance if patient_instance else None
+                items_data = request.data.get('items', [])
+                max_discount = max(
+                    [Decimal(str(item.get('discount_percentage', 0))) for item in items_data],
+                    default=Decimal("0.00")
                 )
 
-            return Response({
-                "success": 1,
-                "message": "Invoice created and finalized successfully",
-                "data": PharmacyInvoiceSerializer(invoice).data
-            }, status=status.HTTP_201_CREATED)
+                invoice = serializer.save()
 
-        except DjangoValidationError as ve:
+                if discount_requires_approval and not discount_approved:
+                    print("Creating Notification for discount approval:", invoice.id)
+                    Notification.objects.create(
+                        message=(
+                            f"Invoice #{invoice.id}: Discount of {max_discount}% requested for "
+                            f"Patient {patient_name} (ID: {patient_id}). Approval required."
+                        ),
+                        notification_type="discount_approval",
+                        created_at=now(),
+                        patient=invoice.patient,
+                        patient_id_value=patient_id,
+                        patient_name=patient_name,
+                        discount_percentage=max_discount,
+                        p_invoice=invoice
+                    )
+
+                    return Response({
+                        "success": 1,
+                        "message": f"Invoice #{invoice.id}: Discount of {max_discount}% requested for Patient {patient_name} (ID: {patient_id}). Approval required.",
+                        "invoice_id": invoice.id,
+                        "patient_id": patient_id,
+                        "patient_name": patient_name,
+                        "discount_percentage": str(max_discount),
+                    }, status=status.HTTP_201_CREATED)
+
+                # Finalize invoice immediately if no approval needed
+                invoice.finalize_invoice()
+                print("Creating Notification for finalized invoice:", invoice.id)
+
+                invoice.refresh_from_db()
+
+                net_amount = getattr(invoice, 'paid_amount', 0)
+
+                Notification.objects.create(
+                    message=(
+                        f"Pharmacy sale (Patient ID: {patient_id}) for ₹{net_amount} has been "
+                        f"completed for {patient_name}. Items: {invoice.items.count()} medications. "
+                        f"Payment: {invoice.typeof_transaction}"
+                    ),
+                    notification_type="sale_complete",
+                    created_at=now(),
+                    patient=invoice.patient,
+                    patient_id_value=patient_id,
+                    patient_name=patient_name,
+                    discount_percentage=max_discount,
+                    p_invoice=invoice
+                )
+
+                return Response({
+                    "success": 1,
+                    "message": "Invoice created successfully",
+                    "invoice_id": invoice.id,
+                    "patient_id": patient_id,
+                    "patient_name": patient_name,
+                    "discount_percentage": str(max_discount),
+                }, status=status.HTTP_201_CREATED)
+
+        except DRFValidationError as e:
             return Response({
                 "success": 0,
-                "message": f"Validation error: {ve.message}",
-                "data": {}
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        except DRFValidationError as ve:
-            return Response({
-                "success": 0,
-                "message": f"Validation error: {ve.detail}",
-                "data": {}
+                "message": "Validation error",
+                "errors": e.detail
             }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             traceback.print_exc()
             return Response({
                 "success": 0,
-                "message": f"An unexpected error occurred: {str(e)}",
-                "data": {}
+                "message": f"Unexpected error: {str(e)}"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class DiscountApprovalAPIView(APIView):
+    """
+    POST: Admin decision to approve or reject discount for a given invoice_id.
+    """
+ 
+    def post(self, request, invoice_id):
+        user = request.user
+        if not user.is_staff and not user.is_superuser:
+            return Response({
+                "success": 0,
+                "message": "Permission denied."
+            }, status=status.HTTP_403_FORBIDDEN)
+ 
+        decision = request.data.get("decision")
+        if decision not in ["approve", "reject"]:
+            return Response({
+                "success": 0,
+                "message": "Invalid decision. Must be 'approve' or 'reject'."
+            }, status=status.HTTP_400_BAD_REQUEST)
+ 
+        try:
+            invoice = PharmacyInvoice.objects.get(pk=invoice_id)
+        except PharmacyInvoice.DoesNotExist:
+            return Response({
+                "success": 0,
+                "message": "Invoice not found."
+            }, status=status.HTTP_404_NOT_FOUND)
+ 
+        if not invoice.discount_requires_approval:
+            return Response({
+                "success": 0,
+                "message": "Invoice does not require discount approval."
+            })
+ 
+        # Safe patient ID for guests
+        patient_id_value = (
+            invoice.patient.patient_id if invoice.patient else invoice.patient_id_value
+        )
+ 
+        # Fetch or create the related notification
+        notification, created = Notification.objects.get_or_create(
+            p_invoice=invoice,
+            notification_type='discount_approval',
+            defaults={
+                'title': f"Discount approval for Invoice #{invoice.id}",
+                'message': f"Discount approval pending for invoice #{invoice.id} and patient {invoice.patient_name}",
+                'approval_status': 'pending',
+                'patient': invoice.patient,
+                'patient_name': invoice.patient_name,
+                'patient_id_value': patient_id_value,
+                'discount_percentage': invoice.discount_percentage if hasattr(invoice, 'discount_percentage') else None,
+            }
+        )
+ 
+        if decision == "approve":
+            if invoice.discount_approved:
+                return Response({
+                    "success": 0,
+                    "message": "Invoice discount already approved."
+                })
+ 
+            # Mark invoice as approved
+            invoice.discount_approved = True
+            invoice.discount_approved_by = user
+            invoice.discount_approval_date = now()
+            invoice.save(update_fields=['discount_approved', 'discount_approved_by', 'discount_approval_date'])
+ 
+            # Finalize invoice
+            invoice.finalize_invoice()
+            invoice.refresh_from_db()
+ 
+            net_amount = getattr(invoice, 'net_amount', invoice.paid_amount)
+            max_discount = invoice.items.aggregate(
+                max_discount=Max('discount_percentage')
+            )['max_discount'] or Decimal('0.00')
+ 
+            # Update the notification
+            notification.approval_status = 'approved'
+            notification.message = (
+                f"Pharmacy sale (Patient ID: {patient_id_value}) for ₹{net_amount} has been "
+                f"completed for {invoice.patient_name}. Items: {invoice.items.count()} medications. "
+                f"Payment: {invoice.typeof_transaction}"
+            )
+            notification.discount_percentage = max_discount
+            notification.created_at = now()
+            notification.save()
+ 
+            return Response({
+                "success": 1,
+                "message": f"Discount approved successfully for Patient {invoice.patient_name} with ID: {patient_id_value}, invoice finalized.",
+                "patient_id": patient_id_value,
+                "patient_name": invoice.patient_name,
+                "discount_percentage": str(max_discount),
+                "invoice_id": invoice.id,
+            }, status=status.HTTP_200_OK)
+ 
+        else:  # decision == "reject"
+            notification.approval_status = 'rejected'
+            notification.message += "\nDiscount rejected by admin."
+            notification.save()
+ 
+            invoice_id = invoice.id
+            invoice.delete()
+ 
+            return Response({
+                "success": 1,
+                "message": f"Discount rejected. Invoice #{invoice_id} for patient {invoice.patient_name} with Patient ID: {patient_id_value} has been deleted."
+            }, status=status.HTTP_200_OK)
+
 
  
 # -------------------- LIST ------------------------------------------

@@ -21,6 +21,7 @@ const PharmacyInvoice = ({onBack}) => {
   const handleBack = () => {
     onBack()
   };
+  const {messages} =  useNotifications()
 
   const [showRecentInvoices, setShowRecentInvoices] = useState(false);
   const [discount, setDiscount] = useState(0);
@@ -166,6 +167,12 @@ const PharmacyInvoice = ({onBack}) => {
       setShowAlert(false);
     }
   }, [discount, tax, invoiceData.items]);
+
+
+
+// ✅ Use invoiceId not invoice_id
+
+
 
   const calculateSummary = (items) => {
     const subtotal = items.reduce((acc, item) => acc + (item.amount || 0), 0);
@@ -549,6 +556,7 @@ const handleBatchChange = async (e, index) => {
       {/* Header */}
       <Row className="mb-4 mt-3">
         <Col>
+        {messages && <p style={{ color: "green" }}>{messages}</p>}
           <h2>
             {showRecentInvoices
               ? "Recent Invoices"

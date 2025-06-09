@@ -7,7 +7,7 @@ class PharmacyInvoiceItemInline(admin.TabularInline):
  
 @admin.register(PharmacyInvoice)
 class PharmacyInvoiceAdmin(admin.ModelAdmin):
-    list_display = ("Bill_No", "patient_name", "patient_id", "appointment_type", "Bill_Date", "get_final_amount")
+    list_display = ("id","Bill_No", "patient_name", "patient_id", "appointment_type", "Bill_Date", "get_final_amount")
     inlines = [PharmacyInvoiceItemInline]
  
     def get_final_amount(self, obj):
@@ -18,6 +18,8 @@ class PharmacyInvoiceAdmin(admin.ModelAdmin):
 @admin.register(PharmacyInvoiceItem)
 class PharmacyInvoiceItemAdmin(admin.ModelAdmin):
     list_display = (
-        "invoice", "medication_name", "quantity", "mrp", "amount",
+        "id","invoice", "medication_name", "quantity", "mrp", "amount",
         "discount_percentage", "tax_percentage", "final_amount"
     )
+ 
+ 

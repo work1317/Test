@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+ 
 class NotificationValidator(serializers.Serializer):
     title = serializers.CharField(required=True, error_messages={
         "required": "Title is a required field.",
@@ -19,3 +19,11 @@ class NotificationValidator(serializers.Serializer):
     created_at = serializers.DateTimeField(required=False, error_messages={
         "invalid": "Invalid date format for created_at."
     })
+    approval_status = serializers.ChoiceField(
+        choices=['pending', 'approved', 'rejected'],
+        required=False,
+        default='pending',
+        error_messages={
+            "invalid_choice": "Approval status must be one of: pending, approved, or rejected."
+        }
+    )

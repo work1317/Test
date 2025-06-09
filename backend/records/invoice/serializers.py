@@ -22,10 +22,15 @@ class ServiceChargeSerializer(serializers.ModelSerializer):
 
 class InvestigationChargeSerializer(serializers.ModelSerializer):
     def validate(self, data):
-        if data['to_date'] < data['from_date']:
+        from_date = data.get('from_date')
+        to_date = data.get('to_date')
+
+        if from_date and to_date and to_date < from_date:
             raise serializers.ValidationError("To date cannot be earlier than from date in Investigation charges.")
-        if data['amount'] < 0:
+
+        if data.get('amount', 0) < 0:
             raise serializers.ValidationError("Investigation amount must be positive.")
+        
         return data
     
     from_date = serializers.DateField(required=False, allow_null=True)
@@ -39,10 +44,15 @@ class InvestigationChargeSerializer(serializers.ModelSerializer):
 
 class PharmacyChargeSerializer(serializers.ModelSerializer):
     def validate(self, data):
-        if data['to_date'] < data['from_date']:
+        from_date = data.get('from_date')
+        to_date = data.get('to_date')
+
+        if from_date and to_date and to_date < from_date:
             raise serializers.ValidationError("To date cannot be earlier than from date in Pharmacy charges.")
-        if data['amount'] < 0:
+
+        if data.get('amount', 0) < 0:
             raise serializers.ValidationError("Pharmacy amount must be positive.")
+
         return data
 
     from_date = serializers.DateField(required=False, allow_null=True)

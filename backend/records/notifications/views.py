@@ -20,28 +20,24 @@ class CombinedDashboardNotificationAPIView(APIView):
         context = {
             "success": 1,
             "message": "Data fetched successfully.",
-            "data": []  # single combined list
+            "data": []
         }
 
         try:
             today = timezone.now().date()
 
-            # Dashboard summary counts
             dashboard_summary = {
                 "total_unread": Notification.objects.filter(is_read=False).count(),
                 "new_patients_today": Patient.objects.filter(created_at__date=today).count(),
                 "invoices_today": Invoice.objects.filter(created_at__date=today).count(),
                 "pharmacy_sales_today": PharmacyInvoice.objects.filter(Date=today).count(),
- 
             }
 
-            # Add dashboard summary as first item in data list
             context["data"].append(dashboard_summary)
 
-            # Get filter from query params
             filter_type = request.GET.get('filter', '').strip().lower()
             search_query = request.GET.get('search', '').strip()
-            notifications = Notification.objects.all().order_by('-created_at')
+            notifications = Notification.objects.all().order_by('-created_at')  # latest first
 
             filter_map = {
                 'patient': ['patient'],
@@ -66,7 +62,7 @@ class CombinedDashboardNotificationAPIView(APIView):
                 context["success"] = 0
                 context["message"] = f"Invalid filter type: {filter_type}"
                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
-            
+
             if search_query:
                 notifications = notifications.filter(
                     Q(title__icontains=search_query) |
@@ -76,7 +72,10 @@ class CombinedDashboardNotificationAPIView(APIView):
                     Q(patient__phno__icontains=search_query)
                 )
 
+            # Assuming NotificationSerializer includes 'approval_status'
             serializer = serializers.NotificationSerializer(notifications, many=True, context={"request": request})
+
+            # The serialized data will include latest approval_status for each notification
             context["data"].extend(serializer.data)
 
         except Exception as e:
@@ -84,6 +83,7 @@ class CombinedDashboardNotificationAPIView(APIView):
             context["message"] = str(e)
 
         return Response(context)
+    
 
     def post(self, request):
         context = {
@@ -99,10 +99,7 @@ class CombinedDashboardNotificationAPIView(APIView):
 
             validated_data = validator.validated_data
 
-            # Explicitly default is_read to False if not provided
-            is_read_value = validated_data.get('is_read')
-            if is_read_value is None:
-                is_read_value = False
+            is_read_value = validated_data.get('is_read', False)
 
             notification = Notification(
                 title=validated_data['title'],
@@ -114,6 +111,7 @@ class CombinedDashboardNotificationAPIView(APIView):
                 medication=validated_data.get('medication'),
                 invoice=validated_data.get('invoice', None),
                 p_invoice=validated_data.get('p_invoice', None),
+                approval_status=validated_data.get('approval_status', 'pending'),  # explicitly set approval_status
             )
             notification.clean()
             notification.save()
@@ -130,6 +128,7 @@ class CombinedDashboardNotificationAPIView(APIView):
             context['message'] = str(e)
 
         return Response(context)
+
 
 
 class MarkAsReadView(APIView):

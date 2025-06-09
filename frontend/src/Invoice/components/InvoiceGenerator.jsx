@@ -18,45 +18,22 @@ export default function InvoiceGenerator() {
   const [formData, setFormData] = useState({
     service: "",
     days: "",
-    amount: "",
+    amount: 0,
   });
   const [store, setStore] = useState([]);
   const [investigationCharges, setInvestigationCharges] = useState(0);
-  const [investigationDates, setInvestigationDates] = useState({
-    from: "",
-    to: "",
-  });
+  const [investigationDates, setInvestigationDates] = useState({from: null, to: null});
   const [pharmacyCharges, setPharmacyCharges] = useState(0);
-  const [pharmacyDates, setPharmacyDates] = useState({ from: "", to: "" });
+  const [pharmacyDates, setPharmacyDates] = useState({ from: null, to: null });
   const [consultationCharges, setConsultationCharges] = useState({
-    visits: "",
-    amountPerVisit: "",
-  });
+  visits: "",
+  amountPerVisit: "", // default as string "0"
+});
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [concession, setConcession] = useState(0); // Added concession state
   const [patientId, setPatientId] = useState(""); // State for patient ID
   const [patientData, setPatientData] = useState(null);
   const [invoiceData, setInvoiceData] = useState(null); // State for patient data
-
-  // Fetch patient data when   changes
-  // useEffect(() => {
-  //   if (patientId) {
-  //     api
-  //       .get(
-  //         `invoice/create-invoice/?patient_id=${patientId}`
-  //       )
-  //       .then((response) => {
-  //         console.log("get patient details", response);
-  //         setPatientData(response.data.data); // Set the patient data on success
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching patient data:", error);
-  //         setPatientData(null); // Clear data if not found
-  //       });
-  //   } else {
-  //     setPatientData(null); // Reset if no patient ID is entered
-  //   }
-  // }, [patientId]);
 
   useEffect(() => {
     if (patientId) {
@@ -74,11 +51,11 @@ export default function InvoiceGenerator() {
       setPatientData(null);
 
       // Optional: Reset other related fields
-      setFormData({ service: "", days: "", amount: "" });
+      setFormData({ service: "", days: "", amount: 0});
       setStore([]);
-      setInvestigationDates({ from: "", to: "" });
+      setInvestigationDates({ from: null, to: null });
       setInvestigationCharges(0);
-      setPharmacyDates({ from: "", to: "" });
+      setPharmacyDates({ from: null, to: null });
       setPharmacyCharges(0);
       setConsultationCharges({ visits: 0, amountPerVisit: 0 });
       setConcession(0);
@@ -105,7 +82,7 @@ export default function InvoiceGenerator() {
       due_on_receipt: dueOnReceipt,
       payment_method: paymentMethod,
       notes: note,
-      concession: concession.toFixed(2),
+       concession: Number(concession).toFixed(2),
       service_charges: store.map((item) => ({
         service_name: item.service,
         days: Number(item.days),
@@ -114,17 +91,19 @@ export default function InvoiceGenerator() {
       investigation_charges: {
         from_date: investigationDates.from,
         to_date: investigationDates.to,
-        amount: Number(investigationCharges).toFixed(2),
+        amount: investigationCharges === "" ? "0.00" : Number(investigationCharges).toFixed(2),
       },
-      pharmacy_charges: {
-        from_date: pharmacyDates.from,
-        to_date: pharmacyDates.to,
-        amount: Number(pharmacyCharges).toFixed(2),
-      },
+
+     pharmacy_charges: {
+      from_date: pharmacyDates.from,
+      to_date: pharmacyDates.to,
+      amount: pharmacyCharges === "" ? "0.00" : Number(pharmacyCharges).toFixed(2),
+
+},
+
       consultation_charges: {
-        no_of_visits: consultationCharges.visits,
-        amount_per_visit: Number(consultationCharges.amountPerVisit).toFixed(2),
-      },
+        no_of_visits:Number(consultationCharges.visits || 0),
+        amount_per_visit: Number(consultationCharges.amountPerVisit || 0).toFixed(2),     },
     };
 
     try {
@@ -195,13 +174,14 @@ export default function InvoiceGenerator() {
     );
     const consultationTotal =
       consultationCharges.visits * consultationCharges.amountPerVisit;
-    return (
-      serviceTotal +
-      Number(investigationCharges) +
-      Number(pharmacyCharges) +
-      consultationTotal
-    ).toFixed(2);
-  };
+        return Number(
+        serviceTotal +
+        Number(investigationCharges || 0) +
+        Number(pharmacyCharges || 0) +
+        consultationTotal
+      ).toFixed(2);
+
+        };
 
   // Calculate the final amount after concession
   const calculateFinalAmount = () => {
@@ -268,11 +248,11 @@ export default function InvoiceGenerator() {
 
                           // Reset all related form states
                           setPatientData(null);
-                          setFormData({ service: "", days: "", amount: "" });
+                          setFormData({ service: "", days: "", amount: 0});
                           setStore([]);
-                          setInvestigationDates({ from: "", to: "" });
+                          setInvestigationDates({ from: null, to: null });
                           setInvestigationCharges(0);
-                          setPharmacyDates({ from: "", to: "" });
+                          setPharmacyDates({ from: null, to: null });
                           setPharmacyCharges(0);
                           setConsultationCharges({
                             visits: 0,
@@ -369,6 +349,7 @@ export default function InvoiceGenerator() {
                         value={formData.service}
                         name="service"
                         onChange={handlerChange}
+                        placeholder="Enter Service "
                       />
                     </Col>
                     <Col>
@@ -378,6 +359,7 @@ export default function InvoiceGenerator() {
                         value={formData.days}
                         name="days"
                         onChange={handlerChange}
+                        placeholder="days"
                       />
                     </Col>
                     <Col>
@@ -448,16 +430,31 @@ export default function InvoiceGenerator() {
                         }
                       />
                     </Col>
-                    <Col className="col-sm-4">
-                      <Form.Label>Amount</Form.Label>
-                      <Form.Control
-                        type="number"
-                        value={investigationCharges}
-                        onChange={(e) =>
-                          setInvestigationCharges(Number(e.target.value))
-                        }
-                      />
-                    </Col>
+                   <Col className="col-sm-4">
+                        <Form.Label>Amount</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Amount"
+                          value={investigationCharges}
+                          onChange={(e) => {
+                            let val = e.target.value;
+
+                            // Allow empty input
+                            if (val === "") {
+                              setInvestigationCharges("");
+                              return;
+                            }
+
+                            // Only allow digits
+                            if (/^\d+$/.test(val)) {
+                              // Remove leading zeros except if single zero
+                              val = val.replace(/^0+(?=\d)/, "");
+                              setInvestigationCharges(val);
+                            }
+                          }}
+                        />
+                      </Col>
+
                   </Row>
 
                   <p className={styles.subTitle}>Pharmacy Charges</p>
@@ -488,46 +485,81 @@ export default function InvoiceGenerator() {
                         }
                       />
                     </Col>
-                    <Col className="col-sm-4">
+                   <Col className="col-sm-4">
                       <Form.Label>Amount</Form.Label>
                       <Form.Control
-                        type="number"
+                        type="text" // changed to "text" to allow custom control
+                        placeholder="Amount"
+                      
                         value={pharmacyCharges}
-                        onChange={(e) =>
-                          setPharmacyCharges(Number(e.target.value))
-                        }
+                        onChange={(e) => {
+                          let val = e.target.value;
+
+                          // Allow empty input
+                          if (val === "") {
+                            setPharmacyCharges("");
+                            return;
+                          }
+
+                          // Only allow digits
+                          if (/^\d+$/.test(val)) {
+                            // Remove leading zeros except if single zero
+                            val = val.replace(/^0+(?=\d)/, "");
+                            setPharmacyCharges(val);
+                          }
+                        }}
                       />
                     </Col>
+
                   </Row>
 
                   <p className={styles.subTitle}>Consultation Charges</p>
 
                   <Row>
                     <Col>
-                      <Form.Label>No. of Visits</Form.Label>
+                         <Form.Label>No.of Visits</Form.Label>
                       <Form.Control
-                        type="number"
-                        value={consultationCharges.visits}
-                        onChange={(e) =>
-                          setConsultationCharges({
-                            ...consultationCharges,
-                            visits: Number(e.target.value),
-                          })
-                        }
-                      />
+                          type="number"
+                          placeholder="Enter number of visits"
+                          value={consultationCharges.visits}
+                          onChange={(e) => {
+                            const value = e.target.value;
+
+                            // Remove leading zeros unless it's "0" or empty
+                            const cleaned = value.replace(/^0+(?=\d)/, "");
+
+                            setConsultationCharges({
+                              ...consultationCharges,
+                              visits: cleaned,
+                            });
+                          }}
+                        />
+
                     </Col>
                     <Col>
                       <Form.Label>Amount per Visit</Form.Label>
-                      <Form.Control
+                     <Form.Control
                         type="number"
+                        placeholder="Enter amount"
                         value={consultationCharges.amountPerVisit}
-                        onChange={(e) =>
-                          setConsultationCharges({
-                            ...consultationCharges,
-                            amountPerVisit: Number(e.target.value),
-                          })
-                        }
+                        onChange={(e) => {
+                          const value = e.target.value;
+
+                          // Prevent leading zero unless it's a decimal like "0.5"
+                          if (/^0[0-9]+/.test(value)) {
+                            setConsultationCharges({
+                              ...consultationCharges,
+                              amountPerVisit: value.replace(/^0+/, ""), // remove leading zeros
+                            });
+                          } else {
+                            setConsultationCharges({
+                              ...consultationCharges,
+                              amountPerVisit: value,
+                            });
+                          }
+                        }}
                       />
+
                     </Col>
                   </Row>
                 </Card.Body>
@@ -582,7 +614,7 @@ export default function InvoiceGenerator() {
                         investigationDates.to
                       )} */}
                     </Col>
-                    <Col>{investigationCharges.toFixed(2)}</Col>
+                    <Col>{investigationCharges === "" ? "0.00" : Number(investigationCharges).toFixed(2)}</Col>
                   </Row>
                   <Row>
                     <Col>
@@ -592,7 +624,7 @@ export default function InvoiceGenerator() {
                     <Col>
                       {/* {calculateDays(pharmacyDates.from, pharmacyDates.to)} */}
                     </Col>
-                    <Col>{pharmacyCharges.toFixed(2)}</Col>
+                         <Col>{pharmacyCharges === "" ? "0.00" : Number(pharmacyCharges).toFixed(2)}</Col>
                   </Row>
                   <Row>
                     <Col>
@@ -614,13 +646,31 @@ export default function InvoiceGenerator() {
                   </div>
                   {/* Concession Input */}
                   <h6 className="mt-1">Concession</h6>
-                  <Form.Control
-                    type="number"
-                    placeholder="Concession"
-                    className="my-2"
-                    value={concession}
-                    onChange={(e) => setConcession(Number(e.target.value) || 0)}
-                  />
+                      <Form.Control
+                        type="text" // change to text
+                        placeholder="Concession"
+                        className="my-2"
+                        value={concession}
+                        onChange={(e) => {
+                          let val = e.target.value;
+
+                          // Allow empty input
+                          if (val === "") {
+                            setConcession("");
+                            return;
+                          }
+
+                          // Only allow digits
+                          if (/^\d+$/.test(val)) {
+                            // Remove leading zeros except if single zero
+                            val = val.replace(/^0+(?=\d)/, "");
+                            setConcession(val);
+                          }
+                        }}
+                      />
+
+
+
                   <div className={styles.totalRow}>
                     <strong>Final Amount</strong>
                     <span>{calculateFinalAmount()}</span>

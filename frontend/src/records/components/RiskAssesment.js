@@ -92,6 +92,12 @@ const RiskAssessment = ({ handleClose, patientId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
  
+    // ✅ Check if at least one checkbox is selected
+  const hasAtLeastOneSelected = Object.values(selectedChecks).some(val => val === true);
+  if (!hasAtLeastOneSelected) {
+    alert("Please select at least one risk factor before submitting.");
+    return;
+  }
     const risk_factors = Object.keys(riskFactors).map((factorKey) => {
       const risk_factor_id = parseInt(factorKey.replace("RiskFactor", ""));
       const fields = {};

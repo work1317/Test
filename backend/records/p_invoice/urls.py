@@ -7,6 +7,7 @@ from p_invoice.views import (
     MedicationSearchByIdAPIView,
     RecentPharmacyInvoicesAPIView,
     InvoiceDownloadAPIView,
+    DiscountApprovalAPIView,
 )
  
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     path('medications/search-by-id/<int:medication_id>/', MedicationSearchByIdAPIView.as_view(), name='pharmacy-invoice-item-search-by-id'),
     path('pharmacy/recent-invoices/', RecentPharmacyInvoicesAPIView.as_view(), name='filter-recent-invoices'),
     path('pharmacy/invoice/download/<int:pk>/', InvoiceDownloadAPIView.as_view(), name='invoice-download'),
+    path('pharmacy/discount/<int:invoice_id>/', DiscountApprovalAPIView.as_view(), name='discount-approval'),
 ]

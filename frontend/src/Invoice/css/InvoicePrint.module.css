@@ -2,19 +2,25 @@
 .custom {
   max-width: 750px; /* Set to preferred modal width */
 }
-
+ 
 /* Header Address Styling */
 .address {
-  font-size: 10px;
+  font-size: 12px;
 }
-
+ 
 /* Hospital Title Styling */
 .title {
   width: 100%;
-  font-size: 28px; /* Use 'font-size' instead of 'size' */
+  font-size: 35px; /* Use 'font-size' instead of 'size' */
   font-weight: bold;
 }
-
+.pvt{
+  width: 100%;
+  font-size: 25px;
+  background-color: #24A1F5;
+  color: #FFFFFF;
+  padding-left: 17px;
+}
 /* Emergency Footer Text Styling */
 .footerNote {
   background-color: #A62855; /* Remove quotes for proper CSS syntax */
@@ -25,7 +31,7 @@
   text-align: center;
   font-size: 18px; /* Adjust font size for print readability */
 }
-
+ 
 /* Modal Footer Positioning */
 .down {
   position: fixed;
@@ -35,19 +41,19 @@
   padding: 10px;
   text-align: right;
 }
-
+ 
 /* Print Styling */
 @media print {
   body * {
     visibility: hidden !important;
   }
-
+ 
   /* Reveal only print content */
   .printMode .printContent,
   .printMode .printContent * {
     visibility: visible !important;
   }
-
+ 
   .printMode .printContent {
     position: absolute;
     left: 0;
@@ -57,11 +63,13 @@
     padding: 0;
     background-color: white;
   }
-
+ 
   /* Hide modal footer and buttons on print */
   .down {
     display: none !important;
   }
 }
-
-
+ 
+ 
+ 
+ 

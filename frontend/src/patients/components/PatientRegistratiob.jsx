@@ -66,8 +66,8 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
       "/patients/create/",
       formData
     );
-    await fetchNotifications()
-    await onNotificationClick()
+    await fetchNotifications();
+    await onNotificationClick();
     console.log("API Response:", response);
     alert(response.data.message)
     // window.location.href = "/notifications";

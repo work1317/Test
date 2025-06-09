@@ -9,8 +9,9 @@ function NotificationContext({ children }) {
   const [read, setRead] = useState(0);
   const [showDot, setShowDot] = useState(false);
   const [getdoctoradd,setgetdoctoradd]=useState(false);
-
-  
+  const [messages, setMessage] = useState("")
+ 
+ 
     const fetchNotifications = async () => {
       try {
         const response = await api.get("notifications/list/");
@@ -24,17 +25,17 @@ function NotificationContext({ children }) {
         console.error("Error fetching notifications:", error);
       }
     };
-  
-
-
-    
+ 
+ 
+ 
+   
     const onNotificationClick = () => {
-    setShowDot(true); 
+    setShowDot(true);
    
   };
  
   return (
-    <NotificationContexts.Provider value={{ read, setRead, fetchNotifications, onNotificationClick, showDot, setShowDot,getdoctoradd, setgetdoctoradd,  }}>
+    <NotificationContexts.Provider value={{ read, setRead, fetchNotifications, onNotificationClick, showDot, setShowDot,getdoctoradd, setgetdoctoradd, messages, setMessage  }}>
       {children}
     </NotificationContexts.Provider>
   );
