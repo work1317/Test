@@ -143,7 +143,7 @@ class TreatmentChartValidator(serializers.Serializer):
 
     def validate_medicines(self, medicines):
         for medicine in medicines:
-            required_fields = ['medicine_name', 'hrs_drops_mins', 'dose', 'time', 'medicine_details']
+            required_fields = ['medicine_name', 'dose', 'time', 'medicine_details']
             for field in required_fields:
                 if field not in medicine or not medicine[field]:
                     raise serializers.ValidationError(f"{field} is required.")

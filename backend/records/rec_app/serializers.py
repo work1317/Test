@@ -74,7 +74,7 @@ class TreatmentChartSerializer(serializers.ModelSerializer):
  
     def validate(self, data):
         """Custom validation for required fields"""
-        required_fields = ['medicine_name', 'hrs_drops_mins', 'dose', 'time', 'medicine_details']
+        required_fields = ['medicine_name', 'dose', 'time', 'medicine_details']
         for field in required_fields:
             if field not in data or not data[field]:
                 raise serializers.ValidationError(f"{field} is required.")

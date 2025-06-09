@@ -23,3 +23,9 @@ class PatientSerializer(serializers.ModelSerializer):
         model = Patient
         fields = '__all__'
 
+    def get_status(self, obj):
+        try:
+            return obj.progress_notes.status
+        except ProgressNote.DoesNotExist:
+            return "Stable"
+
