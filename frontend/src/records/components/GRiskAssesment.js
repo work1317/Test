@@ -3,14 +3,14 @@ import { Form, Row, Col, Card, Container, Alert } from "react-bootstrap";
 import api from "../../utils/axiosInstance";
 import riskStyles from "../css/GRiskAssesment.module.css";
 import { Icon } from "@iconify/react";
-
+ 
 const GRiskAssesment = ({ patient }) => {
   const [riskFactors, setRiskFactors] = useState({});
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [combinedScore, setCombindScore] = useState(0);
-
+ 
   const fieldLabels = {
     minor_surgery: "Minor Surgery",
     age_40_to_60_yrs: "Age 40-60 yrs",
@@ -19,19 +19,19 @@ const GRiskAssesment = ({ patient }) => {
     inflammatory_bowel_disease: "Inflammatory Bowel Disease",
     obesity: "Obesity (>20% of Ideal BW)",
     combined_oral: "Combined Oral",
-    contraceptives_or_HRT: "Contraceptives/HRT",
+    combined_oral_contraceptives_or_HRT: "Combined Oral Contraceptives/HRT",
     // Add more labels as needed...
   };
-
+ 
  const fetchRiskFactors = async () => {
     if (!patient?.patient_id) return;
-
-    
+ 
+   
       try {
         const response = await api.get(
           `/records/get-multiple-risk-factors/${patient.patient_id}/`
         );
-
+         console.log("response of risk assessment",response)
         if (response.data.success) {
           setRiskFactors(response.data.data);
           setCombindScore(response.data.data.combined_total_score || 0);
@@ -47,7 +47,7 @@ const GRiskAssesment = ({ patient }) => {
         setLoading(false);
       }
     };
-
+ 
      useEffect(() => {
     fetchRiskFactors();
     const handleRefresh = () => fetchRiskFactors(); // Refresh on event
@@ -57,20 +57,20 @@ const GRiskAssesment = ({ patient }) => {
     return () => {
       window.removeEventListener("refreshRiskAssessment", handleRefresh);
     };
-
+ 
   }, [patient]);
-
+ 
   const renderCheckboxes = (factorKey, factorDataArray) => {
     if (!Array.isArray(factorDataArray) || factorDataArray.length === 0) return null;
-
+ 
     const factorData = factorDataArray[0];
     if (!factorData) return null;
-
+ 
     const fields = Object.entries(factorData).filter(
       ([key]) =>
         !["id", "patient_id", "created_at", "updated_at", "total_score"].includes(key)
     );
-
+ 
     return fields.map(([key, value], idx) => {
       const label = fieldLabels[key] || key;
       return (
@@ -87,9 +87,9 @@ const GRiskAssesment = ({ patient }) => {
       );
     });
   };
-
+ 
   if (loading) return <p>Loading risk factors...</p>;
-
+ 
   if (noData) {
     return (
       <div className="mb-4">
@@ -100,14 +100,14 @@ const GRiskAssesment = ({ patient }) => {
       </div>
     );
   }
-
+ 
   return (
     <Container className={`mt-4 ${riskStyles.main}`}>
       <h6 className={riskStyles.totalScore}>Total Risk Score :{combinedScore}</h6>
       <Form>
         {Object.keys(riskFactors).map((factorKey, index) => {
           if (factorKey === "combined_total_score") return null;
-
+ 
           return (
             <Card key={index} className="mb-3">
               <Card.Body>
@@ -130,5 +130,7 @@ const GRiskAssesment = ({ patient }) => {
     </Container>
   );
 };
-
+ 
 export default GRiskAssesment;
+ 
+ 

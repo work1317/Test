@@ -194,10 +194,9 @@ class RiskFactor1(models.Model):
     varicose_veins = models.BooleanField(default=False)
     inflammatory_bowel_disease = models.BooleanField(default=False)
     obesity = models.BooleanField(default=False)
-    combined_oral = models.BooleanField(default=False)
-    contraceptives_or_HRT = models.BooleanField(default=False)
+    combined_oral_contraceptives_or_HRT = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)  
-    updated_at = models.DateTimeField(auto_now=True) 
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class RiskFactor2(models.Model):
@@ -207,13 +206,10 @@ class RiskFactor2(models.Model):
     major_surgery = models.BooleanField(default=False)
     immobilising_plaster_cast = models.BooleanField(default=False)
     medical_or_surgical = models.BooleanField(default=False)
-    patients_confined_to = models.BooleanField(default=False)
-    bed_72_hrs = models.BooleanField(default=False)
+    patients_confinedto_bed_72_hrs = models.BooleanField(default=False)
     central_venous_access = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)  
-    updated_at = models.DateTimeField(auto_now=True) 
-    
-    
+    updated_at = models.DateTimeField(auto_now=True)
 
 class RiskFactor3(models.Model):
     patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
@@ -221,8 +217,7 @@ class RiskFactor3(models.Model):
     myocardial_infarction = models.BooleanField(default=False)
     congestive_heart_failure = models.BooleanField(default=False)
     severe_sepsis_or_infection  = models.BooleanField(default=False)
-    factor_V_leiden_or_activated = models.BooleanField(default=False)
-    protein_C_resistance = models.BooleanField(default=False)
+    factor_V_leiden_or_activated_protein_C_resistance = models.BooleanField(default=False)
     antithrombin_III_deficiency = models.BooleanField(default=False)
     proteins_C_and_S_deficiency = models.BooleanField(default=False)
     dysfibrinogenemia = models.BooleanField(default=False)
@@ -231,16 +226,18 @@ class RiskFactor3(models.Model):
     lupus_anticoagulant = models.BooleanField(default=False)
     antiphospholipid_antibodies = models.BooleanField(default=False)
     myeloproliferative_disorders = models.BooleanField(default=False)
+    disordersof_plasminogen_and_plasminactivation = models.BooleanField(default=False)
+    heparin_included_thrombocytopenia= models.BooleanField(default=False)
+    hyperviscosity_syndromes = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)  
     updated_at = models.DateTimeField(auto_now=True) 
     
 
 class RiskFactor4(models.Model):
     patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
-    elective_major_lower = models.BooleanField(default=False)
-    extremity = models.BooleanField(default=False)
+    elective_major_lower_extremity = models.BooleanField(default=False)
     arthroplasty = models.BooleanField(default=False)
-    stroke_feedbackhip_pelvis_or_leg_fracture = models.BooleanField(default=False)
+    hip_pelvis_or_leg_fracture = models.BooleanField(default=False)
     stroke = models.BooleanField(default=False)
     multiple_trauma = models.BooleanField(default=False)
     acute_spinal_cord_injury = models.BooleanField(default=False)

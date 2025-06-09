@@ -53,6 +53,10 @@
     margin-top: 10px;
     font-size: 14px;
   }
+  .file{
+    background-color: rgb(249, 245, 238);
+    padding: 1rem;
+}
   
   
   @media (max-width: 768px) {

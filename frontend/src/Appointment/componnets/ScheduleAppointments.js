@@ -62,6 +62,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
             patient_name: "", age: "", gender: "", email: "", doctor: "", appointment_id: "", patient: "",
             date: "", time: "", phno: "", appointment_type: "", blood_group: "", notes: "", ward_no: "", diagnosis: "",
           });
+           window.dispatchEvent(new Event("refreshScheduleAppointments"));
           setMessage("");
         }, 300);
       } else {

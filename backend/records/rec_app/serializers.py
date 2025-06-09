@@ -162,8 +162,7 @@ class RiskFactor1Serializer(serializers.ModelSerializer):
     varicose_veins = serializers.BooleanField(required=False)
     inflammatory_bowel_disease = serializers.BooleanField(required=False)
     obesity = serializers.BooleanField(required=False)
-    combined_oral = serializers.BooleanField(required=False)
-    contraceptives_or_HRT = serializers.BooleanField(required=False)
+    combined_oral_contraceptives_or_HRT = serializers.BooleanField(required=False)
     total_score = serializers.SerializerMethodField()
 
 
@@ -176,7 +175,7 @@ class RiskFactor1Serializer(serializers.ModelSerializer):
         }
 
     def get_total_score(self, obj):
-        boolean_fields = ['minor_surgery', 'age_40_to_60_yrs', 'pregnancy_or_post_martum', 'varicose_veins', 'inflammatory_bowel_disease', 'obesity','combined_oral','contraceptives_or_HRT']
+        boolean_fields = ['minor_surgery', 'age_40_to_60_yrs', 'pregnancy_or_post_martum', 'varicose_veins', 'inflammatory_bowel_disease', 'obesity','combined_oral_contraceptives_or_HRT']
         data = {field: getattr(obj, field) for field in boolean_fields}
         return calculate_total_score(data, boolean_fields)
 
@@ -189,8 +188,7 @@ class RiskFactor2Serializer(serializers.ModelSerializer):
     major_surgery = serializers.BooleanField(required=False)
     immobilising_plaster_cast = serializers.BooleanField(required=False)
     medical_or_surgical = serializers.BooleanField(required=False)
-    patients_confined_to = serializers.BooleanField(required=False)
-    bed_72_hrs = serializers.BooleanField(required=False)
+    patients_confinedto_bed_72_hrs = serializers.BooleanField(required=False)
     central_venous_access = serializers.BooleanField(required=False)
     total_score = serializers.SerializerMethodField()
 
@@ -203,7 +201,7 @@ class RiskFactor2Serializer(serializers.ModelSerializer):
         }
 
     def get_total_score(self, obj):
-        boolean_fields = ['age_over_60_yrs', 'malignancy', 'major_surgery', 'immobilising_plaster_cast', 'medical_or_surgical', 'patients_confined_to','bed_72_hrs','central_venous_access']
+        boolean_fields = ['age_over_60_yrs', 'malignancy', 'major_surgery', 'immobilising_plaster_cast', 'medical_or_surgical', 'patients_confinedto_bed_72_hrs','central_venous_access']
         data = {field: getattr(obj, field) for field in boolean_fields}
         total_score = sum(2 for field in boolean_fields if data.get(field, False))
         return total_score
@@ -216,8 +214,7 @@ class RiskFactor3Serializer(serializers.ModelSerializer):
     myocardial_infarction = serializers.BooleanField(required=False)
     congestive_heart_failure = serializers.BooleanField(required=False)
     severe_sepsis_or_infection = serializers.BooleanField(required=False)
-    factor_V_leiden_or_activated = serializers.BooleanField(required=False)
-    protein_C_resistance = serializers.BooleanField(required=False)
+    factor_V_leiden_or_activated_protein_C_resistance = serializers.BooleanField(required=False)
     antithrombin_III_deficiency = serializers.BooleanField(required=False)
     proteins_C_and_S_deficiency = serializers.BooleanField(required=False)
     dysfibrinogenemia = serializers.BooleanField(required=False)
@@ -226,6 +223,9 @@ class RiskFactor3Serializer(serializers.ModelSerializer):
     lupus_anticoagulant = serializers.BooleanField(required=False)
     antiphospholipid_antibodies = serializers.BooleanField(required=False)
     myeloproliferative_disorders = serializers.BooleanField(required=False)
+    disordersof_plasminogen_and_plasminactivation = serializers.BooleanField(required=False)
+    heparin_included_thrombocytopenia = serializers.BooleanField(required=False)
+    hyperviscosity_syndromes= serializers.BooleanField(required=False)
     total_score = serializers.SerializerMethodField()
 
     class Meta:
@@ -238,9 +238,9 @@ class RiskFactor3Serializer(serializers.ModelSerializer):
 
     def get_total_score(self, obj):
         boolean_fields = ['history_of_DVT_or_PE', 'myocardial_infarction', 'congestive_heart_failure',
-                           'severe_sepsis_or_infection', 'factor_V_leiden_or_activated', 'protein_C_resistance',
+                           'severe_sepsis_or_infection', 'factor_V_leiden_or_activated_protein_C_resistance',
                            'antithrombin_III_deficiency', 'proteins_C_and_S_deficiency', 'dysfibrinogenemia',
-                           'homocysteinemia', 'prothrombin_mutation_20210A', 'lupus_anticoagulant', 'antiphospholipid_antibodies','myeloproliferative_disorders']
+                           'homocysteinemia', 'prothrombin_mutation_20210A', 'lupus_anticoagulant', 'antiphospholipid_antibodies','myeloproliferative_disorders','disordersof_plasminogen_and_plasminactivation','heparin_included_thrombocytopenia','hyperviscosity_syndromes']
         data = {field: getattr(obj, field) for field in boolean_fields}
         total_score = sum(3 for field in boolean_fields if data.get(field, False))
         return total_score
@@ -252,7 +252,7 @@ class RiskFactor4Serializer(serializers.ModelSerializer):
     elective_major_lower = serializers.BooleanField(required=False)
     extremity = serializers.BooleanField(required=False)
     arthroplasty = serializers.BooleanField(required=False)
-    stroke_feedbackhip_pelvis_or_leg_fracture = serializers.BooleanField(required=False)
+    hip_pelvis_or_leg_fracture = serializers.BooleanField(required=False)
     stroke = serializers.BooleanField(required=False)
     multiple_trauma = serializers.BooleanField(required=False)
     acute_spinal_cord_injury = serializers.BooleanField(required=False)
@@ -267,7 +267,7 @@ class RiskFactor4Serializer(serializers.ModelSerializer):
         }
 
     def get_total_score(self, obj):
-        boolean_fields = ['elective_major_lower', 'extremity', 'arthroplasty', 'stroke_feedbackhip_pelvis_or_leg_fracture',
+        boolean_fields = ['elective_major_lower_extremity', 'arthroplasty', 'hip_pelvis_or_leg_fracture',
                            'stroke', 'multiple_trauma', 'acute_spinal_cord_injury']
         data = {field: getattr(obj, field) for field in boolean_fields}
         total_score = sum(5 for field in boolean_fields if data.get(field, False))

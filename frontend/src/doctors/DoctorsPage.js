@@ -370,7 +370,7 @@ const DoctorsPage = () => {
         }
       } catch (error) {
         console.error("Error fetching doctors", error);
-        setError("Failed to fetch doctor data");
+        setError(" ");
       }
       setLoading(false);
     };
@@ -544,7 +544,7 @@ const DoctorsPage = () => {
                 <option value="Cardiology">Cardiology</option>
                 <option value="ENT">ENT</option>
                 <option value="Dentistry">Dentistry</option>
-                <option value="Dermtology">Dermtology</option>
+                <option value="Dermatology">Dermatology</option>
               </select>
             </div>
           </Col>

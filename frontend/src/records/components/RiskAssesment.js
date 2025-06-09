@@ -3,7 +3,7 @@ import { Form, Row, Col, Card, Container } from "react-bootstrap";
 import riskStyles from "../css/RiskAssesment.module.css";
 import axios from 'axios';
 import api from "../../utils/axiosInstance";
-
+ 
 const RiskAssessment = ({ handleClose, patientId }) => {
   const [scores, setScores] = useState({
     RiskFactor1: 0,
@@ -11,10 +11,10 @@ const RiskAssessment = ({ handleClose, patientId }) => {
     RiskFactor3: 0,
     RiskFactor4: 0,
   });
-
+ 
   const [totalScore, setTotalScore] = useState(0);
   const [selectedChecks, setSelectedChecks] = useState({});
-
+ 
   const riskFactors = {
     RiskFactor1: {
       value: 1,
@@ -25,8 +25,7 @@ const RiskAssessment = ({ handleClose, patientId }) => {
         "Varicose Veins": "varicose_veins",
         "Inflammatory Bowel Disease": "inflammatory_bowel_disease",
         "Obesity (>20% of Ideal BW)": "obesity",
-        "Combined Oral": "combined_oral",
-        "Contraceptives/HRT": "contraceptives_or_HRT"
+        "Combined Oral Contraceptives/HRT": "combined_oral_contraceptives_or_HRT",
       },
     },
     RiskFactor2: {
@@ -37,8 +36,8 @@ const RiskAssessment = ({ handleClose, patientId }) => {
         "Major surgery": "major_surgery",
         "Immobilising Plaster Cast": "immobilising_plaster_cast",
         "Medical or surgical": "medical_or_surgical",
-        "Patients Confined to": "patients_confined_to",
-        "Bed 72 hrs": "bed_72_hrs",
+        "Patients Confined to Bed 72 hrs": "patients_confinedto_bed_72_hrs",
+       
         "Central Venous Access": "central_venous_access"
       },
     },
@@ -49,8 +48,7 @@ const RiskAssessment = ({ handleClose, patientId }) => {
         "Myocardial Infarction": "myocardial_infarction",
         "Congestive Heart Failure": "congestive_heart_failure",
         "Severe sepsis/Infection": "severe_sepsis_or_infection",
-        "Factor V Leiden/Activated": "factor_V_leiden_or_activated",
-        "Protein C Resistance": "protein_C_resistance",
+        "Factor V Leiden/Activated Protein C Resistance": "factor_V_leiden_or_activated_protein_C_resistance",
         "Antithrombin III Deficiency": "antithrombin_III_deficiency",
         "Proteins C & S Deficiency": "proteins_C_and_S_deficiency",
         "Dysfibrinogenemia": "dysfibrinogenemia",
@@ -58,29 +56,31 @@ const RiskAssessment = ({ handleClose, patientId }) => {
         "20210A Prothrombin Mutation": "prothrombin_mutation_20210A",
         "Lupus Anticoagulant": "lupus_anticoagulant",
         "Antiphospholipid Antibodies": "antiphospholipid_antibodies",
-        "Myeloproliferative Disorders": "myeloproliferative_disorders"
+        "Myeloproliferative Disorders": "myeloproliferative_disorders",
+        "Disorders of Plasminogen and Plasmin Activation":"disordersof_plasminogen_and_plasminactivation",
+        "Heparin Induced Thrombocytopenia":"heparin_included_thrombocytopenia",
+        "Hyperviscosity Syndromes":"hyperviscosity_syndromes"
       },
     },
     RiskFactor4: {
       value: 5,
       labels: {
-        "Elective Major Lower": "elective_major_lower",
-        "Extremity": "extremity",
+        "Elective Major Lower Extremity": "elective_major_lower_extremity",
         "Arthroplasty": "arthroplasty",
-        "Stroke FeedbackHip, Pelvis or leg Fracture": "stroke_feedbackhip_pelvis_or_leg_fracture",
+        "Hip, Pelvis or aleg Fracture": "hip_pelvis_or_leg_fracture",
         "Stroke": "stroke",
         "Multiple Trauma": "multiple_trauma",
         "Acute Spinal Cord Injury": "acute_spinal_cord_injury"
       },
     },
   };
-
+ 
   const handleCheckboxChange = (factor, value, label) => {
     const key = `${factor}-${label}`;
     const isChecked = !selectedChecks[key];
-
+ 
     setSelectedChecks((prev) => ({ ...prev, [key]: isChecked }));
-
+ 
     setScores((prev) => {
       const updated = { ...prev };
       updated[factor] = isChecked ? prev[factor] + value : prev[factor] - value;
@@ -88,30 +88,30 @@ const RiskAssessment = ({ handleClose, patientId }) => {
       return updated;
     });
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+ 
     const risk_factors = Object.keys(riskFactors).map((factorKey) => {
       const risk_factor_id = parseInt(factorKey.replace("RiskFactor", ""));
       const fields = {};
-
+ 
       Object.entries(riskFactors[factorKey].labels).forEach(([labelText, fieldName]) => {
         const checkboxKey = `${factorKey}-${labelText}`;
         fields[fieldName] = !!selectedChecks[checkboxKey];
       });
-
+ 
       return {
         risk_factor_id,
         ...fields
       };
     });
-
+ 
     const payload = {
       patient_id: patientId,
       risk_factors
     };
-
+ 
     try {
   const response = await api.post("/records/create-multiple-risk-factors/", payload, {
     headers: {
@@ -160,7 +160,7 @@ const RiskAssessment = ({ handleClose, patientId }) => {
 }
  
    };
-
+ 
   return (
     <Container className={`mt-4 ${riskStyles.main}`}>
       <Form onSubmit={handleSubmit}>
@@ -207,5 +207,7 @@ const RiskAssessment = ({ handleClose, patientId }) => {
     </Container>
   );
 };
-
+ 
 export default RiskAssessment;
+ 
+ 

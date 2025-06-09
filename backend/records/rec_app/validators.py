@@ -281,8 +281,7 @@ class RiskFactor1Validator:
             'varicose_veins',
             'inflammatory_bowel_disease',
             'obesity',
-            'combined_oral',
-            'contraceptives_or_HRT'
+            'combined_oral_contraceptives_or_HRT',
         ]]) > 8:
             raise ValidationError("Invalid data. More than 6 selections are not allowed.")
 
@@ -294,8 +293,7 @@ class RiskFactor2Validator:
             'major_surgery',
             'immobilising_plaster_cast',
             'medical_or_surgical',
-            'patients_confined_to',
-            'bed_72_hrs',
+            'patients_confinedto_bed_72_hrs',
             'central_venous_access'
         ]]) > 8:
             raise ValidationError("Invalid data. More than 6 selections are not allowed.")
@@ -308,8 +306,7 @@ class RiskFactor3Validator:
             'myocardial_infarction',
             'congestive_heart_failure',
             'severe_sepsis_or_infection',
-            'factor_V_leiden_or_activated',
-            'protein_C_resistance',
+            'factor_V_leiden_or_activated_protein_C_resistance',
             'antithrombin_III_deficiency',
             'proteins_C_and_S_deficiency',
             'dysfibrinogenemia',
@@ -317,7 +314,10 @@ class RiskFactor3Validator:
             'prothrombin_mutation_20210A',
             'lupus_anticoagulant',
             'antiphospholipid_antibodies',
-            'myeloproliferative_disorders'
+            'myeloproliferative_disorders',
+            'disordersof_plasminogen_and_plasminactivation',
+            'heparin_included_thrombocytopenia',
+            'hyperviscosity_syndromes',
         ]]) > 14:
             raise ValidationError("Invalid data. More than 13 selections are not allowed.")
 
@@ -326,10 +326,9 @@ class RiskFactor3Validator:
 class RiskFactor4Validator:
     def validate_risk_data(self, data):
         if sum([data.get(field, False) for field in [
-            'elective_major_lower',
-            'extremity',
+            'elective_major_lower_extremity',
             'arthroplasty',
-            'stroke_feedbackhip_pelvis_or_leg_fracture',
+            'hip_pelvis_or_leg_fracture',
             'stroke',
             'multiple_trauma',
             'acute_spinal_cord_injury'

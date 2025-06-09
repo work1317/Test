@@ -60,6 +60,14 @@ const Appointments = () => {
   const handleDateSelect = (date) => {
     setSelectedDate(date);
     fetchAppointmentsByDate(date);
+
+     const handleRefresh = () => fetchAppointmentsByDate(); // Refresh on event
+ 
+    window.addEventListener("refreshScheduleAppointments", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshScheduleAppointments", handleRefresh);
+    };
   };
 
   const handleSearch = (e) => setQuery(e.target.value);
@@ -147,7 +155,7 @@ const Appointments = () => {
               <p className={styles.statsCardText}>Doctors</p>
               <h2 className={styles.statsNumber}>{stats.doctors_available}</h2>
               <p className={`${styles.statsFooter} text-secondary`}>
-                Total Appointments
+                {stats.todays_appointments} Total Appointments
               </p>
             </Card.Body>
           </Card>
@@ -280,7 +288,7 @@ const Appointments = () => {
                           <CiCalendar className={`mb-1 ${styles.calendar}`} />{" "}
                           {item.date}
                         </p>
-                        <p className={styles.patientNote}>{item.notes}</p>
+                        <p className={` text-break ${styles.patientNote}`}>{item.notes}</p>
                       </div>
                       <div>
                         <span className={styles.timeText}>

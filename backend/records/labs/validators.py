@@ -120,7 +120,7 @@ class LabInvoiceValidator(serializers.Serializer):
         "invalid": "Enter a valid decimal amount."
     })
 
-    status = serializers.ChoiceField(choices=['Pending', 'in Progress', 'Completed'], default='pending', error_messages={
+    status = serializers.ChoiceField(choices=['Pending', 'in Progress', 'Completed'], default='Pending', error_messages={
         "invalid_choice": "Status must be 'pending', 'in Progress', or 'completed'."
     })
 

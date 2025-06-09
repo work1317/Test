@@ -2,8 +2,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Button, Form, Modal, Row, Col, Dropdown,Alert } from "react-bootstrap";
 import api from "../../utils/axiosInstance";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
  
 const AddDoctor = ({ show, handleClose, refreshDoctor }) => {
+  const {fetchNotifications, onNotificationClick}  = useNotifications()
   const [formData, setFormData] = useState({
     d_name: "",
     d_department: "",
@@ -57,6 +59,8 @@ const handleSubmit = async (e) => {
     console.log('Doctor created:', response.data.message);
     window.dispatchEvent(new Event('refreshAddDoctor'));
     alert("Doctor added");
+    await fetchNotifications();
+    await onNotificationClick()
     
     await refreshDoctor();
     handleClose();

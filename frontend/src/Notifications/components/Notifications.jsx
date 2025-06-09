@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {Container,Row,Col,Button,Card,Pagination,} from "react-bootstrap";
 import Notificationstyle from "../css/Notiification.module.css";
 import { CiSearch } from "react-icons/ci";
@@ -16,7 +16,8 @@ import Discount from './Discount'
 import api from "../../utils/axiosInstance";
 import useNotification from "antd/es/notification/useNotification";
 import { useNotifications } from "../../dashboard/components/NotificationContext";
- 
+import AuthContext from "../../context/AuthProvider";
+ import {Icon} from "@iconify/react"
  
 function Notifications() {
   const {setShowDot} = useNotifications()
@@ -31,7 +32,8 @@ function Notifications() {
  
   });
   const [showPatientModal, setShowPatientModal] = useState(false); // ✅ Modal state
- 
+  const {userRoles}= useContext(AuthContext)
+  const isAdmin=userRoles.includes("Super Admin") 
   const notificationsPerPage = 15;
  
   const [pendingApprovals, setPendingApprovals] = useState([]);
@@ -83,7 +85,8 @@ useEffect(() => {
  
           const iconMap = {
             patient: <AiOutlinePlus className={Notificationstyle.patients} />,
-            lab_invoice: <FaMicroscope className={Notificationstyle.labInvoice} />,
+            // lab_invoice: <FaMicroscope className={Notificationstyle.labInvoice} />,
+            lab_invoice: <Icon icon="guidance:medical-laboratory" className={Notificationstyle.labInvoice} />,
             discounts: <FaPercent className={Notificationstyle.discounts} />,
             user: <AiOutlineUser className={Notificationstyle.user} />,
             sales: <BsCurrencyDollar className={Notificationstyle.sales} />,
@@ -101,6 +104,7 @@ useEffect(() => {
             title: getNotificationTitle(category, note.title),
             description1: note.message || "",
             description2: "",
+            patient_phone: note.patient_phone || "",
             time: new Date(note.created_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             icon: iconMap[category] || iconMap["others"],
             bgColor: isRead ? "#FFFFFF" : "#D5DEF5",
@@ -171,15 +175,17 @@ const filteredNotifications = allnotifications.filter((note) => {
     (Array.isArray(activeTab)
       ? activeTab.includes(note.category)
       : note.category === activeTab);
- 
+
   const matchesSearch =
     query === "" ||
     note.title.toLowerCase().includes(query.toLowerCase()) ||
     note.description1.toLowerCase().includes(query.toLowerCase()) ||
-    note.description2.toLowerCase().includes(query.toLowerCase());
- 
+    note.description2.toLowerCase().includes(query.toLowerCase()) ||
+    (note.patient_phone && note.patient_phone.toString().includes(query));
+
   return matchesTab && matchesSearch;
 });
+
  
  
  
@@ -189,7 +195,7 @@ const tabs = [
   { key: "patient", label: "Patients" },
   { key: "invoice", label: "Invoices" },
   { key: "discounts", label: "Discounts" },
-  { key: "user", label: "User Preference" },
+  ...(isAdmin? [{ key: "user", label: "User Preference" }] : []),
   { key: "sales", label: "Sales" },
   { key: ["medication_add", "expiry","low_stock",'stagant'], label: "Pharmacy" },
   { key: "lab_invoice", label: "Labs" },
@@ -232,7 +238,7 @@ useEffect(() => {
         <Col>
           {/* ✅ Updated Header with Button */}
           <div className="d-flex justify-content-between align-items-center flex-wrap">
-            <h1 className="fs-2">Notifications</h1>
+            <h1 className="fs-2 mt-3">Notifications</h1>
            
           </div>
         </Col>

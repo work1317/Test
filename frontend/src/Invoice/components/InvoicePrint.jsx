@@ -192,7 +192,7 @@ const InvoicePrint = ({ show, handlePrintClose, patientId }) => {
 
             <Row>
               <Col>
-                <Form.Control type="number" value={concession} readOnly />
+                <Form.Control type="number" value={concession}  style={{ paddingLeft: '500px' }} readOnly />
               </Col>
             </Row>
 

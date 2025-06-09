@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import api from "../../utils/axiosInstance";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
 
-function Inedit({ show, handleClose, patientId }) {
+function Inedit({ show, handleClose, patientId, fetchPatients }) {
   const [loading, setLoading] = useState(true);
+  const {fetchNotifications, onNotificationClick} = useNotifications()
   const [error, setError] = useState("");
   const [registrationTime, setRegistrationTime] = useState(null);
   const [formValues, setFormValues] = useState({
@@ -29,6 +31,8 @@ function Inedit({ show, handleClose, patientId }) {
           console.log("GET response:", res);
           if (res.data.success === 1) {
             const data = res.data.data;
+            fetchNotifications();
+            onNotificationClick()
             setFormValues({
               patient_name: data.patient_name || "",
               doctor_name: data.doctor_name || "",
@@ -127,6 +131,10 @@ function Inedit({ show, handleClose, patientId }) {
       console.log("PUT response:", res);
       if (res.data.success === 1) {
         alert(res.data.message || "Patient updated successfully.");
+        setTimeout(() => {
+         window.dispatchEvent(new Event("refreshInEdit"));
+         }, 300)
+         fetchPatients()
         handleClose();
       } else {
         setError(res.data.message || "Failed to update.");

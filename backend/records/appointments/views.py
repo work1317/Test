@@ -19,6 +19,7 @@ import calendar
 from rest_framework.exceptions import ValidationError
 from datetime import datetime, timedelta, date
 from . import models, serializers, validators
+from patients.models import Patient
 
  
 # Create your views here.
@@ -276,7 +277,7 @@ class AppointmentListAPIView(APIView):
             # Stats
             inpatients = models.Appointment.objects.filter(appointment_type='inpatient').count()
             outpatients = models.Appointment.objects.filter(appointment_type='outpatient').count()
-            casualty = models.Appointment.objects.filter(appointment_type='casuality').count()
+            casualty = models.Patient.objects.filter(appointment_type='casuality').count()
             total_active_cases = inpatients+outpatients+casualty
  
             total_doctors = DoctorAvailability.objects.count()

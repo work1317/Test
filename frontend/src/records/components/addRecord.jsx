@@ -391,7 +391,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                   <label className={styles.HeadText}>Summary</label>
                   <Form.Control     
                     rows={4}
-                    placeholder="Add a summery of the record"
+                    placeholder="Add a summary of the record"
                     value={formData.Service_procedure.summary}
                     onChange={(e) => handleInputChange(e, "summary")}
                     className={styles.inputPosition}

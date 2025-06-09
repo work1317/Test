@@ -45,6 +45,13 @@ function PatientManagement() {
   };
   useEffect(() => {
   fetchPatients();
+     const handleRefresh = () => fetchPatients(); // Refresh on event
+ 
+    window.addEventListener("refreshInEdit", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshInEdit", handleRefresh);
+    };
 }, []);
 
 
@@ -254,6 +261,7 @@ function PatientManagement() {
               show={showModal}
               handleClose={() => setShowModal(false)}
               patient={selectedPatient}
+              fetchPatients={fetchPatients}
             />
           ) : (
             <Card className={`${PatientStyles.selectPatientCard} text-center`}>

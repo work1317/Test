@@ -936,7 +936,7 @@ const handleBatchChange = async (e, index) => {
                     }
                     disabled={paymentTerms === "Yes"}
                   >
-                    <option value= "select payment methods">Select Pyment Methods</option>
+                    <option value= "select payment methods">Select Payment Methods</option>
                     <option value="Cash">Cash</option>
                     <option value="Debit/Credit">Debit/Credit</option>
                     <option value="UPI">UPI</option>

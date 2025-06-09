@@ -1549,16 +1549,16 @@ class RetrieveMultipleRiskFactorsAPIView(APIView):
             # Define boolean fields for each risk factor
             risk_factor_boolean_fields = {
                 1: ['minor_surgery', 'age_40_to_60_yrs', 'pregnancy_or_post_martum',
-                    'varicose_veins', 'inflammatory_bowel_disease', 'obesity', 'combined_oral', 'contraceptives_or_HRT'],
+                    'varicose_veins', 'inflammatory_bowel_disease', 'obesity', 'combined_oral_contraceptives_or_HRT'],
                 2: ['age_over_60_yrs', 'malignancy', 'major_surgery',
-                    'immobilising_plaster_cast', 'medical_or_surgical', 'patients_confined_to', 'bed_72_hrs', 'central_venous_access'],
+                    'immobilising_plaster_cast', 'medical_or_surgical', 'patients_confinedto_bed_72_hrs', 'central_venous_access'],
                 3: ['history_of_DVT_or_PE', 'myocardial_infarction', 'congestive_heart_failure',
-                    'severe_sepsis_or_infection', 'factor_V_leiden_or_activated',
-                    'protein_C_resistance', 'antithrombin_III_deficiency', 'proteins_C_and_S_deficiency', 
+                    'severe_sepsis_or_infection', 'factor_V_leiden_or_activated_protein_C_resistance', 'antithrombin_III_deficiency', 'proteins_C_and_S_deficiency', 
                     'dysfibrinogenemia', 'homocysteinemia', 'prothrombin_mutation_20210A', 'lupus_anticoagulant', 
-                    'antiphospholipid_antibodies', 'myeloproliferative_disorders'],
-                4: ['elective_major_lower', 'extremity', 'arthroplasty',
-                    'stroke_feedbackhip_pelvis_or_leg_fracture', 'stroke', 'multiple_trauma',
+                    'antiphospholipid_antibodies', 'myeloproliferative_disorders','disordersof_plasminogen_and_plasminactivation','heparin_included_thrombocytopenia',
+            'hyperviscosity_syndromes',],
+                4: ['elective_major_lower_extremity', 'arthroplasty',
+                    'hip_pelvis_or_leg_fracture', 'stroke', 'multiple_trauma',
                     'acute_spinal_cord_injury'],
             }
 
@@ -1639,16 +1639,16 @@ class UpdateMultipleRiskFactorsAPIView(APIView):
             # Define boolean fields for each risk factor
             risk_factor_boolean_fields = {
                 1: ['minor_surgery', 'age_40_to_60_yrs', 'pregnancy_or_post_martum',
-                    'varicose_veins', 'inflammatory_bowel_disease', 'obesity', 'combined_oral', 'contraceptives_or_HRT'],
+                    'varicose_veins', 'inflammatory_bowel_disease', 'obesity', 'combined_oral_contraceptives_or_HRT'],
                 2: ['age_over_60_yrs', 'malignancy', 'major_surgery',
-                    'immobilising_plaster_cast', 'medical_or_surgical', 'patients_confined_to', 'bed_72_hrs', 'central_venous_access'],
+                    'immobilising_plaster_cast', 'medical_or_surgical', 'patients_confinedto_bed_72_hrs', 'central_venous_access'],
                 3: ['history_of_DVT_or_PE', 'myocardial_infarction', 'congestive_heart_failure',
-                    'severe_sepsis_or_infection', 'factor_V_leiden_or_activated',
-                    'protein_C_resistance', 'antithrombin_III_deficiency', 'proteins_C_and_S_deficiency', 
+                    'severe_sepsis_or_infection', 'factor_V_leiden_or_activated_protein_C_resistance', 'antithrombin_III_deficiency', 'proteins_C_and_S_deficiency', 
                     'dysfibrinogenemia', 'homocysteinemia', 'prothrombin_mutation_20210A', 'lupus_anticoagulant', 
-                    'antiphospholipid_antibodies', 'myeloproliferative_disorders'],
-                4: ['elective_major_lower', 'extremity', 'arthroplasty',
-                    'stroke_feedbackhip_pelvis_or_leg_fracture', 'stroke', 'multiple_trauma',
+                    'antiphospholipid_antibodies', 'myeloproliferative_disorders','disordersof_plasminogen_and_plasminactivation','heparin_included_thrombocytopenia',
+            'hyperviscosity_syndromes',],
+                4: ['elective_major_lower_extremity', 'arthroplasty',
+                    'hip_pelvis_or_leg_fracture', 'stroke', 'multiple_trauma',
                     'acute_spinal_cord_injury'],
             }
 

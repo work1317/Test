@@ -33,6 +33,8 @@ function AllRecord() {
         const p = prescriptionRes.data.data || [];
         const s = serviceRes.data.data || [];
         const l = labRes.data.data || [];
+
+
  
         setVitals(v);
         setPrescriptions(p);
@@ -47,6 +49,14 @@ function AllRecord() {
     };
  
     fetchAll();
+
+    const handleRefresh = () => fetchAll(); // Refresh on event
+ 
+    window.addEventListener("refreshAddRecordModal", handleRefresh);
+ 
+    return () => {
+      window.removeEventListener("refreshAddRecordModal", handleRefresh);
+    };
   }, [selectedPatient]);
  
   if (loading) return <p>Loading records...</p>;

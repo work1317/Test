@@ -24,13 +24,16 @@ class MedicationValidator(serializers.Serializer):
         "required": "Strength is required.",
         "blank": "Strength cannot be blank.",
     })
-
+    batch_no = serializers.CharField(required=True,allow_blank=False,max_length=50,error_messages={
+        "required": "Batch number is required.",
+        "blank": "Strength cannot be blank.",
+    })
     stock_quantity = serializers.IntegerField(required=False, allow_null=True)
     unit_price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
     mrp = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
     expiry_date = serializers.DateField(required=False, allow_null=True,default=None)
     description = serializers.CharField(required=False, allow_blank=True)
-    batch_no = serializers.CharField(required=False, allow_blank=True, max_length=50) 
+    # batch_no = serializers.CharField(required=False, allow_blank=True, max_length=50) 
 
     def validate(self, data):
         """

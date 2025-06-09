@@ -89,7 +89,7 @@ const TreatmentChat = ({ handleClose,patientId }) => {
                   name="hrs_drops_mins"
                   value={medicineDetails.hrs_drops_mins}
                   onChange={handleChange}
-                  required
+                  
                 />
               </Form.Group>
             </Col>

@@ -137,7 +137,7 @@ const RecordLab = () => {
       (
         patient.patient_name?.toLowerCase().includes(lowerQuery) ||
         patient.patient_id?.toString().toLowerCase().includes(lowerQuery) ||
-        patient.phone_number?.toString().toLowerCase().includes(lowerQuery)
+        patient.phno?.toString().toLowerCase().includes(lowerQuery)
       )
   );
 
@@ -176,7 +176,7 @@ const RecordLab = () => {
   };
  
   return (
-    <Container className="mb-5" style={{ backgroundColor: "#F9FAFC" }}>
+    <Container className="mb-5">
       <Row className="mt-5 ms-2 d-flex justify-content-between">
         <Col md={8}>
           <h1 className="fw-bolder">Electronic Medical Records</h1>
@@ -218,7 +218,8 @@ const RecordLab = () => {
                 <Row className="d-flex justify-content-around" key={index} onClick={() => handlePatientSelect(patient)} >
                   <Col xs={6} md={4} className="d-flex">
                     <div className="d-flex mt-2 align-items-center">
-                      <UserRound className={`m-3 ${Recordstyle.iconCss} p-1`} size={30} style={{ color: "#262872" }} />
+                      {/* <UserRound className={`m-3 ${Recordstyle.iconCss} p-1`} size={30} style={{ color: "#262872" }} /> */}
+                          <Icon icon="iconamoon:profile" className={`m-3 p-2 ${Recordstyle.iconCss}`} width={50} height={50}></Icon>
                       <div>
                         <span className={Recordstyle.text}>{patient.patient_name}</span>
                         <br />
@@ -251,7 +252,8 @@ const RecordLab = () => {
           <Row className="m-3 mt-4 d-flex flex-row">
             <Col xs={12} md={6} className="d-flex align-items-center flex-row justify-content-between">
               <div className="d-flex flex-row">
-                <UserRound className={`p-2 ${Recordstyle.iconCss1}`} size={30} style={{ color: "#262872" }} />
+                {/* <UserRound className={`p-2 ${Recordstyle.iconCss1}`} size={30} style={{ color: "#262872" }} /> */}
+                 <Icon icon="iconamoon:profile" className={`m-0 p-2 ${Recordstyle.iconCss}`} width={50} height={50}></Icon>
                 <h6 className={`${Recordstyle.textdata} ms-4`}>{selectedPatient.patient_name}</h6>
               </div>
             </Col>
@@ -271,7 +273,7 @@ const RecordLab = () => {
             </Col>
           </Row>
           <AddRecordModal show={showModal1} handleClose={() => setShowModal1(false)} patientId={selectedPatient ? selectedPatient.patient_id : null} />
-          <Row className="text-center p-3 rounded">
+          <Row className="text-center rounded">
             <Col xs={6} md={3}>
               <small className="text-muted fw-bold">{selectedPatient.age} years, {selectedPatient.gender}</small>
             </Col>
@@ -297,21 +299,21 @@ const RecordLab = () => {
             </Col>
           </Row>
  
-          <Row className="text-center p-3 rounded">
-            <Col xs={6} md={3} className="border-end">
-              <small className="text-muted">Blood Group</small>
+          <Row className="text-center mt-2 ms-4 p-3 rounded" style={{backgroundColor:'#F9FAFC',maxWidth:'1150px'}}>
+            <Col xs={6} md={3} >
+              <p className="text-muted">Blood Group</p>
               <p className="fw-bold m-0">{selectedPatient.blood_group}</p>
             </Col>
-            <Col xs={6} md={3} className="border-end">
-              <small className="text-muted">Ward Number</small>
+            <Col xs={6} md={3} >
+              <p className="text-muted">Ward Number</p>
               <p className="fw-bold m-0">{selectedPatient.ward_no}</p>
             </Col>
-            <Col xs={6} md={3} className="border-end mt-3 mt-md-0">
-              <small className="text-muted">Admission Date</small>
+            <Col xs={6} md={3} className=" mt-3 mt-md-0">
+              <p className="text-muted">Admission Date</p>
               <p className="fw-bold m-0">{new Date(selectedPatient.created_at).toLocaleDateString('en-IN', {day: '2-digit',month: '2-digit',year: 'numeric',})}</p>
             </Col>
             <Col xs={6} md={3} className="mt-3 mt-md-0">
-              <small className="text-muted">Diagnosis</small>
+              <p className="text-muted text-break">Diagnosis</p>
               <p className="fw-bold m-0 ">{selectedPatient.diagnosis}</p>
             </Col>
           </Row>
@@ -335,26 +337,26 @@ const RecordLab = () => {
               children: (
                 <Row className="mt-4 g-0">
                  
-                  {activeTab === "vitals" &&
+                  {tab === "vitals" &&
                   <doctors.Provider value={{ selectedPatient}}>
                     <DailyVital  />
                   </doctors.Provider> }
-                  {activeTab === "lab" && <doctors.Provider value={{selectedPatient}}>
+                  {tab === "lab" && <doctors.Provider value={{selectedPatient}}>
                   <LabResult transformData={transformData} />
                   </doctors.Provider>}
-                  {activeTab === "prescription" &&
+                  {tab === "prescription" &&
                   <doctors.Provider value={{ selectedPatient}}>
                     <RecordPrescription />
                   </doctors.Provider>}
-                  {activeTab === "Imaging" &&
+                  {tab === "Imaging" &&
                   <doctors.Provider value={{selectedPatient}}>
                    <RecordImaging transformData={transformData} />
                    </doctors.Provider>}
-                  {activeTab === "Records" &&
+                  {tab === "Records" &&
                     <doctors.Provider value={{selectedPatient}}>
                       <AllRecord activeTab={activeTab}  />
                     </doctors.Provider> }
-                  {activeTab === "services" &&
+                  {tab === "services" &&
                   <doctors.Provider value={{selectedPatient}}>
                     <Service />
                     </doctors.Provider>

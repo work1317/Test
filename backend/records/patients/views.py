@@ -129,7 +129,7 @@ class GetPatientAPIView(APIView):
             total_outpatients = models.Patient.objects.filter(appointment_type='outpatient').count()
             total_casualty = models.Patient.objects.filter(appointment_type='casualty').count()
             total_patients = models.Patient.objects.all().count()
-            casualty = Appointment.objects.filter(appointment_type='casuality').count()
+            casualty = Patient.objects.filter(appointment_type='casuality').count()
             progress = ProgressNote.objects.filter(status="critical").count()
             critical_cases = casualty+progress
             

@@ -3,10 +3,43 @@ import ServiceStyle from '../css/Service.module.css'
 import { Stethoscope } from 'lucide-react';
 import { doctors } from './RecordLab';
 import api from "../../utils/axiosInstance";
+import { Button } from "react-bootstrap";
+import { Icon } from "@iconify/react";
  
 function Service() {
        const { selectedPatient}  =  useContext(doctors)
        const [serStore, setSerStore] = useState([])
+
+       const handleDownload = async (report) => {
+  try {
+    if (!report) {
+      console.error("No report selected");
+      return;
+    }
+ 
+    const response = await api.get(report, {
+      responseType: "blob",
+    });
+ 
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+ 
+    const link = document.createElement("a");
+    link.href = url;
+ 
+    // Extract filename from report URL/path
+    const filename = report.split("/").pop() || "report.pdf";
+ 
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+ 
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error downloading the report:", error);
+  }
+};
  
  
        useEffect(() => {
@@ -55,7 +88,23 @@ function Service() {
                         <div>
                             <p className={`p-1 me-5 mt-4 pe-2 ps-2 ${ServiceStyle.completed}`}>Completed</p>
                         </div>
+                       
                     </div>
+                     <div className={`d-flex flex-row justify-content-between ${ServiceStyle.file}`}>
+                   {items.report ? items.report.split("/").pop() : "No file available"}
+                  <Button
+                    variant="link"
+                    className="p-0"
+                    onClick={() => handleDownload(items.report)}
+                  >
+                    <Icon
+                      icon="material-symbols:download"
+                      width="24"
+                      height="24"
+                      color="#002072"
+                    />
+                  </Button>
+                </div>
                 </div>
         </div>))}
         </>

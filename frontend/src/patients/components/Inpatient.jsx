@@ -8,7 +8,7 @@ import Prescription from "./Prescription";
 import InEdit from "./Inedit"
 import Vitals from "./Vitals";
 
-export default function Inpatient({patient}) {
+export default function Inpatient({patient, fetchPatients}) {
   const [activeTab, setActiveTab] = useState("vitals"); 
   const [show, setShow] = useState(false);
   const [editDisabled, setEditDisabled] = useState(false);
@@ -30,6 +30,8 @@ export default function Inpatient({patient}) {
     checkEditStatus();
     const interval = setInterval(checkEditStatus, 60000); 
     return () => clearInterval(interval);
+
+  
   }, [patient.admissionTime]);
 
 
@@ -39,12 +41,13 @@ export default function Inpatient({patient}) {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2 className="patient-name">{patient.patient_name}</h2>
           <div className="d-flex align-items-center">
-            <span className="status-badge instable">Stable</span>
+            <span className="status-badge instable">{patient.status}</span>
             <button className="edit-btn ms-2">
             <Edit size={18} disabled={editDisabled} onClick={handleShow}/>
                   <InEdit
         show={show}
         handleClose={handleClose}
+        fetchPatients={fetchPatients}
         patientId={patient.patient_id}
       />              {editDisabled && <small className="text-danger ms-2"></small>}
             </button>

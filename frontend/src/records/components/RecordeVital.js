@@ -5,9 +5,41 @@ import { Heart } from 'lucide-react';
 import { doctors } from './RecordLab';
 import { useState, useEffect, useContext } from 'react';
 import { vitalDatas } from './DailyVital';
+import { Button } from "react-bootstrap";
+import { Icon } from "@iconify/react";
+import api from '../../utils/axiosInstance';
 const RecordeVital= ({ show, handleClose, store}) => {
     const { selectedPatient, patients}  =  useContext(doctors)
     console.log("selected patient : ", selectedPatient)
+
+
+    const handleDownload = async () => {
+  try {
+    if (!store.report) {
+      console.error("No report selected");
+      return;
+    }
+ 
+    const response = await api.get(`${store.report}/`, {
+      responseType: 'blob',
+    });
+    console.log("pdf download",response)
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+ 
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', store.report);
+    document.body.appendChild(link);
+    link.click();
+ 
+    // Clean up
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error downloading the report:', error);
+  }
+};
    
   return (
     <div>
@@ -82,6 +114,11 @@ const RecordeVital= ({ show, handleClose, store}) => {
                             <h6>{store.cvs}</h6>
                         </div>
                     </div>
+                    <div className={`d-flex flex-row justify-content-between mt-2 ${RecordStyle.file}`}>
+                    {store.report ? store.report.split("/").pop() : "No file available"}
+                    <Button variant="link" className="p-0" onClick={handleDownload}>
+       <Icon icon="material-symbols:download" width="24" height="24" color="#002072"/></Button>
+                </div>
                 </div>
           </div>
         </Modal.Body>

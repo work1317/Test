@@ -4,7 +4,7 @@ import { notification } from 'antd';
 import 'antd/dist/reset.css'; // Required for Ant Design 5+
 import styles from '../css/PendingApprovals.module.css';
 
-const PendingApprovals = () => {
+const Discount = () => {
   const [approvals, setApprovals] = useState([
     { id: 1, PatientName: "priyanka", PatientID: 'P001', DiscountAmount: '25%', status: 'Pending' }
   ]);
@@ -82,4 +82,4 @@ const PendingApprovals = () => {
   );
 };
 
-export default PendingApprovals;
+export default Discount;

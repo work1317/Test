@@ -9,11 +9,11 @@ import axios from "axios"; // Add axios for API call
 import api from "../../utils/axiosInstance";
 import { useNotifications } from "../../dashboard/components/NotificationContext";
 
- export default function InvoiceGenerator() {
-  const {fetchNotifications, onNotificationClick} = useNotifications()
+export default function InvoiceGenerator() {
+  const { fetchNotifications, onNotificationClick } = useNotifications();
   const [paymentMethod, setPaymentMethod] = useState("");
   const [dueOnReceipt, setDueOnReceipt] = useState("");
-  const[note,setNote]=useState("");
+  const [note, setNote] = useState("");
   const [show, setShow] = useState(true);
   const [formData, setFormData] = useState({
     service: "",
@@ -39,85 +39,118 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
   const [invoiceData, setInvoiceData] = useState(null); // State for patient data
 
   // Fetch patient data when   changes
+  // useEffect(() => {
+  //   if (patientId) {
+  //     api
+  //       .get(
+  //         `invoice/create-invoice/?patient_id=${patientId}`
+  //       )
+  //       .then((response) => {
+  //         console.log("get patient details", response);
+  //         setPatientData(response.data.data); // Set the patient data on success
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching patient data:", error);
+  //         setPatientData(null); // Clear data if not found
+  //       });
+  //   } else {
+  //     setPatientData(null); // Reset if no patient ID is entered
+  //   }
+  // }, [patientId]);
+
   useEffect(() => {
     if (patientId) {
       api
-        .get(
-          `invoice/create-invoice/?patient_id=${patientId}`
-        )
+        .get(`invoice/create-invoice/?patient_id=${patientId}`)
         .then((response) => {
           console.log("get patient details", response);
-          setPatientData(response.data.data); // Set the patient data on success
+          setPatientData(response.data.data);
         })
         .catch((error) => {
           console.error("Error fetching patient data:", error);
-          setPatientData(null); // Clear data if not found
+          setPatientData(null);
         });
     } else {
-      setPatientData(null); // Reset if no patient ID is entered
+      setPatientData(null);
+
+      // Optional: Reset other related fields
+      setFormData({ service: "", days: "", amount: "" });
+      setStore([]);
+      setInvestigationDates({ from: "", to: "" });
+      setInvestigationCharges(0);
+      setPharmacyDates({ from: "", to: "" });
+      setPharmacyCharges(0);
+      setConsultationCharges({ visits: 0, amountPerVisit: 0 });
+      setConcession(0);
+      setDueOnReceipt("");
+      setIsPaymentMethodDisabled(false);
+      setPaymentMethod("");
+      setNote("");
     }
   }, [patientId]);
-    const [isPaymentMethodDisabled, setIsPaymentMethodDisabled] = useState(false);
+
+  const [isPaymentMethodDisabled, setIsPaymentMethodDisabled] = useState(false);
 
   const handlePaymentTermsChange = (e) => {
     const value = e.target.value;
     // Disable Payment Method if "Yes" is selected
-    setIsPaymentMethodDisabled(value === 'yes');
+    setIsPaymentMethodDisabled(value === "yes");
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const payload = {
-    patient: patientId,
-    due_on_receipt: dueOnReceipt,
-    payment_method: paymentMethod,
-    notes: note,
-    concession: concession.toFixed(2),
-    service_charges: store.map((item) => ({
-      service_name: item.service,
-      days: Number(item.days),
-      amount: Number(item.amount).toFixed(2),
-    })),
-    investigation_charges: {
-      from_date: investigationDates.from,
-      to_date: investigationDates.to,
-      amount: Number(investigationCharges).toFixed(2),
-    },
-    pharmacy_charges: {
-      from_date: pharmacyDates.from,
-      to_date: pharmacyDates.to,
-      amount: Number(pharmacyCharges).toFixed(2),
-    },
-    consultation_charges: {
-      no_of_visits: consultationCharges.visits,
-      amount_per_visit: Number(consultationCharges.amountPerVisit).toFixed(2),
-    },
+    const payload = {
+      patient: patientId,
+      due_on_receipt: dueOnReceipt,
+      payment_method: paymentMethod,
+      notes: note,
+      concession: concession.toFixed(2),
+      service_charges: store.map((item) => ({
+        service_name: item.service,
+        days: Number(item.days),
+        amount: Number(item.amount).toFixed(2),
+      })),
+      investigation_charges: {
+        from_date: investigationDates.from,
+        to_date: investigationDates.to,
+        amount: Number(investigationCharges).toFixed(2),
+      },
+      pharmacy_charges: {
+        from_date: pharmacyDates.from,
+        to_date: pharmacyDates.to,
+        amount: Number(pharmacyCharges).toFixed(2),
+      },
+      consultation_charges: {
+        no_of_visits: consultationCharges.visits,
+        amount_per_visit: Number(consultationCharges.amountPerVisit).toFixed(2),
+      },
+    };
+
+    try {
+      const response = await api.post("invoice/create-invoice/", payload);
+      await fetchNotifications();
+      await onNotificationClick();
+
+      const invoice = response.data.data; // Use the response data directly
+      setInvoiceData(invoice); // Update invoiceData state
+      setPatientId(invoice?.invoice?.patient || "");
+      // Update patientId state safely
+
+      alert(response.data?.message || "Invoice created successfully!");
+
+      setShowPrintModal(false); // Open print modal
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to create invoice. Please try again.";
+      alert(errorMessage);
+      console.error(
+        "Invoice creation error:",
+        error.response?.data || error.message
+      );
+    }
   };
-
-  try {
-    const response = await api.post(
-      "invoice/create-invoice/",
-      payload
-    );
-    await fetchNotifications()
-    await onNotificationClick()
-
-    const invoice = response.data.data;  // Use the response data directly
-    setInvoiceData(invoice);             // Update invoiceData state
-    setPatientId(invoice?.invoice?.patient || "");  // Update patientId state safely
-
-    alert(response.data?.message || "Invoice created successfully!");
-
-    setShowPrintModal(false);  // Open print modal
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.message || "Failed to create invoice. Please try again.";
-    alert(errorMessage);
-    console.error("Invoice creation error:", error.response?.data || error.message);
-  }
-};
-
 
   // Handle print modal open and close
   const handlePrintOpen = () => {
@@ -125,8 +158,7 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
     console.log("click");
   };
   const handlePrintClose = () => {
-    setShowPrintModal(false)
-
+    setShowPrintModal(false);
   };
 
   const handlerShow = () => setShow(!show);
@@ -197,15 +229,14 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
                 <Icon icon="material-symbols-light:print-outline-rounded" />{" "}
                 Print
               </button>
-             {showPrintModal && invoiceData && (
-  <InvoicePrint
-    show={showPrintModal}
-    handlePrintClose={() => setShowPrintModal(false)}
-    invoiceData={invoiceData}                     // pass full invoice data
-    patientId={invoiceData.invoice?.patient || ""} // pass patientId safely
-  />
-)}
-
+              {showPrintModal && invoiceData && (
+                <InvoicePrint
+                  show={showPrintModal}
+                  handlePrintClose={() => setShowPrintModal(false)}
+                  invoiceData={invoiceData} // pass full invoice data
+                  patientId={invoiceData.invoice?.patient || ""} // pass patientId safely
+                />
+              )}
             </div>
           </div>
 
@@ -217,14 +248,45 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
                 <Card.Body>
                   <h5>Patient Details</h5>
                   <Row className="mb-2">
-                    <Col>
+                    {/* <Col>
                       <Form.Label>Patient Id</Form.Label>
                       <Form.Control
                         placeholder="Enter Patient ID"
                         value={patientId}
                         onChange={(e) => setPatientId(e.target.value)} // Update patient ID
                       />
+                    </Col> */}
+
+                    <Col>
+                      <Form.Label>Patient Id</Form.Label>
+                      <Form.Control
+                        placeholder="Enter Patient ID"
+                        value={patientId}
+                        onChange={(e) => {
+                          const newId = e.target.value;
+                          setPatientId(newId);
+
+                          // Reset all related form states
+                          setPatientData(null);
+                          setFormData({ service: "", days: "", amount: "" });
+                          setStore([]);
+                          setInvestigationDates({ from: "", to: "" });
+                          setInvestigationCharges(0);
+                          setPharmacyDates({ from: "", to: "" });
+                          setPharmacyCharges(0);
+                          setConsultationCharges({
+                            visits: 0,
+                            amountPerVisit: 0,
+                          });
+                          setConcession(0);
+                          setDueOnReceipt("");
+                          setIsPaymentMethodDisabled(false);
+                          setPaymentMethod("");
+                          setNote("");
+                        }}
+                      />
                     </Col>
+
                     <Col>
                       <Form.Label>Patient Name</Form.Label>
                       <Form.Control
@@ -280,9 +342,9 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
                       />
                     </Col>
                     <Col>
-                      <Form.Label>Room Type</Form.Label>
+                      <Form.Label>Room Number</Form.Label>
                       <Form.Control
-                        placeholder="Room Type"
+                        placeholder="Room Number"
                         value={patientData?.ward || ""}
                         readOnly
                       />
@@ -482,7 +544,8 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
                   </p>
                   <Row>
                     <Col>Name:{patientData?.patient_name || ""} </Col>
-                    <Col>Age/Sex: {patientData?.age}</Col>
+                    {/* <Col>Age/Sex: {patientData?.age}</Col> */}
+                    <Col> Age/Sex: {patientData?.age && patientData?.gender ? ( <> {patientData.age} / {patientData.gender}</> ) : null} </Col>
                   </Row>
                   <Row>
                     <Col>Patient ID: {patientData?.patient_id || ""}</Col>
@@ -535,9 +598,7 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
                     <Col>
                       Consultation Charges ({consultationCharges.visits} visits)
                     </Col>
-                    <Col>
-                    {/* {consultationCharges.visits} */}
-                    </Col>
+                    <Col>{/* {consultationCharges.visits} */}</Col>
                     <Col>
                       {(
                         consultationCharges.visits *
@@ -552,6 +613,7 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
                     <span>{calculateTotal()}</span>
                   </div>
                   {/* Concession Input */}
+                  <h6 className="mt-1">Concession</h6>
                   <Form.Control
                     type="number"
                     placeholder="Concession"
@@ -567,75 +629,83 @@ import { useNotifications } from "../../dashboard/components/NotificationContext
               </Card>
             </Col>
             <Card className={styles.paymentCard}>
-      <Card.Body>
-        <Row>
-          {/* Left Section */}
-          <Col md={6}>
-            <div className={styles.sectionHeader}>
-              <Icon
-                icon="fluent:payment-28-regular"
-                width="28px"
-                height="28px"
-                className={styles.headerIcon}
-              />
-              <span>Payment Information</span>
-            </div>
+              <Card.Body>
+                <Row>
+                  {/* Left Section */}
+                  <Col md={6}>
+                    <div className={styles.sectionHeader}>
+                      <Icon
+                        icon="fluent:payment-28-regular"
+                        width="28px"
+                        height="28px"
+                        className={styles.headerIcon}
+                      />
+                      <span>Payment Information</span>
+                    </div>
 
-            <Form.Group className="mb-3">
-                    <Form.Label className={styles.formLabel}>Payment Terms</Form.Label>
-                    <Form.Select
-                      className={styles.formSelect}
-                      value={dueOnReceipt}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDueOnReceipt(value);
-                        setIsPaymentMethodDisabled(value === "yes");  // disable Payment Method if 'yes'
-                      }}
-                    >
-                      <option value="">Due on Receipt</option>
-                      <option value="yes">Yes</option>
-                      <option value="no">No</option>
-                    </Form.Select>
-          </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Label className={styles.formLabel}>
+                        Payment Terms
+                      </Form.Label>
+                      <Form.Select
+                        className={styles.formSelect}
+                        value={dueOnReceipt}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setDueOnReceipt(value);
+                          setIsPaymentMethodDisabled(value === "yes"); // disable Payment Method if 'yes'
+                        }}
+                      >
+                        <option value="">Due on Receipt</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </Form.Select>
+                    </Form.Group>
 
+                    <Form.Group>
+                      <Form.Label className={styles.formLabel}>
+                        Payment Method
+                      </Form.Label>
+                      <Form.Select
+                        className={styles.formSelect}
+                        disabled={isPaymentMethodDisabled}
+                        value={paymentMethod}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      >
+                        <option value="">Select Payment Method</option>
+                        <option value="cash">Cash</option>
+                        <option value="upi">UPI</option>
+                        <option value="debit/credit">Debit/Credit</option>
+                        <option value="multiple (cash+card), (cash+upi)">
+                          Multiple (Cash+Card), (Cash+UPI)
+                        </option>
+                        <option value="insurance">Insurance</option>
+                        <option value="government schemes">
+                          Government Schemes
+                        </option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
 
-          <Form.Group>
-          <Form.Label className={styles.formLabel}>Payment Method</Form.Label>
-          <Form.Select
-            className={styles.formSelect}
-            disabled={isPaymentMethodDisabled}
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          >
-              <option value="">Select Payment Method</option>
-              <option value="cash">Cash</option>
-              <option value="upi">UPI</option>
-              <option value="debit/credit">Debit/Credit</option>
-              <option value="multiple (cash+card), (cash+upi)">Multiple (Cash+Card), (Cash+UPI)</option>
-              <option value="insurance">Insurance</option>
-              <option value="government schemes">Government Schemes</option>
-            </Form.Select>
-       </Form.Group>
-
-          </Col>
-
-          {/* Notes in Payment */}
-          <Col md={6}>
-            <Form.Group>
-              <Form.Label className={styles.formLabel}>Notes</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={7}
-                placeholder="Add any additional or payment instructions"
-                className={styles.notesArea}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
+                  {/* Notes in Payment */}
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label className={styles.formLabel}>
+                        Notes
+                      </Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={7}
+                        placeholder="Add any additional or payment instructions"
+                        className={styles.notesArea}
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
           </Row>
         </Container>
       ) : (
