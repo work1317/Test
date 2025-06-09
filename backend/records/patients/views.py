@@ -124,14 +124,26 @@ class GetPatientAPIView(APIView):
 
             if doctor_name:
                 patients = patients.filter(doctor_name__icontains=doctor_name)  
+            
 
             total_inpatients = models.Patient.objects.filter(appointment_type='inpatient').count()
             total_outpatients = models.Patient.objects.filter(appointment_type='outpatient').count()
             total_casualty = models.Patient.objects.filter(appointment_type='casualty').count()
             total_patients = models.Patient.objects.all().count()
-            casualty = Appointment.objects.filter(appointment_type='casuality').count()
+            casualty = Patient.objects.filter(appointment_type='casuality').count()
             progress = ProgressNote.objects.filter(status="critical").count()
             critical_cases = casualty+progress
+
+            # # Get status for a specific patient
+            # patient_status = None
+            # if patient_id:
+            #     try:
+            #         patient_obj = models.Patient.objects.get(patient_id=patient_id)
+            #         latest_note = patient_obj.progress_notes.order_by('-created_at').first()
+            #         if latest_note:
+            #             patient_status = latest_note.status
+            #     except models.Patient.DoesNotExist:
+            #         pass
             
 
 
@@ -150,7 +162,7 @@ class GetPatientAPIView(APIView):
                         "outpatients": total_outpatients,
                         "casualty": total_casualty,
                         "total_patients":total_patients,
-                        "critical_cases":critical_cases
+                        "critical_cases":critical_cases,
                     }
                 }
         except Exception as e:
@@ -169,8 +181,10 @@ class PatientUpdateAPIView(APIView):
         }
         try:
             patient = models.Patient.objects.get(patient_id=patient_id)
+            status = patient.progress_notes.status
             patient_serializer = serializers.PatientSerializer(patient)
             context['data'] = patient_serializer.data
+            context['data']['status'] = status
 
         except models.Patient.DoesNotExist:
             context['success'] = 0

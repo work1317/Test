@@ -28,6 +28,7 @@ function Inedit({ show, handleClose, patientId }) {
           console.log("GET response:", res);
           if (res.data.success === 1) {
             const data = res.data.data;
+            console.log("Status",res.data.status)
             setFormValues({
               patient_name: data.patient_name || "",
               doctor_name: data.doctor_name || "",
@@ -73,7 +74,7 @@ function Inedit({ show, handleClose, patientId }) {
       ward_no: formValues.ward_no,
       age: formValues.age,
       gender: formValues.gender,
-      phno: formValues.phno,
+      phno: formValues.phno
     };
 
     api
@@ -81,7 +82,6 @@ function Inedit({ show, handleClose, patientId }) {
       .then((res) => {
         console.log("PUT response:", res);
         if (res.data.success === 1) {
-          console.log(res.data.message)
           alert(res.data.message);
           handleClose();
         } else {
