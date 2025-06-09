@@ -56,6 +56,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
         handleClose();
 
         // Clear form after close
+        alert(response.data.message)
         setTimeout(() => {
           setFormData({
             patient_name: "", age: "", gender: "", email: "", doctor: "", appointment_id: "", patient: "",

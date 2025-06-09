@@ -11,9 +11,20 @@ from django.db import transaction
 from invoice.models import Invoice,InvoiceServiceCharge
 from django.apps import apps
 from p_invoice.models import PharmacyInvoice
+from django.utils.timezone import now
+import threading
+from threading import local
 
 # Write the signals over here
 
+_user_storage = threading.local()
+ 
+def set_current_user(user):
+    _user_storage.user = user
+ 
+def get_current_user():
+    return getattr(_user_storage, 'user', None)
+ 
 
 
 @receiver(post_save, sender=Patient)
@@ -193,4 +204,48 @@ def create_invoice_notifications(sender, instance, created, **kwargs):
         transaction.on_commit(notify)
 
  
+# @receiver(post_save, sender=DoctorAvailability)
+# def notify_doctor_creation(sender, instance, created, **kwargs):
+
+#     if created:
+#         user = get_current_user()
+#         username = user.username if user else "Unknown"
+
+#         Notification.objects.create(
+#             title = f"New Doctor Added:{instance.d_name}",
+#             message=(
+#                 f"Doctor ID: {instance.d_id}\n"
+#                 f"Doctor Name : {instance.d_name}\n"
+#                 f"Added by:{username}\n"
+#                 f"Date:{timezone.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+#                 f"Action required: Approve or Reject."
+#             ),
+#             notification_type = "doctor",
+#             doctor = instance,
+#             entered_by=user
+#         )
+
+
+
+@receiver(post_save, sender=DoctorAvailability)
+def doctor_created_notification(sender, instance, created, **kwargs):
+    if created:
+        user = get_current_user()
+        print("Fetched User in Signal:", user)
+        username = user.username if user else "Unknown"
+        created_time = now().strftime("%Y-%m-%d %H:%M:%S")
  
+        message = (
+            f"Doctor ID: {instance.d_id}\n"
+            f"Doctor Name: {instance.d_name}\n"
+            f"Added by: {username}\n"
+            f"Date: {created_time}\n"
+            f"Action required: Approve or Reject."
+        )
+ 
+        Notification.objects.create(
+            title=f"New Doctor Added: {instance.d_name}",
+            message=message,
+            notification_type="doctor",
+            doctor=instance
+        )

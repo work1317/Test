@@ -8,6 +8,7 @@ export const useNotifications = () => useContext(NotificationContexts);
 function NotificationContext({ children }) {
   const [read, setRead] = useState(0);
   const [showDot, setShowDot] = useState(false);
+  const [getdoctoradd,setgetdoctoradd]=useState(false);
 
   
     const fetchNotifications = async () => {
@@ -23,15 +24,17 @@ function NotificationContext({ children }) {
         console.error("Error fetching notifications:", error);
       }
     };
+  
 
 
+    
     const onNotificationClick = () => {
     setShowDot(true); 
    
   };
  
   return (
-    <NotificationContexts.Provider value={{ read, setRead, fetchNotifications, onNotificationClick, showDot, setShowDot }}>
+    <NotificationContexts.Provider value={{ read, setRead, fetchNotifications, onNotificationClick, showDot, setShowDot,getdoctoradd, setgetdoctoradd,  }}>
       {children}
     </NotificationContexts.Provider>
   );

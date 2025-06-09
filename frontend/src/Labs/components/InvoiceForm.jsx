@@ -4,13 +4,30 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { forms } from './Labtest';
 import { LuCircleX } from "react-icons/lu";
 import styles from '../css/Invoice.module.css';
+import { Icon } from "@iconify/react";
 
-function InvoiceForm({ handlerClose, saveButtons }) {
+function InvoiceForm({ handlerClose, saveButtons, patients }) {
   const { formsData1, setFormsData1 } = useContext(forms);
 
   const handlerForms = (e) => {
-    setFormsData1({ ...formsData1, [e.target.name]: e.target.value });
-  };
+  const { name, value } = e.target;
+
+  // Start with spreading the previous data
+  const updatedData = { ...formsData1, [name]: value };
+
+  if (name === "patient_id") {
+    const selectedPatient = patients.find(
+      (p) => p.patient_id?.toLowerCase() === value.toLowerCase()
+    );
+
+    if (selectedPatient) {
+      updatedData.patient_name = selectedPatient.patient_name;
+    }
+  }
+
+  setFormsData1(updatedData);
+};
+
 
   return (
     <div className={styles.modalOverlay}>
@@ -18,7 +35,7 @@ function InvoiceForm({ handlerClose, saveButtons }) {
         <div className={styles.model}>
           <h2>Add New Invoice</h2>
           <div className={styles.butMod} onClick={handlerClose}>
-            <LuCircleX />
+               <Icon icon="carbon:close-outline" height="24" width="24" color="#9A9A9A"/>
           </div>
         </div>
 
@@ -26,13 +43,28 @@ function InvoiceForm({ handlerClose, saveButtons }) {
           <Form>
             <div className="row">
               <div className="col-md-6 mb-3">
+              <Form.Group>
+               <Form.Label className={`${styles.label}`}>Patient ID:</Form.Label>
+                              <Form.Control
+                                className={styles.formsCon}
+                                type="text"
+                                name="patient_id"
+                                value={formsData1.patient_id || ''}
+                                onChange={handlerForms}
+                                placeholder="Enter your ID"
+                              />
+                            </Form.Group>
+                
+              </div>
+
+              <div className="col-md-6 mb-3">
                 <Form.Label>Patient Name</Form.Label>
                 <Form.Control
                   className={styles.formsCon}
                   type="text"
-                  name="patient"
+                  name="patient_name"
                   placeholder="Patient Name"
-                  value={formsData1.patient}
+                  value={formsData1.patient_name || ""}
                   onChange={handlerForms}
                   required
                 />

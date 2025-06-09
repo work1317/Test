@@ -5,7 +5,7 @@ import { FaDownload, FaMicroscope } from "react-icons/fa";
 import { LuCircleX } from "react-icons/lu";
 import { forms } from "./Labtest";
 import api from "../../utils/axiosInstance";
-
+import { Icon } from '@iconify/react';
 function LabViewresult({ handlerClose, selectedResult, selectForm }) {
 
   const handleDownload = async () => {
@@ -43,7 +43,7 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
           >
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex  align-items-center">
-                <div className="rounded-circle bg-light p-2 me-3">
+                <div className="rounded-circle  p-2 me-3">
                   <div
                     style={{
                       width: "64px",
@@ -55,7 +55,7 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
                       alignItems: "center",
                     }}
                   >
-                    <FaMicroscope size={50} color="#3f51b5" />
+                  <Icon width="24" height="24" color="#262872" icon="uit:microscope" />
                   </div>
                 </div>
                 <div>
@@ -66,7 +66,7 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
                 </div>
               </div>
               <div className={styles.modCos} onClick={handlerClose}>
-                <LuCircleX id="but-mod" />
+               <Icon icon="carbon:close-outline" height="24" width="24" color="#9A9A9A"/>
               </div>
             </div>
           </div>
@@ -112,8 +112,7 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
                   <small className="text-muted">(2.4 MB)</small>
                 </div>
                 <Button variant="link" className="p-0" onClick={handleDownload}>
-                  <FaDownload size={20} />
-                </Button>
+       <Icon icon="material-symbols:download" width="24" height="24" color="#002072"/>                </Button>
               </div>
             </Col>
           </Row>

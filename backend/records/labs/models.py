@@ -107,9 +107,9 @@ class LabTest(models.Model):
 class LabInvoice(models.Model):
  
     class StatusChoices(models.TextChoices):
-        PENDING =  'pending', 'Pending'
+        PENDING =  'Pending', 'Pending'
         IN_PROGRESS = 'in Progress', 'In Progress'
-        COMPLETED =  'completed', 'Completed'
+        COMPLETED =  'Completed', 'Completed'
  
     patient = models.ForeignKey(
     Patient,

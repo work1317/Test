@@ -44,19 +44,52 @@ class LabTestSerializer(serializers.ModelSerializer):
             raise DRFValidationError(e.message_dict)
         return attrs
 
+# class LabInvoiceSerializer(serializers.ModelSerializer):
+#     # Override patient field to show patient_name instead of ID
+#     patient = serializers.CharField(source='patient.patient_name', read_only=True)
+
+#     class Meta:
+#         model = LabInvoice
+#         fields = '__all__'
+
+#     def validate(self, attrs):
+#         instance = LabInvoice(**attrs)
+#         try:
+#             instance.clean()
+#         except DjangoValidationError as e:
+#             raise DRFValidationError(e.message_dict)
+#         return attrs
+ 
 class LabInvoiceSerializer(serializers.ModelSerializer):
-    # Override patient field to show patient_name instead of ID
-    patient = serializers.CharField(source='patient.patient_name', read_only=True)
+    # Accept `patient_id` in the request
+    patient_id = serializers.CharField(write_only=True)
+    # Return patient name in the response
+    patient_name = serializers.CharField(source='patient.patient_name', read_only=True)
 
     class Meta:
         model = LabInvoice
-        fields = '__all__'
+        fields = [
+            'id', 'patient_id', 'patient_name',
+            'testname', 'amount', 'status', 'date'
+        ]
+
+    def validate_patient_id(self, value):
+        try:
+            Patient.objects.get(patient_id=value)
+        except Patient.DoesNotExist:
+            raise DRFValidationError("Patient with this ID does not exist.")
+        return value
+
+    def create(self, validated_data):
+        patient_id = validated_data.pop('patient_id')
+        patient = Patient.objects.get(patient_id=patient_id)
+        return LabInvoice.objects.create(patient=patient, **validated_data)
 
     def validate(self, attrs):
-        instance = LabInvoice(**attrs)
+        # Temporarily create an instance to run model's clean method
+        temp_invoice = LabInvoice(**attrs)
         try:
-            instance.clean()
+            temp_invoice.clean()
         except DjangoValidationError as e:
             raise DRFValidationError(e.message_dict)
         return attrs
- 

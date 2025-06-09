@@ -59,7 +59,7 @@ function Labtest() {
 
 
   const [formsData1, setFormsData1] = useState({
-    patient: "",
+    patient_name: "",
     testname: "",
     amount: "",
     status: "Pending",
@@ -203,14 +203,17 @@ function Labtest() {
 
     const testDate = new Date(formsData.test_date);
     if (testDate < today) {
-      alert("Request date cannot be in the past.");
+      alert("Test date cannot be in the past.");
       return;
     }
 
     if (!formsData.test_type) {
       alert("Please Enter your test details ")
     }
-
+  if(formsData.test_date === ""){
+      alert("Please enter the Test Date")
+      return
+    }
     try {
       const formData = new FormData();
       Object.keys(formsData).forEach((key) => {
@@ -243,7 +246,7 @@ function Labtest() {
         summary: "",
         upload: null,
       });
-
+      alert("Lab Test Saved Successfully")
       handlerClose();
     } catch (error) {
       alert(
@@ -276,7 +279,7 @@ function Labtest() {
 
   // Validation for required fields
   if (
-    formsData1.patient.trim() === "" ||
+    formsData1.patient_name.trim() === "" ||
     formsData1.testname.trim() === "" ||
     formsData1.amount.trim() === "" ||
     formsData1.status.trim() === "" ||
@@ -309,7 +312,7 @@ function Labtest() {
       status: "",
       date: "",
     });
-
+    alert("successFully Added!")
     handlerClose();
   } catch (error) {
     alert("Patient does not exist.");
@@ -339,7 +342,7 @@ function Labtest() {
                   }`}
                 onClick={() => setPage("invoice")}
               >
-                Invoice
+                Invoices
               </div>
             </div>
             {page === "labtest" ? (
@@ -416,7 +419,7 @@ function Labtest() {
                     alignItems: "center",
                   }}
                 >
-                  <h3>InVoice</h3>
+                  <h3>Invoices</h3>
                   <button
                     onClick={handlerShows}
                     className={`p-2 ${styles.notebtn}`}
@@ -430,6 +433,7 @@ function Labtest() {
                     <InvoiceForm
                       handlerClose={handlerClose}
                       saveButtons={saveButtons}
+                      patients={patients}
                     />
                   </forms.Provider>
                 )}
@@ -451,7 +455,7 @@ function Labtest() {
                     <tbody className="t-body">
                       {formObj1.map((form, index) => (
                         <tr className="tr" key={index}>
-                          <td id="td">{form.patient}</td>
+                          <td id="td">{form.patient_name}</td>
                           <td id="td">{form.testname}</td>
                           <td id="td">{Number(form.amount).toFixed(2)}</td>
                           <td id="td">{form.date}</td>

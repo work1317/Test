@@ -3,6 +3,7 @@ import styles from "../css/InvoiceViewResult.module.css";
 import { Button, Row, Col } from "react-bootstrap";
 import { FaDownload,FaMicroscope } from "react-icons/fa";
 import { LuCircleX } from "react-icons/lu";
+import { Icon } from '@iconify/react';
 
 function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
   return (
@@ -11,7 +12,7 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
         <div className={styles.modalContent}>
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex  align-items-center">
-              <div className="rounded-circle bg-light p-2 me-3">
+              <div className="rounded-circle  p-2 me-3">
                 <div
                   style={{
                     width: "64px",
@@ -23,7 +24,8 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
                     alignItems: "center",
                   }}
                 >
-                  <FaMicroscope size={32} color="#3f51b5" />
+                                  <Icon width="24" height="24" color="#262872" icon="uit:microscope" />
+                
                 </div>
               </div>
               <div>
@@ -34,7 +36,7 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
               </div>
             </div>
             <div className={styles.modCos} onClick={handlerClose}>
-              <LuCircleX id="but-mod" />
+               <Icon icon="carbon:close-outline" height="24" width="24" color="#9A9A9A"/>
             </div>
           </div>
         
@@ -43,7 +45,7 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
           <Row className="mb-3">
             <Col md={6}>
               <h5>Patient Name</h5>
-              <p>{inSelectForm.patient}</p>
+              <p>{inSelectForm.patient_name}</p>
             </Col>
             <Col md={6}>
               <h5>Test Type</h5>

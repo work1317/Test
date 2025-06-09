@@ -5,6 +5,7 @@ import api from "../../utils/axiosInstance";
 function Inedit({ show, handleClose, patientId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [registrationTime, setRegistrationTime] = useState(null);
   const [formValues, setFormValues] = useState({
     patient_name: "",
     doctor_name: "",
@@ -61,39 +62,83 @@ function Inedit({ show, handleClose, patientId }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
    
 
-    // Only send fields that exist in PatientUpdateSerializer
-    const updatePayload = {
-      patient_name: formValues.patient_name,
-      doctor_name: formValues.doctor_name,
-      appointment_type: formValues.appointment_type,
-      diagnosis: formValues.diagnosis,
-      notes: formValues.notes,
-      ward_no: formValues.ward_no,
-      age: formValues.age,
-      gender: formValues.gender,
-      phno: formValues.phno
-    };
+  //   // Only send fields that exist in PatientUpdateSerializer
+  //   const updatePayload = {
+  //     patient_name: formValues.patient_name,
+  //     doctor_name: formValues.doctor_name,
+  //     appointment_type: formValues.appointment_type,
+  //     diagnosis: formValues.diagnosis,
+  //     notes: formValues.notes,
+  //     ward_no: formValues.ward_no,
+  //     age: formValues.age,
+  //     gender: formValues.gender,
+  //     phno: formValues.phno,
+  //   };
 
-    api
-      .put(`/patients/update/${patientId}/`, updatePayload)
-      .then((res) => {
-        console.log("PUT response:", res);
-        if (res.data.success === 1) {
-          alert(res.data.message);
-          handleClose();
-        } else {
-          setError(res.data.message || "Failed to update.");
-        }
-      })
-      .catch((err) => {
-        console.error("PUT error:", err);
-        setError("Failed to update patient.");
-      })
-      .finally(() => setLoading(false));
+  //   api
+  //     .put(`/patients/update/${patientId}/`, updatePayload)
+  //     .then((res) => {
+  //       console.log("PUT response:", res);
+  //       if (res.data.success === 1) {
+  //         console.log(res.data.message)
+  //         alert(res.data.message);
+  //         handleClose();
+  //       } else {
+  //         setError(res.data.message || "Failed to update.");
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.error("PUT error:", err);
+  //       setError("Failed to update patient.");
+  //     })
+  //     .finally(() => setLoading(false));
+  // };
+  const handleSubmit = (e) => {
+  e.preventDefault();
+ 
+  // Check time difference
+  if (registrationTime) {
+    const now = new Date();
+    const hoursDiff = (now - registrationTime) / (1000 * 60 * 60); // ms to hours
+ 
+    if (hoursDiff > 30) {
+      alert("Updates are not allowed for patients registered more than 30 hours ago.");
+      return;
+    }
+  }
+ 
+  const updatePayload = {
+    patient_name: formValues.patient_name,
+    doctor_name: formValues.doctor_name,
+    appointment_type: formValues.appointment_type,
+    diagnosis: formValues.diagnosis,
+    notes: formValues.notes,
+    ward_no: formValues.ward_no,
+    age: formValues.age,
+    gender: formValues.gender,
+    phno: formValues.phno,
   };
+ 
+  api
+    .put(`/patients/update/${patientId}/`, updatePayload)
+    .then((res) => {
+      console.log("PUT response:", res);
+      if (res.data.success === 1) {
+        alert(res.data.message || "Patient updated successfully.");
+        handleClose();
+      } else {
+        setError(res.data.message || "Failed to update.");
+      }
+    })
+    .catch((err) => {
+      console.error("PUT error:", err);
+      setError("Failed to update patient.");
+    })
+    .finally(() => setLoading(false));
+};
 
   return (
     <Modal show={show} onHide={handleClose} centered size="lg">

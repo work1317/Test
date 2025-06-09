@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import ScheduleAppointments from "../../Appointment/componnets/ScheduleAppointments";
 import { FaLastfmSquare } from "react-icons/fa";
+import { useNotifications } from "../../dashboard/components/NotificationContext";
 
 const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
   const [showUserModal, setShowUserModal] = useState(false)
@@ -52,7 +53,7 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
         </div>
         <hr></hr>
         <div className={`row`}>
-          <div className={`col-md-4`}>
+          <div className={`col-md-6`}>
             <h5>Contact Information</h5>
             <div style={{ color: "#979797" }}>
               <p>
@@ -69,7 +70,7 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
               </p>
             </div>
           </div>
-          <div className={`col-md-8`}>
+          <div className={`col-md-6`}>
             <h5>Availability</h5>
             <div style={{ color: "#979797" }}>
               <p>
@@ -120,16 +121,21 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
             <h5 className="mt-4">Education & Certifications</h5>
             <h5 style={{ color: "#484848" }}>Education</h5>
             <div style={{ color: "#979797" }}>
-            {doctor.d_education_info}
+              {doctor.d_education_info?.split(",").map((item, index) => (
+                <div key={index}>{item.trim()}</div>
+ 
+              ))}
             </div>
           </div>
 
           
           <div className={`col-md-6 mt-5`}>
             <h5  className="mt-3" style={{ color: "#484848" }}>Certifications</h5>
-            <div style={{ color: "#979797" }}>
-              {doctor.d_certifications}
-            </div>
+              <div style={{ color: "#979797" }}>
+                  {doctor.d_certifications?.split(",").map((item, index) => (
+                    <div key={index}>{item.trim()}</div>
+                  ))}
+                </div>
           </div>
         </div>
         <hr></hr>
