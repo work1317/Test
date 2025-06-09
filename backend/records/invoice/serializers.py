@@ -27,6 +27,9 @@ class InvestigationChargeSerializer(serializers.ModelSerializer):
         if data['amount'] < 0:
             raise serializers.ValidationError("Investigation amount must be positive.")
         return data
+    
+    from_date = serializers.DateField(required=False, allow_null=True)
+    to_date = serializers.DateField(required=False, allow_null=True)
 
     class Meta:
         model = InvestigationCharge
@@ -41,6 +44,9 @@ class PharmacyChargeSerializer(serializers.ModelSerializer):
         if data['amount'] < 0:
             raise serializers.ValidationError("Pharmacy amount must be positive.")
         return data
+
+    from_date = serializers.DateField(required=False, allow_null=True)
+    to_date = serializers.DateField(required=False, allow_null=True)
 
     class Meta:
         model = PharmacyCharge

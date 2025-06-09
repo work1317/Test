@@ -157,7 +157,7 @@ class InitialAssessment(models.Model):
     patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
     rating_title = models.CharField(max_length=255, blank=True, null=True)
     relationship_to_feedback = models.CharField(max_length=255, blank=True, null=True)
-    feedback_date = models.DateField(blank=True, null=True)
+    # feedback_date = models.DateField(blank=True, null=True)
     duration_of_experience = models.TextField(blank=True, null=True)
     present_illness = models.TextField(blank=True, null=True)
     past_illness = models.TextField(blank=True, null=True)

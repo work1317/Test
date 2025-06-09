@@ -133,7 +133,7 @@ class InitialAssessmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InitialAssessment
-        fields = ['patient_id', 'rating_title', 'relationship_to_feedback', 'feedback_date','duration_of_experience','present_illness','past_illness','experience_feedback','health_feedback','heart_feedback','stroke_feedback','other_feedback', 'patient']
+        fields = ['patient_id', 'rating_title', 'relationship_to_feedback', 'duration_of_experience','present_illness','past_illness','experience_feedback','health_feedback','heart_feedback','stroke_feedback','other_feedback', 'patient','created_at']
         extra_kwargs = {
             'patient': {'write_only': True}
         }

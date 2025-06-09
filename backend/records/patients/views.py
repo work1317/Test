@@ -181,10 +181,8 @@ class PatientUpdateAPIView(APIView):
         }
         try:
             patient = models.Patient.objects.get(patient_id=patient_id)
-            status = patient.progress_notes.status
             patient_serializer = serializers.PatientSerializer(patient)
             context['data'] = patient_serializer.data
-            context['data']['status'] = status
 
         except models.Patient.DoesNotExist:
             context['success'] = 0

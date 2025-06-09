@@ -36,7 +36,7 @@ class PainAssessmentAdmin(admin.ModelAdmin):
 
 @admin.register(InitialAssessment)
 class InitialAssessmentAdmin(admin.ModelAdmin):
-    list_display = ['patient','rating_title','relationship_to_feedback','feedback_date','duration_of_experience','present_illness','past_illness','experience_feedback','health_feedback','heart_feedback','stroke_feedback','other_feedback','created_at','updated_at']
+    list_display = ['patient','rating_title','relationship_to_feedback','duration_of_experience','present_illness','past_illness','experience_feedback','health_feedback','heart_feedback','stroke_feedback','other_feedback','created_at','updated_at']
 
 @admin.register(CarePlanFeedback)
 class CarePlanFeedbackAdmin(admin.ModelAdmin):

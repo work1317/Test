@@ -26,7 +26,7 @@ class MedicationValidator(serializers.Serializer):
     })
     batch_no = serializers.CharField(required=True,allow_blank=False,max_length=50,error_messages={
         "required": "Batch number is required.",
-        "blank": "Strength cannot be blank.",
+        "blank": "Batch Number cannot be blank.",
     })
     stock_quantity = serializers.IntegerField(required=False, allow_null=True)
     unit_price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
