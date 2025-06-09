@@ -9,7 +9,6 @@ const Outhistory = () => {
     "Migraine History",
     
   ];
-
   return (
     <Container className="history-container">
       <Card className="history-card" size="lg">

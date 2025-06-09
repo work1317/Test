@@ -18,14 +18,8 @@ class PatientUpdateSerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     doctor_name = serializers.CharField(source='doctor.d_name', read_only=True)
     status = serializers.SerializerMethodField()
+
     class Meta:
         model = Patient
         fields = '__all__'
-
-    def get_status(self, obj):
-        try:
-            return obj.progress_notes.status
-        except ProgressNote.DoesNotExist:
-            return "Stable"
-
 

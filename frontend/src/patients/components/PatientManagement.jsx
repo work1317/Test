@@ -32,6 +32,7 @@ function PatientManagement() {
       const { data } = await api.get(
         "/patients/patients/"
       );
+      console.log("get patients",data)
       if (data.success) {
         setPatients(data.data.patients || []);
         setCounts(data.data.total_counts || {});

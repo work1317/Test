@@ -33,6 +33,7 @@ function Inedit({ show, handleClose, patientId, fetchPatients }) {
             const data = res.data.data;
             fetchNotifications();
             onNotificationClick()
+            console.log("Status",res.data.status)
             setFormValues({
               patient_name: data.patient_name || "",
               doctor_name: data.doctor_name || "",

@@ -41,7 +41,7 @@ export default function Inpatient({patient, fetchPatients}) {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2 className="patient-name">{patient.patient_name}</h2>
           <div className="d-flex align-items-center">
-            <span className="status-badge instable">{patient.status}</span>
+            <span className="status-badge instable"> {patient.status} </span>
             <button className="edit-btn ms-2">
             <Edit size={18} disabled={editDisabled} onClick={handleShow}/>
                   <InEdit
