@@ -34,7 +34,7 @@ function Notifications() {
   const [showPatientModal, setShowPatientModal] = useState(false); // ✅ Modal state
   const {userRoles}= useContext(AuthContext)
   const isAdmin=userRoles.includes("Super Admin") 
-  const notificationsPerPage = 15;
+  const notificationsPerPage = 50;
  
   const [pendingApprovals, setPendingApprovals] = useState([]);
   const [allnotifications, setNotifications] = useState([]);

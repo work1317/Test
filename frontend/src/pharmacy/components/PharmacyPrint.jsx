@@ -6,23 +6,29 @@ import logo from "../../assets/images/sitelogo.svg";
 import { Icon } from "@iconify/react";
  
 const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
-  const totalAmount =
-    getinvoice?.items?.reduce(
-      (acc, item) => acc + (parseFloat(item.amount) || 0),
-      0
-    ) || 0;
-  const totalDiscount =
-    getinvoice?.items?.reduce(
-      (acc, item) => acc + (parseFloat(item.discount_amount) || 0),
-      0
-    ) || 0;
-  const totalTax =
-    getinvoice?.items?.reduce(
-      (acc, item) => acc + (parseFloat(item.tax_amount) || 0),
-      0
-    ) || 0;
-  const netAmount = totalAmount - totalDiscount;
-  const paidAmount = parseFloat(getinvoice?.paid_amount || 0);
+  const totalAmount = parseFloat(
+  getinvoice?.items?.reduce(
+    (acc, item) => acc + (parseFloat(item.amount) || 0),
+    0
+  ) || 0
+);
+ 
+const totalDiscount = parseFloat(
+  getinvoice?.items?.reduce(
+    (acc, item) => acc + (parseFloat(item.discount_amount) || 0),
+    0
+  ) || 0
+);
+ 
+const totalTax = parseFloat(
+  getinvoice?.items?.reduce(
+    (acc, item) => acc + (parseFloat(item.tax_amount) || 0),
+    0
+  ) || 0
+);
+ 
+const netAmount = parseFloat(totalAmount - totalDiscount) || 0;
+const paidAmount = parseFloat(getinvoice?.paid_amount || netAmount + totalTax) || 0;
  
   const printRef = useRef();
  
@@ -182,28 +188,28 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                   <th style={headerStyle}>Amount</th>
                 </tr>
               </thead>
-              <tbody>
-                {getinvoice?.items?.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.medication_name}</td>
-                    <td>{item.expiry_date}</td>
-                    <td>{item.mrp}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.amount}</td>
-                  </tr>
-                ))}
-              </tbody>
+        <tbody>
+            {getinvoice?.items?.map((item, index) => (
+              <tr key={index}>
+                <td>{item.medication_name}</td>
+                <td>{item.expiry_date}</td>
+                <td>{(Number(item.mrp) || 0).toFixed(2)}</td>
+                <td>{item.quantity}</td>
+                <td>{(Number(item.amount) || 0).toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
             </Table>
  
-            <div className="text-end pe-4 mt-3">
-              <p>Total Amount: ₹{totalAmount.toFixed(2)}</p>
-              <p>- Discount: ₹{totalDiscount.toFixed(2)}</p>
-              <p>Net Amount: ₹{netAmount.toFixed(2)}</p>
-              <p>+ Tax: ₹{totalTax.toFixed(2)}</p>
-              <p>Paid Amount: ₹{(getinvoice?.paid_amount || 0).toFixed(2)}</p>
-              <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
-              <h5>Total Payable: ₹{(getinvoice?.paid_amount || netAmount + totalTax).toFixed(2)}</h5>
-            </div>
+         <div className="text-end pe-4 mt-3">
+            <p>Total Amount: ₹{(Number(totalAmount) || 0).toFixed(2)}</p>
+            <p>- Discount: ₹{(Number(totalDiscount) || 0).toFixed(2)}</p>
+            <p>Net Amount: ₹{(Number(netAmount) || 0).toFixed(2)}</p>
+            <p>+ Tax: ₹{(Number(totalTax) || 0).toFixed(2)}</p>
+            <p>Paid Amount: ₹{(Number(getinvoice?.paid_amount) || 0).toFixed(2)}</p>
+            <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
+            <h5>Total Payable: ₹{(Number(paidAmount) || 0).toFixed(2)}</h5>
+          </div>
  
             <div
               style={{
