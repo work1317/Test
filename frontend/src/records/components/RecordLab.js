@@ -314,7 +314,7 @@ const RecordLab = () => {
             </Col>
             <Col xs={6} md={3} className="mt-3 mt-md-0">
               <p className="text-muted text-break">Diagnosis</p>
-              <p className="fw-bold m-0 ">{selectedPatient.diagnosis}</p>
+              <p className="fw-bold m-0 text-break ">{selectedPatient.diagnosis}</p>
             </Col>
           </Row>
  
