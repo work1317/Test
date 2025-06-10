@@ -184,7 +184,7 @@ class PharmacyInvoice(models.Model):
         ("Multiple (Cash+Card), (Cash+UPI)", "Multiple (Cash+Card), (Cash+UPI)"),
     ]
     Date = models.DateField(auto_now_add=True)
-    typeof_transaction = models.CharField(max_length=50, choices=TYPE_CHOICES, null=True, blank=True)
+    typeof_transaction = models.CharField(max_length=50, choices=TYPE_CHOICES)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.TextField(max_length=100, blank=True, null=True)
     notification_created = models.BooleanField(default=False)

@@ -420,6 +420,10 @@ const handleBatchChange = async (e, index) => {
     const discountValue = parseFloat(discount || 0);
     const taxValue = parseFloat(tax || 0);
 
+    if(invoiceData.typeof_transaction === ""){
+      alert("Transaction type cannot be blank")
+      return
+    }
     const payload = {
       patient_id: selectedValue === "yes" ? null : patientDetails.patient_id,
       patient_name: patientDetails.patient_name,
@@ -964,7 +968,7 @@ const handleBatchChange = async (e, index) => {
                     }
                     disabled={paymentTerms === "Yes"}
                   >
-                    <option value= "select payment methods">Select Payment Methods</option>
+                    <option value= "">Select Payment Methods</option>
                     <option value="Cash">Cash</option>
                     <option value="Debit/Credit">Debit/Credit</option>
                     <option value="UPI">UPI</option>

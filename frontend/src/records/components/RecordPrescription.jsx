@@ -1,117 +1,116 @@
-import React, { useState,  useContext} from 'react'
-import { Container, Card, Row, Col } from "react-bootstrap";
-import Recordprescription from '../css/RecordPrescription.module.css';
-import api from "../../utils/axiosInstance";
-import { doctors } from './RecordLab';
-import { Button } from "react-bootstrap";
+import React, { useState, useContext, useEffect } from "react";
+import { Container, Card, Row, Col, Button } from "react-bootstrap";
 import { Icon } from "@iconify/react";
+import Recordprescription from "../css/RecordPrescription.module.css";
+import api from "../../utils/axiosInstance";
+import { doctors } from "./RecordLab";
  
 function RecordPrescription() {
-   const {selectedPatient}  =  useContext(doctors)
-  const [preStore, setPreStore] =  useState([]);
+  const { selectedPatient } = useContext(doctors);
+  const [prescriptions, setPrescriptions] = useState([]);
  
-  useState(() =>{
-    const fecthingData = async() => {
-    try{
-      const response  =  await api.get(`/records/records/?record_type=prescription&patient_id=${selectedPatient.patient_id}`);
-      console.log(response.data.data)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get(
+          `/records/records/?record_type=prescription&patient_id=${selectedPatient.patient_id}`
+        );
+        console.log(response.data.data);
  
-      if(response.data?.data){
-        setPreStore(response.data.data[0])
-      }else{
-        console.log("records not added")
-        setPreStore(null)
+        if (response.data?.data && response.data.data.length > 0) {
+          setPrescriptions(response.data.data);
+        } else {
+          console.log("No prescription records found");
+          setPrescriptions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching prescription data:", error);
       }
-     
+    };
  
-    }
-    catch(error){
-     console.log("data not added")
-    }
-  }
-  fecthingData()
-   const handleRefresh = () => fecthingData(); // Refresh on event
- 
+    fetchData();
+    const handleRefresh = () => fetchData();
     window.addEventListener("refreshAddRecordModal", handleRefresh);
  
     return () => {
       window.removeEventListener("refreshAddRecordModal", handleRefresh);
     };
-  }, [])
-
-  const handleDownload = async () => {
-  try {
-    if (!preStore.report) {
-      console.error("No report selected");
-      return;
+  }, [selectedPatient]);
+ 
+  const handleDownload = async (report) => {
+    try {
+      if (!report) {
+        console.error("No report file available.");
+        return;
+      }
+ 
+      const response = await api.get(report, { responseType: "blob" });
+      console.log("Downloading:", response);
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+ 
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", report.split("/").pop());
+      document.body.appendChild(link);
+      link.click();
+ 
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the report:", error);
     }
- 
-    const response = await api.get(`${preStore.report}/`, {
-      responseType: 'blob',
-    });
-    console.log("pdf download",response)
-    const blob = new Blob([response.data], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(blob);
- 
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', preStore.report);
-    document.body.appendChild(link);
-    link.click();
- 
-    // Clean up
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('Error downloading the report:', error);
-  }
-};
- 
+  };
  
   return (
-    <div>
-      {preStore  ? (
-      <>
-          <Container className={Recordprescription.prescriptioncontainer}>
-      <Card className={Recordprescription.prescriptioncard}>
-        <Card.Body>
-          <h5 className={Recordprescription.doctorname}>{selectedPatient.patient_name}</h5>
-          <div className='d-flex gap-3'>
-            <p className="text-muted">Age:25 years</p>
-             Date: {new Date(selectedPatient.created_at).toLocaleDateString()}
-          </div>
-          <Card className={`border border-light ${Recordprescription.medicinecard}`}>
-            <Card.Body className={`${Recordprescription.secondcard}`}>
-              <div className='d-flex justify-content-between'>
-                <h6 className={Recordprescription.medicinename}>{preStore.medication_name}</h6>
-                <p>{preStore.dosage}</p>
-              </div>
-              <Row>
-                <Col xs={12} sm={4} >
-                  <p >{preStore.duration}</p>
-                  <p >{preStore.summary}</p>
-                </Col>
-              </Row>
-
-                       
-            </Card.Body>
-               <div className={`d-flex flex-row justify-content-between ${Recordprescription.file}`}>
-                   {preStore.report ? preStore.report.split("/").pop() : "No file available"}
-                    <Button variant="link" className="p-0" onClick={handleDownload}>
-       <Icon icon="material-symbols:download" width="24" height="24" color="#002072"/></Button>
+    <Container className={Recordprescription.prescriptioncontainer}>
+      <div style={{ maxHeight: "500px", overflowY: "auto", padding: "10px" }}>
+        {prescriptions.length > 0 ? (
+          prescriptions.map((prescription, index) => (
+            <Card key={index} className={` mb-2 ${Recordprescription.prescriptioncard}`} >
+              <Card.Body>
+                <h5 className={Recordprescription.doctorname}>{selectedPatient.patient_name}</h5>
+                <div className="d-flex gap-3">
+                  <p className="text-muted">Doctor: {prescription.doctor_name}</p>
+                  <p>Category: {prescription.category}</p>
+                  <p>Date: {new Date(prescription.created_at).toLocaleDateString()}</p>
                 </div>
-          </Card>
-        </Card.Body>
-      </Card>
+                <Card className={`border border-light ${Recordprescription.medicinecard}`}>
+                  <Card.Body className={Recordprescription.secondcard}>
+                    <div className="d-flex justify-content-between">
+                      <h6 className={Recordprescription.medicinename}>{prescription.medication_name}</h6>
+                      <p>{prescription.dosage}</p>
+                    </div>
+                    <Row>
+                      <Col xs={12} sm={6}>
+                        <p>Duration: {prescription.duration}</p>
+                        <p>Summary: {prescription.summary}</p>
+                        <p>Status: {prescription.status}</p>
+                        <p>Quantity: {prescription.quantity}</p>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                  <div className={`d-flex flex-row justify-content-between ${Recordprescription.file}`}>
+                    {prescription.report ? prescription.report.split("/").pop() : "No report available"}
+                    {prescription.report && (
+                      <Button variant="link" className="p-0" onClick={() => handleDownload(prescription.report)}>
+                        <Icon icon="material-symbols:download" width="24" height="24" color="#002072" />
+                      </Button>
+                    )}
+                  </div>
+                </Card>
+              </Card.Body>
+            </Card>
+          ))
+        ) : (
+          <div className="text-center mt-5">
+            <p style={{ color: "#808080" }}>No prescription records found for this patient.</p>
+          </div>
+        )}
+      </div>
     </Container>
-    </>
-    ):(
-      <div className="text-center mt-5">
-      <p style={{ color: "#808080" }}>No Prescription for this patient yet.</p>
-    </div>
-    )}
-    </div>
-  )
+  );
 }
  
-export default RecordPrescription
+export default RecordPrescription;

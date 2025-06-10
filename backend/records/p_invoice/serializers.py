@@ -31,6 +31,13 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
     doctor = serializers.CharField(required=False, allow_blank=True)
     Bill_No = serializers.ReadOnlyField()
     Bill_Date = serializers.ReadOnlyField()
+    typeof_transaction = serializers.CharField(required=True, allow_null=False, allow_blank=False,
+                                               error_messages = {
+                                                   "required":"Type of Transaction is required",
+                                                   "blank":"Type of Transaction cannot be blank",
+                                                   "null":"Type of Transaction cannot be null"
+                                               }   
+                                               )
  
     class Meta:
         model = PharmacyInvoice
