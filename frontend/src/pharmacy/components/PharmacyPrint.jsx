@@ -108,101 +108,102 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
   };
  
   return (
-<Modal show={show} onHide={onClose} size="lg">
-<Modal.Header closeButton />
-<Modal.Body ref={printRef}>
+    <Modal show={show} onHide={onClose} size="lg">
+      <Modal.Header closeButton />
+      <Modal.Body ref={printRef}>
         {getinvoice ? (
-<>
-<div
+          <>
+            <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "20px",
                 marginBottom: "20px",
               }}
->
-<img
+            >
+              <img
                 src={logo}
                 alt="Hospital Logo"
                 style={{ height: "120px", marginLeft: "20px" }}
               />
-<div>
-<h2 className="m-0" style={{ color: "#A34C51" }}>
+              <div>
+                <h2 className="m-0" style={{ color: "#A34C51" }}>
                   Sai Teja Multi Speciality Hospital
-</h2>
-<h5 className="text-primary">
+                </h2>
+                <h5 className="text-primary">
                   (A UNIT OF SAVITHA HEALTH CARE PVT.LTD)
-</h5>
-<p className="mb-0">
-                  Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035. <br />
+                </h5>
+                <p className="mb-0">
+                  Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035.{" "}
+                  <br />
                   Ph: 040 4006 2725, +91 84840 19791
-</p>
-</div>
-</div>
+                </p>
+              </div>
+            </div>
  
             <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
  
             <h4 className="mb-3">Invoice Details</h4>
-<Row className="mb-2">
-<Col>GST No: 36GXDPS8882J1ZH</Col>
-<Col>DL NO: 135/RR2/AP/2010 </Col>
-</Row>
-<Row className="mb-3">
-<Col>Bill Date: {getinvoice.Bill_Date}</Col>
-<Col>Bill No: {getinvoice.Bill_No}</Col>
-</Row>
-<hr />
- 
+            <Row className="mb-2">
+              <Col>GST No: 36GXDPS8882J1ZH</Col>
+              <Col>DL NO: 135/RR2/AP/2010 </Col>
+            </Row>
             <Row className="mb-3">
-<Col>
-<b>Patient Name:</b> {getinvoice.patient_name}
-</Col>
-<Col>
-<b>Age:</b> {getinvoice.age}
-</Col>
-<Row>
-<Col>
-<b>Sex:</b> {getinvoice.gender}
-</Col>
-<Col>
-<b>Doctor Name:</b> {getinvoice.doctor}
-</Col>
-</Row>
-</Row>
-<hr />
+              <Col>Bill Date: {getinvoice.Bill_Date}</Col>
+              <Col>Bill No: {getinvoice.Bill_No}</Col>
+            </Row>
+            <hr />
+ 
+           <Row className="mb-3">
+              <Col>
+                <b>Patient Name:</b> {getinvoice.patient_name}
+              </Col>
+              <Col>
+                <b>Age:</b> {getinvoice.age}
+              </Col>
+              <Row>
+                <Col>
+                  <b>Sex:</b> {getinvoice.gender}
+                </Col>
+                <Col>
+                  <b>Doctor Name:</b> {getinvoice.doctor}
+                </Col>
+              </Row>
+            </Row>
+            <hr />
  
             <Table striped bordered>
-<thead>
-<tr>
-<th style={headerStyle}>Medicine</th>
-<th style={headerStyle}>Exp Date</th>
-<th style={headerStyle}>MRP</th>
-<th style={headerStyle}>Qty</th>
-<th style={headerStyle}>Amount</th>
-</tr>
-</thead>
-<tbody>
+              <thead>
+                <tr>
+                  <th style={headerStyle}>Medicine</th>
+                  <th style={headerStyle}>Exp Date</th>
+                  <th style={headerStyle}>MRP</th>
+                  <th style={headerStyle}>Qty</th>
+                  <th style={headerStyle}>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
                 {getinvoice?.items?.map((item, index) => (
-<tr key={index}>
-<td>{item.medication_name}</td>
-<td>{item.expiry_date}</td>
-<td>{item.mrp}</td>
-<td>{item.quantity}</td>
-<td>{item.amount}</td>
-</tr>
+                  <tr key={index}>
+                    <td>{item.medication_name}</td>
+                    <td>{item.expiry_date}</td>
+                    <td>{item.mrp}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.amount}</td>
+                  </tr>
                 ))}
-</tbody>
-</Table>
+              </tbody>
+            </Table>
  
-    <div className="text-end pe-4 mt-3">
-        <p>Total Amount: ₹{totalAmount}</p>
-        <p>- Discount: ₹{totalDiscount}</p>
-        <p>Net Amount: ₹{netAmount.toFixed(2)}</p>
-        <p>+ Tax: ₹{totalTax}</p>
-        <p>Paid Amount: ₹{paidAmount.toFixed(2)}</p>
-        <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
-        <h5>Total Payable: ₹{paidAmount.toFixed(2)}</h5>
-      </div>
+            <div className="text-end pe-4 mt-3">
+              <p>Total Amount: ₹{totalAmount.toFixed(2)}</p>
+              <p>- Discount: ₹{totalDiscount.toFixed(2)}</p>
+              <p>Net Amount: ₹{netAmount.toFixed(2)}</p>
+              <p>+ Tax: ₹{totalTax.toFixed(2)}</p>
+              <p>Paid Amount: ₹{(getinvoice?.paid_amount || 0).toFixed(2)}</p>
+              <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
+              <h5>Total Payable: ₹{(getinvoice?.paid_amount || netAmount + totalTax).toFixed(2)}</h5>
+            </div>
  
             <div
               style={{
@@ -212,29 +213,36 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                 fontSize: "20px",
                 marginBottom: "-12px",
               }}
->
-<p className="mt-2">ROUND THE CLOCK EMERGENCY SERVICES</p>
-</div>
-</>
+            >
+              <p className="mt-2">ROUND THE CLOCK EMERGENCY SERVICES</p>
+            </div>
+          </>
         ) : (
-<p>No invoice data available.</p>
+          <p>No invoice data available.</p>
         )}
-</Modal.Body>
+      </Modal.Body>
  
       <Modal.Footer>
-<Button className="no-print" variant="success" onClick={handleDownloadPDF}>
-<Icon icon="mdi:download" /> Download PDF
-</Button>
-<Button className="no-print" variant="outline-primary" onClick={handlePrint}>
-<Icon icon="mdi:printer" className="me-1" /> Print
-</Button>
-<Button className="no-print" variant="secondary" onClick={onClose}>
+        <Button
+          className="no-print"
+          variant="success"
+          onClick={handleDownloadPDF}
+        >
+          <Icon icon="mdi:download" /> Download PDF
+        </Button>
+        <Button
+          className="no-print"
+          variant="outline-primary"
+          onClick={handlePrint}
+        >
+          <Icon icon="mdi:printer" className="me-1" /> Print
+        </Button>
+        <Button className="no-print" variant="secondary" onClick={onClose}>
           Close
-</Button>
-</Modal.Footer>
-</Modal>
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
  
 export default PharmacyPrint;
- 

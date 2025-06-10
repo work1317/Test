@@ -2,6 +2,7 @@ import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import RInvoice from '../css/RecentInvoice.module.css';
 import api from '../../utils/axiosInstance';
+import PharmacyPrint from './PharmacyPrint';
  
 const RecentInvoice = () => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -18,7 +19,22 @@ const RecentInvoice = () => {
   const [totalDiscountAmount, setTotalDiscountAmount] = useState(0);
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(0);
   const [totalNetAmount, setTotalNetAmount] = useState(0);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
  
+const handleBillNumberClick = (invoice) => {
+  // Add default values if fields are missing
+  const invoiceWithDefaults = {
+    ...invoice,
+    age: invoice.age || 'N/A',
+    gender: invoice.gender || 'N/A',
+    doctor: invoice.doctor || 'N/A',
+    paid_amount: invoice.paid_amount || invoice.Amount // Use total amount if paid_amount not available
+  };
+ 
+  setSelectedInvoice(invoiceWithDefaults);
+  setShowPrintModal(true);
+};
   const setTotalsFromBackend = (totals) => {
     setTotalAmount(totals.total_amount || 0);
     setTotalDiscountAmount(totals.total_discount_amount || 0);
@@ -44,7 +60,7 @@ const RecentInvoice = () => {
       } catch (err) {
         setError('Failed to fetch invoices.');
         setLoading(false);
-        console.error("Failed to fetch recent invoices:", err);
+        console.error("Loading ...", err);
       }
     };
  
@@ -257,7 +273,13 @@ const RecentInvoice = () => {
                 return (
                   <tr key={invoice.id || `${invoice.Bill_No}-${index}`}>
                     <td>{index + 1}</td>
-                    <td>{invoice.Bill_No || ''}</td>
+                  <button
+                    style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                    onClick={() => handleBillNumberClick(invoice)}
+                  >
+                    {invoice.Bill_No || ''}
+                  </button>
+ 
                     <td>{invoice.Bill_Date}</td>
                     <td>{invoice.typeof_transaction || ''}</td>
                     <td>{invoice.appointment_type || ''}</td>
@@ -274,6 +296,15 @@ const RecentInvoice = () => {
             </tbody>
           </Table>
         </div>
+        {selectedInvoice && (
+        <PharmacyPrint
+          show={showPrintModal}
+          onClose={() => setShowPrintModal(false)}
+          getinvoice={selectedInvoice}
+          invoiceId={selectedInvoice.Bill_No}
+       
+        />
+      )}
       </Row>
  
       <Row className="mb-3 mt-3">
@@ -303,4 +334,3 @@ const RecentInvoice = () => {
 };
  
 export default RecentInvoice;
- 
