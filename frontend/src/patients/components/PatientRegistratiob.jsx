@@ -113,6 +113,21 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
     setLoading(false);
   }
 };
+
+const onClose = () => {
+   setFormData({
+        patient_name: "",
+        doctor:"",
+        age: "",
+        gender: "",
+        email: "",
+        phno: "",
+        appointment_type: "",
+        blood_group: "",
+        notes: "",
+      });
+      handleClose();
+}
   
   return (
     <>
@@ -262,7 +277,7 @@ const PatientRegistration = ({ show, handleClose, refreshPatient }) => {
             </Form.Group>
 
             <div className="d-flex justify-content-end gap-3 ps-5 mt-1">
-              <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+              <Button variant="secondary" onClick={onClose}>Cancel</Button>
               <Button type="submit" variant="primary" disabled={loading} className={PatientRegister.submitbutton}>
                 {loading ? <Spinner as="span" animation="border" size="sm" /> : "Submit"}
               </Button>

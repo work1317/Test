@@ -87,6 +87,22 @@ class InvoiceSerializer(serializers.ModelSerializer):
     investigation_charges = InvestigationChargeSerializer()
     pharmacy_charges = PharmacyChargeSerializer()
     consultation_charges = ConsultationChargeSerializer()
+    due_on_receipt = serializers.CharField(required=True, allow_null=False, allow_blank=False,
+                                           error_messages={
+                                               "required": "Due on Receipt is a required field.",
+                                                "blank": "Due on receipt cannot be empty.",
+                                                "null":"Due on receipt cannot be null"
+                                           }
+                                           )
+    payment_method = serializers.CharField(required=True, allow_null=False, allow_blank=False,
+                                           error_messages={
+                                               "required": "Payment Method is a required field.",
+                                                "blank": "Payment Method cannot be empty.",
+                                                "null":"Payment Method cannot be null"
+                                           }
+                                           )
+    notes = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+ 
 
     class Meta:
         model = Invoice

@@ -87,7 +87,7 @@ useEffect(() => {
             patient: <AiOutlinePlus className={Notificationstyle.patients} />,
             // lab_invoice: <FaMicroscope className={Notificationstyle.labInvoice} />,
             lab_invoice: <Icon icon="guidance:medical-laboratory" className={Notificationstyle.labInvoice} />,
-            discounts: <FaPercent className={Notificationstyle.discounts} />,
+            discount_approval: <FaPercent className={Notificationstyle.discounts} />,
             user: <AiOutlineUser className={Notificationstyle.user} />,
             sales: <BsCurrencyDollar className={Notificationstyle.sales} />,
             medication_add: <GiMedicalPack className={Notificationstyle.pharmacy} />,
@@ -95,7 +95,6 @@ useEffect(() => {
             invoice: <BsCurrencyDollar className={Notificationstyle.invoices} />,
             others: <AiOutlineNotification className={Notificationstyle.others} />,
             doctor: <AiOutlinePlus className={Notificationstyle.patients} />,
-            bills:<BsCurrencyDollar className={Notificationstyle.sales}/>
           };
  
           return {
@@ -199,7 +198,7 @@ const tabs = [
   { key: "sales", label: "Sales" },
   { key: ["medication_add", "expiry","low_stock",'stagant'], label: "Pharmacy" },
   { key: "lab_invoice", label: "Labs" },
-  {key:"bills",label:"bills"}
+  
 ];
  
 useEffect(() => {

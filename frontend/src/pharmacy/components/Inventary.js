@@ -141,6 +141,7 @@ function Inventary({ onMedicationAdded }) {
               overflowX: 'hidden',
             }}
           >
+            <div className='pt-2'>
             <Row className="mb-4 g-4 px-4">
               {filteredMedications.map((med, index) => (
                 <Col key={index} xs={12} sm={6} md={4} lg={4}>
@@ -204,6 +205,7 @@ function Inventary({ onMedicationAdded }) {
                 </Col>
               ))}
             </Row>
+            </div>
           </div>
 
           {/* Update Stock Modal */}

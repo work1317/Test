@@ -11,7 +11,7 @@ import { IoCalendarClearOutline } from "react-icons/io5";
 import { LuClock4 } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import ScheduleAppointments from "../../Appointment/componnets/ScheduleAppointments";
+// import ScheduleAppointments from "../../Appointment/componnets/ScheduleAppointments";
 import { FaLastfmSquare } from "react-icons/fa";
 import { useNotifications } from "../../dashboard/components/NotificationContext";
 
@@ -146,7 +146,7 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
           >
             Schedule Appointment
           </Button>
-          <ScheduleAppointments show={showUserModal} handleClose={() => setShowUserModal(false)} />
+          {/* <ScheduleAppointments show={showUserModal} handleClose={() => setShowUserModal(false)} /> */}
         </div>
       </Modal.Body>
     </Modal>

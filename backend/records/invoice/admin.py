@@ -9,4 +9,4 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceCharge)
 class ServiceChargeAdmin(admin.ModelAdmin):
-    list_display = ['id','service_name']
+    list_display = ['id','service_name','days','amount']

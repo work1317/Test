@@ -160,6 +160,9 @@ const InvoicePrint = ({ show, handlePrintClose, patientId }) => {
           .w-30 {
             width: 30% !important;
           }
+          .num{
+            padding-right: 220px;
+          }
         </style>
       </head>
       <body>
@@ -315,14 +318,14 @@ const handleDownload = () => {
  
             <Row>
               <Col>
-                <Form.Control type="number" value={concession} readOnly style={{paddingLeft:"480px"}}/>
+                <Form.Control type="number" value={concession} style={{textAlign:"right"}} className={`${styles.inputs} num`} readOnly />
               </Col>
             </Row>
  
             <div className="d-flex w-100 py-1 fw-bold mt-3">
               <div style={{ width: '50%' }}>Final Amount</div>
               <div style={{ width: '20%' }}></div>
-              <div style={{ width: '30%' }}>{finalAmount.toFixed(2)}</div>
+              <div style={{ width: '30%', float:"left"}}>{finalAmount.toFixed(2)}</div>
             </div>
           </div>
  

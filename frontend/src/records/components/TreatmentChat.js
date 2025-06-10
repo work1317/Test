@@ -22,10 +22,9 @@ const TreatmentChat = ({ handleClose,patientId }) => {
   const handleAddMedicine = () => {
     if (
       medicineDetails.medicine_name &&
-      medicineDetails.hrs_drops_mins &&
       medicineDetails.dose &&
-      medicineDetails.time &&
-      medicineDetails.medicine_details
+      medicineDetails.time 
+      
     ) {
       setMedicines([...medicines, medicineDetails]);
       setMedicineDetails({ medicine_name: "", hrs_drops_mins: "", dose: "", time: "", medicine_details: "" });
@@ -127,7 +126,6 @@ const TreatmentChat = ({ handleClose,patientId }) => {
               name="medicine_details"
               value={medicineDetails.medicine_details}
               onChange={handleChange}
-              required
             />
           </Form.Group>
         </Card>

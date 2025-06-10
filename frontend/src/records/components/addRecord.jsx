@@ -151,7 +151,38 @@ function AddRecordModal({show,handleClose,patientId}) {
   }, [savedRecords]); 
     // ...
 
- 
+
+    const onClose = () => {
+      setFormData({
+         Prescription: {
+      medication_name: "",
+      category:"",
+      duration: "",
+      dosage: "",
+      summary: "",
+      report: FileList | File,
+    },
+    Vitals: {
+      category:"",
+      height: "",
+      weight: "",
+      blood_pressure: "",
+      bmi: "",
+      grbs: "",
+      cvs: "",
+      respiratory_rate: "",
+      cns: "",
+      report: FileList | File ,
+    },
+    Service_procedure: {
+      title: "",
+      category:"",
+      summary: "",
+      report: FileList | File,
+    },
+      })
+      handleClose()
+    }
 
 
   return (
@@ -422,7 +453,7 @@ function AddRecordModal({show,handleClose,patientId}) {
                 fontSize: "16px",
                 fontWeight: "400",
               }}
-              onClick={handleClose}
+              onClick={onClose}
             >
               Cancel
             </Button>

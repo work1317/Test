@@ -106,7 +106,23 @@ const handleSubmit = async (e) => {
       setErrors(" ")
     setFormData({ ...formData, d_available_days: updatedDays });
   };
- 
+
+  const onClose = () =>{ 
+        setFormData({
+      d_name: "",
+      d_department: "",
+      d_phn_no: "",
+      d_email: "",
+      d_ward_no: "",
+      d_available_days: [],
+      d_start_time: "",
+      d_end_time: "",
+      d_education_info: "",
+      d_certifications: "",
+      is_guest: false,
+    });
+    handleClose()
+  }
   return (
    
     <Modal show={show} onHide={handleClose} size="lg" centered>  
@@ -292,7 +308,7 @@ const handleSubmit = async (e) => {
           </Form.Group>
  
           <div className="d-flex flex-row justify-content-end">
-            <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+            <Button variant="secondary" onClick={onClose}>Cancel</Button>
             <Button variant="primary" type="submit" className="ms-2">
               Submit Details
             </Button>

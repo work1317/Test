@@ -110,7 +110,7 @@ class ProgressNote(models.Model):
 class TreatmentChart(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="treatment_charts")
     medicine_name = models.CharField(max_length=255)
-    hrs_drops_mins = models.CharField(max_length=50)  # Stores Hrs/Drops/Mins as a string
+    hrs_drops_mins = models.CharField(max_length=50, blank=True, null=True)  # Stores Hrs/Drops/Mins as a string
     dose = models.CharField(max_length=50)
     time = models.TimeField()
     medicine_details = models.TextField()

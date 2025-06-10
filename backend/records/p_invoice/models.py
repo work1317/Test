@@ -273,28 +273,48 @@ class PharmacyInvoiceItem(models.Model):
         self.net_amount = self.amount - self.discount_amount
         self.tax_amount = (self.net_amount * self.tax_percentage) / 100
         self.final_amount = self.net_amount + self.tax_amount
-
+ 
     def save(self, *args, **kwargs):
         if not PharmacyInvoice.objects.filter(id=self.invoice_id).exists():
             raise ValidationError(f"Invalid invoice reference: {self.invoice_id} does not exist.")
-
+       
+        is_new = self.pk is None
+        old_quantity = 0
+ 
+        if not is_new:
+            old_item = PharmacyInvoiceItem.objects.get(pk=self.pk)
+            old_quantity = old_item.quantity
+        quantity_diff = self.quantity - old_quantity
+ 
         if self.medication_name:
             self.mrp = self.medication_name.mrp or Decimal("0.00")
             self.expiry_date = self.medication_name.expiry_date
-
+ 
         self.calculate_amounts()
+ 
+        if quantity_diff> 0:
+            if(self.medication_name.stock_quantity or 0) < quantity_diff:
+                raise ValidationError(f"Insufficient stock for {self.medication_name.medication_name}."
+                                      f" Available: {self.medication_name.stock_quantity},"
+                                       f" Requested: {quantity_diff}"
+                                       )
         super().save(*args, **kwargs)
-
+ 
+        self.medication_name.stock_quantity = (self.medication_name.stock_quantity or 0) - quantity_diff
+        self.medication_name.save(update_fields=['stock_quantity'])
+ 
         # Update parent invoice paid_amount sum after item save
         parent_invoice = self.invoice
         parent_invoice.paid_amount = parent_invoice.items.aggregate(total=models.Sum('final_amount'))['total'] or Decimal("0.00")
         parent_invoice.save(update_fields=['paid_amount'])
-
+ 
     def delete(self, *args, **kwargs):
+        self.medication_name.stock_quantity = (self.medication_name.stock_quantity or 0) + self.quantity
+        self.medication_name.save(update_fields=['stock_quantity'])
         invoice = self.invoice
         super().delete(*args, **kwargs)
         invoice.paid_amount = invoice.items.aggregate(total=models.Sum('final_amount'))['total'] or Decimal("0.00")
         invoice.save(update_fields=['paid_amount'])
-
+ 
     def __str__(self):
         return f"{self.medication_name.medication_name} - Qty: {self.quantity}"

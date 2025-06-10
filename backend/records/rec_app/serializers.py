@@ -68,6 +68,7 @@ class ProgressNoteSerializer(serializers.ModelSerializer):
 # Treatment Chart
 
 class TreatmentChartSerializer(serializers.ModelSerializer):
+    hrs_drops_mins = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     class Meta:
         model = TreatmentChart
         fields = '__all__'

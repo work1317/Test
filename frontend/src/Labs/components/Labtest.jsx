@@ -120,6 +120,30 @@ function Labtest() {
     setShowes(false);
     setOpens(false);
     setTab(false);
+
+    setFormsData({
+         patient: "",
+    patient_name: "",
+    requested_test: "",
+    requested_by: "",
+    request_date: "",
+    priority: "Urgent",
+    status: "Pending",
+    notes: "",
+    test_date: "",
+    username: "",
+    summary: "",
+    test_type: "",
+    flag: false,
+    upload: null,
+    })
+    setFormsData1({
+       patient_name: "",
+    testname: "",
+    amount: "",
+    status: "Pending",
+    date: "",
+    })
   };
 
   // iNVOICE VIEW DETAILS

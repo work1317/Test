@@ -78,6 +78,20 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
       setLoading(false);
     }
   };
+
+  const onClose  = () => {
+    setFormData({medication_name: "",
+          category: "",
+          manufacturer: "",
+          strength: "",
+          batch_no:"",
+          stock_quantity: "",
+          unit_price: "",
+          mrp: "",
+          expiry_date: "",
+          description: "",})
+          handleClose()
+  }
   
 
   return (
@@ -224,7 +238,7 @@ const AddMedication = ({ show, handleClose,onMedicationAdded }) => {
           </Form.Group>
 
           <div className="d-flex justify-content-end gap-4 ps-5">
-            <button type="button" className={styles.cancel} onClick={handleClose}>
+            <button type="button" className={styles.cancel} onClick={onClose}>
               Cancel
             </button>
             <button type="submit" className={styles.Addbutton}>

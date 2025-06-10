@@ -93,6 +93,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 if discount_requires_approval and not discount_approved:
                     print("Creating Notification for discount approval:", invoice.id)
                     Notification.objects.create(
+                        title = "Discount Approval Needed",
                         message=(
                             f"Invoice #{invoice.id}: Discount of {max_discount}% requested for "
                             f"Patient {patient_name} (ID: {patient_id}). Approval required."
@@ -103,7 +104,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                         patient_id_value=patient_id,
                         patient_name=patient_name,
                         discount_percentage=max_discount,
-                        p_invoice=invoice
+                        p_invoice=invoice,
                     )
 
                     return Response({
@@ -113,6 +114,8 @@ class CreatePharmacyInvoiceAPIView(APIView):
                         "patient_id": patient_id,
                         "patient_name": patient_name,
                         "discount_percentage": str(max_discount),
+                        "Bill_No": invoice.Bill_No,
+                        "Bill_Date": invoice.Bill_Date,
                     }, status=status.HTTP_201_CREATED)
 
                 # Finalize invoice immediately if no approval needed
@@ -124,6 +127,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 net_amount = getattr(invoice, 'paid_amount', 0)
 
                 Notification.objects.create(
+                    title = "Pharmacy Sale Completed",
                     message=(
                         f"Pharmacy sale (Patient ID: {patient_id}) for ₹{net_amount} has been "
                         f"completed for {patient_name}. Items: {invoice.items.count()} medications. "
@@ -135,7 +139,7 @@ class CreatePharmacyInvoiceAPIView(APIView):
                     patient_id_value=patient_id,
                     patient_name=patient_name,
                     discount_percentage=max_discount,
-                    p_invoice=invoice
+                    p_invoice=invoice,
                 )
 
                 return Response({
@@ -145,6 +149,8 @@ class CreatePharmacyInvoiceAPIView(APIView):
                     "patient_id": patient_id,
                     "patient_name": patient_name,
                     "discount_percentage": str(max_discount),
+                    "Bill_No": invoice.Bill_No,
+                    "Bill_Date": invoice.Bill_Date,
                 }, status=status.HTTP_201_CREATED)
 
         except DRFValidationError as e:
@@ -213,6 +219,8 @@ class DiscountApprovalAPIView(APIView):
                 'patient_name': invoice.patient_name,
                 'patient_id_value': patient_id_value,
                 'discount_percentage': invoice.discount_percentage if hasattr(invoice, 'discount_percentage') else None,
+                "Bill_No": invoice.Bill_No,
+                "Bill_Date": invoice.Bill_Date,
             }
         )
  
@@ -240,6 +248,7 @@ class DiscountApprovalAPIView(APIView):
  
             # Update the notification
             notification.approval_status = 'approved'
+            notification.title = "Pharmacy Sale Completed"
             notification.message = (
                 f"Pharmacy sale (Patient ID: {patient_id_value}) for ₹{net_amount} has been "
                 f"completed for {invoice.patient_name}. Items: {invoice.items.count()} medications. "

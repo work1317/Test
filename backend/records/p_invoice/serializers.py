@@ -9,21 +9,6 @@ from django.core.exceptions import ValidationError
  
 # create your serializers here
  
- 
-class PharmacyInvoiceItemSerializer(serializers.ModelSerializer):
-    medication_name = serializers.CharField()  # Accept medication name as string
-    batch_no = serializers.CharField(write_only=True)
- 
-    class Meta:
-        model = PharmacyInvoiceItem
-        exclude = ('invoice',)
- 
-    def validate(self, data):
-        # Optional: Validate batch_no and medication_name correspondence here if needed
-        return data
- 
- 
- 
 class PharmacyInvoiceItemSerializer(serializers.ModelSerializer):
     medication_name = serializers.CharField()  # Accept medication name as string
     batch_no = serializers.CharField(write_only=True)
@@ -44,6 +29,8 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
     age = serializers.IntegerField(required=False)
     gender = serializers.CharField(required=False, allow_blank=True)
     doctor = serializers.CharField(required=False, allow_blank=True)
+    Bill_No = serializers.ReadOnlyField()
+    Bill_Date = serializers.ReadOnlyField()
  
     class Meta:
         model = PharmacyInvoice

@@ -77,6 +77,14 @@ const ScheduleAppointments = ({ show, handleClose }) => {
     }
   };
 
+  const onClose = () => {
+    setFormData({
+            patient_name: "", age: "", gender: "", email: "", doctor: "", appointment_id: "", patient: "",
+            date: "", time: "", phno: "", appointment_type: "", blood_group: "", notes: "", ward_no: "", diagnosis: "",
+          });
+          handleClose()
+  }
+
   return (
     <Modal show={show} onHide={handleClose} centered size="lg">
       <Modal.Header closeButton>
@@ -94,7 +102,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Patient Name</Form.Label>
                 <Form.Control
-                  type="text" name="patient_name" value={formData.patient_name}
+                  type="text" placeholder="patient" name="patient_name" value={formData.patient_name}
                   onChange={handleChange} isInvalid={!!error.patient_name}
                 />
                 <Form.Control.Feedback type="invalid">{error.patient_name}</Form.Control.Feedback>
@@ -104,7 +112,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Doctor</Form.Label>
                 <Form.Control
-                  type="text" name="doctor" value={formData.doctor}
+                  type="text" placeholder="doctor" name="doctor" value={formData.doctor}
                   onChange={handleChange} isInvalid={!!error.doctor}
                 />
                 <Form.Control.Feedback type="invalid">{error.doctor}</Form.Control.Feedback>
@@ -117,7 +125,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Mobile Number</Form.Label>
                 <Form.Control
-                  type="tel" name="phno" value={formData.phno}
+                  type="tel" placeholder="mobile" name="phno" value={formData.phno}
                   onChange={handleChange} isInvalid={!!error.phno}
                 />
                 <Form.Control.Feedback type="invalid">{error.phno}</Form.Control.Feedback>
@@ -127,7 +135,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Email</Form.Label>
                 <Form.Control
-                  type="email" name="email" value={formData.email}
+                  type="email" placeholder="email" name="email" value={formData.email}
                   onChange={handleChange} isInvalid={!!error.email}
                 />
                 <Form.Control.Feedback type="invalid">{error.email}</Form.Control.Feedback>
@@ -140,7 +148,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Age</Form.Label>
                 <Form.Control
-                  type="number" name="age" value={formData.age}
+                  type="number" placeholder="age" name="age" value={formData.age}
                   onChange={handleChange} isInvalid={!!error.age}
                 />
                 <Form.Control.Feedback type="invalid">{error.age}</Form.Control.Feedback>
@@ -228,7 +236,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
           </Form.Group>
 
           <div className="d-flex justify-content-end gap-3 ps-5 mt-1">
-            <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+            <Button variant="secondary" onClick={onClose}>Cancel</Button>
             <Button type="submit" variant="primary" disabled={loading} className={styles.submitbutton}>
               {loading ? <Spinner as="span" animation="border" size="sm" /> : "Submit"}
             </Button>

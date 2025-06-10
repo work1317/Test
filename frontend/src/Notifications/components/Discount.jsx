@@ -77,7 +77,7 @@ const handleReject = async (invoice_id) => {
         </thead>
         <tbody>
           {approvals
-            .filter((item) => item.invoice_id && item.patient_name)
+            .filter((item) => item.invoice_id && item.patient_name && Number(item.discount_percentage) >15)
             .map((item) => (
               <tr key={item.invoice_id}>
                 <td>{item.patient_id_value}</td>

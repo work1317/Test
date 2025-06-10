@@ -66,8 +66,10 @@ const MainDashBoard = () => {
 
   const {
     patients,
+    patients_filtered,
     increased_patients,
     doctors,
+    doctors_filtered,
     increased_doctors,
     todays_appointments,
     critical_cases,
@@ -83,14 +85,14 @@ const MainDashBoard = () => {
   const statistics = [
     {
       title: "Total Patients",
-      value: patients,
+      value: patients_filtered,
       icon: "mingcute:group-line",
       color: styles.carblue,
       values: "+" + increased_patients + "% this month",
     },
     {
       title: "Doctors",
-      value: doctors,
+      value: doctors_filtered,
       icon: "fluent-mdl2:group",
       color: styles.cargreen,
       values: "+" + increased_doctors + " this week",

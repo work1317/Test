@@ -56,11 +56,16 @@ class AppointmentCreateAPIView(APIView):
 
             if appointment_date < date.today():
                 raise Exception("Cannot book an appointment for a past date")
+            
 
             # Convert time
             appointment_time = req_params["time"]
             if isinstance(appointment_time, str):
                 appointment_time = datetime.strptime(appointment_time, "%H:%M").time()
+
+            # Prevent booking for a past time today
+            if appointment_date == date.today() and appointment_time < datetime.now().time():
+                raise Exception("Cannot book an appointment for a past time today")
 
             # Validate appointment day
             day_name = calendar.day_name[appointment_date.weekday()]
@@ -81,7 +86,7 @@ class AppointmentCreateAPIView(APIView):
             if doctor.d_end_time <= doctor.d_start_time and appointment_time < doctor.d_start_time:
                 appointment_datetime += timedelta(days=1)
 
-            if not (start_time <= appointment_datetime <= end_time):
+            if not (start_time <= appointment_datetime < end_time):
                 raise Exception(
                     f"Doctor is only available between {doctor.d_start_time.strftime('%H:%M')} and "
                     f"{doctor.d_end_time.strftime('%H:%M')}"

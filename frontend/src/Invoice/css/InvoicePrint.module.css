@@ -31,6 +31,10 @@
   text-align: center;
   font-size: 18px; /* Adjust font size for print readability */
 }
+.inputs{
+  text-align: left;
+  padding-right: 150px;
+}
  
 /* Modal Footer Positioning */
 .down {
@@ -42,34 +46,45 @@
   text-align: right;
 }
  
-/* Print Styling */
 @media print {
   body * {
     visibility: hidden !important;
   }
- 
-  /* Reveal only print content */
+
   .printMode .printContent,
   .printMode .printContent * {
     visibility: visible !important;
   }
- 
+
   .printMode .printContent {
-    position: absolute;
-    left: 0;
+    position: absolute !important;
     top: 0;
+    left: 0;
     width: 100% !important;
-    margin: 0;
-    padding: 0;
-    background-color: white;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white;
   }
- 
-  /* Hide modal footer and buttons on print */
+
   .down {
     display: none !important;
   }
+
+  /* THE FIX FOR INPUT */
+  .inputs {
+    padding-left: 400rem !important;
+    text-align: left !important; /* TEMPORARY: just to see it during print */
+  }
+
+  /* REMOVE CONTAINER / COL WRAPS */
+  .printMode .col,
+  .printMode [class*="col-"],
+  .printMode .container,
+  .printMode .row {
+    all: unset !important;
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }
- 
- 
- 
- 

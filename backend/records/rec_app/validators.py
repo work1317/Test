@@ -140,6 +140,7 @@ class TreatmentChartValidator(serializers.Serializer):
     medicines = serializers.ListField(
         child=serializers.DictField(), allow_empty=False
     )
+    hrs_drops_mins = serializers.CharField(allow_null=True, allow_blank=True, required=False)
 
     def validate_medicines(self, medicines):
         for medicine in medicines:

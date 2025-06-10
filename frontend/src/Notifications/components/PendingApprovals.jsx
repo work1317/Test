@@ -86,7 +86,7 @@ try {
           <Button
             variant="success"
             size="sm"
-            onClick={() => handleApprove(item.patient)}
+            onClick={() => handleApprove(item.id)}
             className="me-2"
             disabled={item.approval_status === 'approved' || item.approval_status === "rejected"}
           >

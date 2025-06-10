@@ -319,44 +319,56 @@ const handleSuggestionClick = (medicine, index) => {
   setActiveRowIndex(null);
 };
 
-
+const clearPatientDetails = () => {
+  setPatientDetails((prev) => ({
+    ...prev,
+    patient_name: "",
+    age: "",
+    gender: "",
+    doctor: "",
+  }));
+};
 
   const handleChange = (e) => {
     setInvoiceData({ ...invoiceData, [e.target.name]: e.target.value });
   };
 
   const fetchPatientDetails = async (patientId) => {
-    try {
-      const response = await api.get(
-        `p_invoice/create-invoice-with-items/`,
-        {
-          params: { patient_id: patientId },
-        }
-      );
-
-      console.log("Fetched patient details:", response.data.data);
-
-      if (response.status === 200) {
-        const { patient_name, age, gender, doctor } = response.data.data;
-        setPatientDetails((prev) => ({
-          ...prev,
-          patient_name,
-          age,
-          gender,
-          doctor,
-        }));
-
-        const newInvoiceId = response.data.invoice_id || response.data.data?.id;
-
-        if (newInvoiceId) {
-          // Set the invoice ID and open print modal
-          setInvoiceId(newInvoiceId);
-        }
+  try {
+    const response = await api.get(`p_invoice/create-invoice-with-items/`, {
+      params: { patient_id: patientId },
+    });
+ 
+    console.log("Fetched patient details:", response.data.data);
+ 
+    if (response.status === 200 && response.data.success === 1) {
+      const { patient_name, age, gender, doctor } = response.data.data;
+ 
+      setPatientDetails((prev) => ({
+        ...prev,
+        patient_name,
+        age,
+        gender,
+        doctor,
+      }));
+ 
+      const newInvoiceId = response.data.invoice_id || response.data.data?.id;
+      if (newInvoiceId) {
+        setInvoiceId(newInvoiceId);
       }
-    } catch (error) {
-      console.error("Error fetching patient details: ", error);
+    } else {
+      // Invalid patient_id or not found
+      clearPatientDetails();
     }
-  };
+  } catch (error) {
+    console.error("Error fetching patient details: ", error);
+ 
+    // Clear previous patient data on error
+    clearPatientDetails();
+  }
+};
+ 
+ 
 
   useEffect(() => {
     if (selectedValue === "no" && patientDetails.patient_id) {
@@ -462,7 +474,9 @@ const handleBatchChange = async (e, index) => {
         // ✅ Extract fields safely
         const newInvoiceId = response.data.invoice_id || response.data.data?.id;
         const BillNo = response.data.Bill_No || response.data.data?.Bill_No;
-        const BillDate = response.data.Bill_Date || response.data.data?.Bill_Date;
+        // const BillDate = response.data.Bill_Date || response.data.data?.Bill_Date;
+        const rawDate = response.data.Bill_Date || response.data.data?.Bill_Date;
+        const BillDate = rawDate ? new Date(rawDate).toISOString().split("T")[0] : "";
 
         // ✅ Set invoice data including bill details
         setGetInvoice({
@@ -528,7 +542,7 @@ const handleBatchChange = async (e, index) => {
         console.log("getInvoice", getinvoice);
         setSuccessMessage("");
         // setShowModal(true)
-      }, 4000); // 4000ms = 4 seconds
+      }, 6000); // 6000ms = 6 seconds
  
       // Cleanup the timer on unmount or when message changes
       return () => clearTimeout(timer);
@@ -540,7 +554,7 @@ const handleBatchChange = async (e, index) => {
   return (
     <Container className="p-4">
       {!showRecentInvoices && (
-        <Button onClick={handleBack} variant="outline-secondary">
+        <Button onClick={handleBack} variant="outline-secondary" className="mb-4" >
           ← Back
         </Button>
       )}
@@ -556,7 +570,13 @@ const handleBatchChange = async (e, index) => {
       {/* Header */}
       <Row className="mb-4 mt-3">
         <Col>
-        {messages && <p style={{ color: "green" }}>{messages}</p>}
+        {/* {messages && <p style={{ color: "green" }}>{messages}</p>} */}
+        {messages && (
+          <p style={{ color: messages.includes("approve") ? "green" : "red" }}>
+            {messages}
+          </p>
+        )}
+        
           <h2>
             {showRecentInvoices
               ? "Recent Invoices"
@@ -883,7 +903,7 @@ const handleBatchChange = async (e, index) => {
               )}
               <div className="text-end mt-3">
                 <p>
-                  Discount % 
+                   Discount % &nbsp;
                   <Form.Control
                     type="number"
                     name="discount"
@@ -896,7 +916,7 @@ const handleBatchChange = async (e, index) => {
                 </p>
                 <p>Net Amount: ₹{invoiceData.summary.net_amount}</p>
                 <p>
-                  Tax % 
+                  Tax % &nbsp;
                   <Form.Control
                     type="number"
                     name="tax"

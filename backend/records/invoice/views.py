@@ -91,13 +91,16 @@ class InvoiceAPIView(APIView):
             service_charges_data = ServiceChargeSerializer(
                 invoice.service_charges.all(), many=True
             ).data
+            print("service_charges_data =", service_charges_data)
+            print("Types inside service_charges_data =", [type(sc) for sc in service_charges_data])
+
             investigation_data = InvestigationChargeSerializer(invoice.investigation_charges).data
             pharmacy_data = PharmacyChargeSerializer(invoice.pharmacy_charges).data
             consultation_data = ConsultationChargeSerializer(invoice.consultation_charges).data
 
             # Totals calculation
             service_total = sum(
-                float(sc['days']) * float(sc['amount']) for sc in service_charges_data
+                float(sc['amount']) for sc in service_charges_data
             )
             consultation_total = float(consultation_data['no_of_visits']) * float(consultation_data['amount_per_visit'])
             investigation_total = float(investigation_data['amount'])
@@ -184,7 +187,9 @@ class InvoiceDetailAPIView(APIView):
             pharmacy_data = PharmacyChargeSerializer(invoice.pharmacy_charges).data
             consultation_data = ConsultationChargeSerializer(invoice.consultation_charges).data
 
-            service_total = sum(float(sc['days']) * float(sc['amount']) for sc in service_charges_data)
+            service_total = sum(
+                float(sc['amount']) for sc in service_charges_data
+            )
             consultation_total = float(consultation_data['no_of_visits']) * float(consultation_data['amount_per_visit'])
             investigation_total = float(investigation_data['amount'])
             pharmacy_total = float(pharmacy_data['amount'])
@@ -295,7 +300,9 @@ class AllInvoiceListAPIView(APIView):
             consultation_data = ConsultationChargeSerializer(invoice.consultation_charges).data
 
             # Totals
-            service_total = sum(float(sc['days']) * float(sc['amount']) for sc in service_charges_data)
+            service_total = sum(
+                float(sc['amount']) for sc in service_charges_data
+            )
             consultation_total = float(consultation_data['no_of_visits']) * float(consultation_data['amount_per_visit'])
             investigation_total = float(investigation_data['amount'])
             pharmacy_total = float(pharmacy_data['amount'])
