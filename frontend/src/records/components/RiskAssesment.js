@@ -36,7 +36,7 @@ const RiskAssessment = ({ handleClose, patientId }) => {
         "Major surgery": "major_surgery",
         "Immobilising Plaster Cast": "immobilising_plaster_cast",
         "Medical or surgical": "medical_or_surgical",
-        "Patients Confined to Bed 72 hrs": "patients_confinedto_bed_72_hrs",
+        "Patients Confined to Bed > 72 hrs": "patients_confinedto_bed_72_hrs",
        
         "Central Venous Access": "central_venous_access"
       },

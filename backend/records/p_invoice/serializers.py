@@ -133,7 +133,7 @@ class RecentPharmacyInvoicesSerializer(serializers.ModelSerializer):
         model = PharmacyInvoice
         fields = [
             "Bill_No", "Bill_Date", "typeof_transaction", "patient_name","age","gender","doctor",
-            "appointment_type", "Amount", "DiscountAmt", "AfterDiscount",
+            "appointment_type", "Amount", "DiscountAmt", "AfterDiscount","discount_approved",
             "NetAmount", "items"  # Include items here
         ]
  

@@ -258,7 +258,7 @@ const handleBillNumberClick = (invoice) => {
                 <th style={headercolor}>Discount Amount</th>
                 <th style={headercolor}>Net Amount</th>
                 <th style={headercolor}>Due Amount</th>
-                <th style={headercolor}>Current Due</th>
+                <th style={headercolor}>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -289,7 +289,7 @@ const handleBillNumberClick = (invoice) => {
                     <td>{totalDiscount.toFixed(2)}</td>
                     <td>{totalNetAmount.toFixed(2)}</td>
                     <td>{parseFloat(invoice.Dueamt || 0).toFixed(2)}</td>
-                    <td>{parseFloat(invoice.Currdue || 0).toFixed(2)}</td>
+                    <td>{invoice.discount_approved ? "Approved" : "Pending"}</td>
                   </tr>
                 );
               })}
