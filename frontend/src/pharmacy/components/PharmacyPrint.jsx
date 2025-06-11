@@ -160,22 +160,22 @@ const paidAmount = parseFloat(getinvoice?.paid_amount || netAmount + totalTax) |
             </Row>
             <hr />
  
-           <Row className="mb-3">
-              <Col>
-                <b>Patient Name:</b> {getinvoice.patient_name}
-              </Col>
-              <Col>
-                <b>Age:</b> {getinvoice.age}
-              </Col>
-              <Row>
-                <Col>
-                  <b>Sex:</b> {getinvoice.gender}
-                </Col>
-                <Col>
-                  <b>Doctor Name:</b> {getinvoice.doctor}
-                </Col>
-              </Row>
-            </Row>
+          <Row className="mb-2">
+            <Col style={{ width: "50%" }}>
+              <b>Patient Name:</b> {getinvoice.patient_name}
+            </Col>
+            <Col style={{ width: "50%" }}>
+              <b>Gender:</b> {getinvoice.gender}
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col style={{ width: "50%" }}>
+              <b>Age:</b> {getinvoice.age}
+            </Col>
+            <Col style={{ width: "50%" }}>
+              <b>Doctor Name:</b> {getinvoice.doctor}
+            </Col>
+          </Row>
             <hr />
  
             <Table striped bordered>

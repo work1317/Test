@@ -179,8 +179,8 @@ const RecordLab = () => {
     <Container className="mb-5">
       <Row className="mt-5 ms-2 d-flex justify-content-between">
         <Col md={8}>
-          <h1 className="fw-bolder">Electronic Medical Records</h1>
-          <p className={Recordstyle.text}>Comprehensive patient health records</p>
+          <h1 className="fw-bolder me-1">Electronic Medical Records</h1>
+          <p className={`ms-2 ${Recordstyle.text}`}>Comprehensive patient health records</p>
         </Col>
         <Col md={2} className="mt-3">
           <Button

@@ -8,19 +8,19 @@ import styles from '../css/InvoicePrint.module.css';
 import { Icon } from '@iconify/react';
 import api from '../../utils/axiosInstance';
  
-const InvoicePrint = ({ show, handlePrintClose, patientId }) => {
+const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {
   const printRef = useRef();
   const [invoiceData, setInvoiceData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
  
   useEffect(() => {
-    if (!show || !patientId) return;
+    if (!show || !invoiceId) return;
  
     const fetchInvoice = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`invoice/get-invoice/${patientId}/`);
+        const response = await api.get(`invoice/get-invoice-by-id/${invoiceId}/`);
         if (response.data.success === 1) {
           setInvoiceData(response.data.data);
           setError(null);
@@ -37,7 +37,7 @@ const InvoicePrint = ({ show, handlePrintClose, patientId }) => {
     };
  
     fetchInvoice();
-  }, [show, patientId]);
+  }, [show, invoiceId]);
  
   const getDateRangeWithDays = (fromDateStr, toDateStr) => {
     if (!fromDateStr || !toDateStr) return '';
@@ -213,10 +213,18 @@ const InvoicePrint = ({ show, handlePrintClose, patientId }) => {
     })) || []),
     {
       name: 'Investigation Charges',
+      // days: getDateRangeWithDays(
+      //   invoiceData.invoice?.investigation_charges?.from_date,
+      //   invoiceData.invoice?.investigation_charges?.to_date
+      // ),
       amount: Number(invoiceData.invoice?.investigation_charges?.amount) || 0,
     },
     {
       name: 'Pharmacy Charges',
+      // days: getDateRangeWithDays(
+      //   invoiceData.invoice?.pharmacy_charges?.from_date,
+      //   invoiceData.invoice?.pharmacy_charges?.to_date
+      // ),
       amount: Number(invoiceData.invoice?.pharmacy_charges?.amount) || 0,
     },
     {

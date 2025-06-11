@@ -253,7 +253,7 @@ const handleBillNumberClick = (invoice) => {
                 <th style={headercolor}>Pay Mode</th>
                 <th style={headercolor}>Form Type</th>
                 <th style={headercolor}>Patient Name</th>
-                <th style={headercolor}> Paid Amt</th>
+                <th style={headercolor}>Paid Amt</th>
                 <th style={headercolor}>After Discount</th>
                 <th style={headercolor}>Discount Amount</th>
                 <th style={headercolor}>Net Amount</th>

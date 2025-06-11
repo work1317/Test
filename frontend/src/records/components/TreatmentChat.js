@@ -74,6 +74,7 @@ const TreatmentChat = ({ handleClose,patientId }) => {
                 <Form.Control
                   type="text"
                   name="medicine_name"
+                  placeholder="Enter medicine name"
                   value={medicineDetails.medicine_name}
                   onChange={handleChange}
                   required
@@ -86,6 +87,7 @@ const TreatmentChat = ({ handleClose,patientId }) => {
                 <Form.Control
                   type="text"
                   name="hrs_drops_mins"
+                  placeholder="Enter Hrs/Drops/Mins"
                   value={medicineDetails.hrs_drops_mins}
                   onChange={handleChange}
                   
@@ -98,6 +100,7 @@ const TreatmentChat = ({ handleClose,patientId }) => {
                 <Form.Control
                   type="text"
                   name="dose"
+                  placeholder="Enter Dose"
                   value={medicineDetails.dose}
                   onChange={handleChange}
                   required
@@ -124,6 +127,7 @@ const TreatmentChat = ({ handleClose,patientId }) => {
               as="textarea"
               rows={3}
               name="medicine_details"
+              placeholder="Enter Medicine Details"
               value={medicineDetails.medicine_details}
               onChange={handleChange}
             />

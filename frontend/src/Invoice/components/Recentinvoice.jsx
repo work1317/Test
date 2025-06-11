@@ -12,7 +12,7 @@ function Recentinvoice({ back }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showPrintModal, setShowPrintModal] = useState(false);
-const [selectedPatientId, setSelectedPatientId] = useState(null);
+const [selectedinvoiceId, setSelectedinvoiceId] = useState(null);
  
  
     // State for the search input and dropdowns
@@ -164,7 +164,7 @@ useEffect(() => {
                 <td
                     style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
                     onClick={() => {
-                        setSelectedPatientId(invoice.invoice.patient); // use patient ID
+                        setSelectedinvoiceId(invoice.invoice.id); // use patient ID
                         setShowPrintModal(true);
                     }}
                     >
@@ -187,7 +187,7 @@ useEffect(() => {
           ))
         ) : (
           <tr>
-            <td colSpan="5" className="text-center">No results found</td>
+            <td colSpan="6" className="text-center">No results found</td>
           </tr>
         )}
       </tbody>
@@ -195,7 +195,7 @@ useEffect(() => {
     <InvoicePrint
      show={showPrintModal}
     handlePrintClose={() => setShowPrintModal(false)}
-    patientId={selectedPatientId}
+    invoiceId={selectedinvoiceId}
       />
  
   </div>

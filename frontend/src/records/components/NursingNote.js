@@ -50,7 +50,7 @@ const NursingNote = ({ handleClose, patientId }) => {
                 as="textarea"
                 rows={3}
                 name="notes"
-                placeholder="Enter Feedback Details..."
+                placeholder="Enter Feedback Details"
                 className={styles.textbox}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}

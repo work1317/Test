@@ -32,6 +32,7 @@ export default function InvoiceGenerator() {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [concession, setConcession] = useState(0); // Added concession state
   const [patientId, setPatientId] = useState(""); // State for patient ID
+  const [invoiceId, setInvoiceId] = useState(""); // state for Invoice ID
   const [patientData, setPatientData] = useState(null);
   const [invoiceData, setInvoiceData] = useState(null); // State for patient data
 
@@ -68,11 +69,76 @@ export default function InvoiceGenerator() {
 
   const [isPaymentMethodDisabled, setIsPaymentMethodDisabled] = useState(false);
 
+
+
   const handlePaymentTermsChange = (e) => {
     const value = e.target.value;
     // Disable Payment Method if "Yes" is selected
     setIsPaymentMethodDisabled(value === "yes");
   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//       const invoice = response.data.data;
+
+
+//     const payload = {
+//       patient: patientId,
+//       due_on_receipt: dueOnReceipt,
+//       payment_method: paymentMethod,
+//       notes: note,
+//        concession: Number(concession).toFixed(2),
+//       service_charges: store.map((item) => ({
+//         service_name: item.service,
+//         days: Number(item.days),
+//         amount: Number(item.amount).toFixed(2),
+//       })),
+//       investigation_charges: {
+//         from_date: investigationDates.from,
+//         to_date: investigationDates.to,
+//         amount: investigationCharges === "" ? "0.00" : Number(investigationCharges).toFixed(2),
+//       },
+
+//      pharmacy_charges: {
+//       from_date: pharmacyDates.from,
+//       to_date: pharmacyDates.to,
+//       amount: pharmacyCharges === "" ? "0.00" : Number(pharmacyCharges).toFixed(2),
+
+// },
+
+//       consultation_charges: {
+//         no_of_visits:Number(consultationCharges.visits || 0),
+//         amount_per_visit: Number(consultationCharges.amountPerVisit || 0).toFixed(2),     },
+//     };
+
+//     try {
+//       const response = await api.post("invoice/create-invoice/", payload);
+//       await fetchNotifications();
+//       await onNotificationClick();
+
+//       setInvoiceData(invoice);
+//       setPatientId(invoice?.invoice?.patient || "");
+//       setInvoiceId(invoice?.invoice?.id || "");
+
+      
+//       // Update patientId state safely
+
+//       alert(response.data?.message || "Invoice created successfully!");
+
+//       setShowPrintModal(false); // Open print modal
+//     } catch (error) {
+//       const errorMessage =
+//         error.response?.data?.message ||
+//         "Failed to create invoice. Please try again.";
+//       alert(errorMessage);
+//       console.error(
+//         "Invoice creation error:",
+//         error.response?.data || error.message
+//       );
+//     }
+//   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,7 +148,7 @@ export default function InvoiceGenerator() {
       due_on_receipt: dueOnReceipt,
       payment_method: paymentMethod,
       notes: note,
-       concession: Number(concession).toFixed(2),
+      concession: Number(concession).toFixed(2),
       service_charges: store.map((item) => ({
         service_name: item.service,
         days: Number(item.days),
@@ -91,19 +157,25 @@ export default function InvoiceGenerator() {
       investigation_charges: {
         from_date: investigationDates.from,
         to_date: investigationDates.to,
-        amount: investigationCharges === "" ? "0.00" : Number(investigationCharges).toFixed(2),
+        amount:
+          investigationCharges === ""
+            ? "0.00"
+            : Number(investigationCharges).toFixed(2),
       },
-
-     pharmacy_charges: {
-      from_date: pharmacyDates.from,
-      to_date: pharmacyDates.to,
-      amount: pharmacyCharges === "" ? "0.00" : Number(pharmacyCharges).toFixed(2),
-
-},
-
+      pharmacy_charges: {
+        from_date: pharmacyDates.from,
+        to_date: pharmacyDates.to,
+        amount:
+          pharmacyCharges === ""
+            ? "0.00"
+            : Number(pharmacyCharges).toFixed(2),
+      },
       consultation_charges: {
-        no_of_visits:Number(consultationCharges.visits || 0),
-        amount_per_visit: Number(consultationCharges.amountPerVisit || 0).toFixed(2),     },
+        no_of_visits: Number(consultationCharges.visits || 0),
+        amount_per_visit: Number(consultationCharges.amountPerVisit || 0).toFixed(
+          2
+        ),
+      },
     };
 
     try {
@@ -111,14 +183,14 @@ export default function InvoiceGenerator() {
       await fetchNotifications();
       await onNotificationClick();
 
-      const invoice = response.data.data; // Use the response data directly
-      setInvoiceData(invoice); // Update invoiceData state
+      const invoice = response.data.data; // ✅ Move this line inside the try block
+      setInvoiceData(invoice);
       setPatientId(invoice?.invoice?.patient || "");
-      // Update patientId state safely
+      setInvoiceId(invoice?.invoice?.id || ""); // ✅ Set invoice ID
 
       alert(response.data?.message || "Invoice created successfully!");
 
-      setShowPrintModal(false); // Open print modal
+      setShowPrintModal(false); // You might want to set this to true if you're opening the modal
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
@@ -130,6 +202,8 @@ export default function InvoiceGenerator() {
       );
     }
   };
+
+
 
   // Handle print modal open and close
   const handlePrintOpen = () => {
@@ -214,7 +288,8 @@ export default function InvoiceGenerator() {
                   show={showPrintModal}
                   handlePrintClose={() => setShowPrintModal(false)}
                   invoiceData={invoiceData} // pass full invoice data
-                  patientId={invoiceData.invoice?.patient || ""} // pass patientId safely
+                  // patientId={invoiceData.invoice?.patient || ""} // pass patientId safely
+                  invoiceId={invoiceId}
                 />
               )}
             </div>
@@ -228,6 +303,14 @@ export default function InvoiceGenerator() {
                 <Card.Body>
                   <h5>Patient Details</h5>
                   <Row className="mb-2">
+                    {/* <Col>
+                      <Form.Label>Patient Id</Form.Label>
+                      <Form.Control
+                        placeholder="Enter Patient ID"
+                        value={patientId}
+                        onChange={(e) => setPatientId(e.target.value)} // Update patient ID
+                      />
+                    </Col> */}
 
                     <Col>
                       <Form.Label>Patient Id</Form.Label>
@@ -341,7 +424,7 @@ export default function InvoiceGenerator() {
                         value={formData.service}
                         name="service"
                         onChange={handlerChange}
-                        placeholder="Enter Service "
+                        placeholder="Enter Service Name"
                       />
                     </Col>
                     <Col>
@@ -397,7 +480,7 @@ export default function InvoiceGenerator() {
                   <p className={styles.subTitle}>Investigation Charges</p>
                   <Row className="mb-2">
                     <Col className="col-sm-4">
-                      <Form.Label>From</Form.Label>
+                      <Form.Label>From Date</Form.Label>
                       <Form.Control
                         type="date"
                         value={investigationDates.from}
@@ -410,7 +493,7 @@ export default function InvoiceGenerator() {
                       />
                     </Col>
                     <Col className="col-sm-4">
-                      <Form.Label>To</Form.Label>
+                      <Form.Label>To Date</Form.Label>
                       <Form.Control
                         type="date"
                         value={investigationDates.to}
@@ -452,7 +535,7 @@ export default function InvoiceGenerator() {
                   <p className={styles.subTitle}>Pharmacy Charges</p>
                   <Row className="mb-2">
                     <Col className="col-sm-4">
-                      <Form.Label>From</Form.Label>
+                      <Form.Label>From Date</Form.Label>
                       <Form.Control
                         type="date"
                         value={pharmacyDates.from}
@@ -465,7 +548,7 @@ export default function InvoiceGenerator() {
                       />
                     </Col>
                     <Col className="col-sm-4">
-                      <Form.Label>To</Form.Label>
+                      <Form.Label>To Date</Form.Label>
                       <Form.Control
                         type="date"
                         value={pharmacyDates.to}
@@ -601,6 +684,10 @@ export default function InvoiceGenerator() {
                       <br />
                     </Col>
                     <Col>
+                      {/* {calculateDays(
+                        investigationDates.from,
+                        investigationDates.to
+                      )} */}
                     </Col>
                     <Col>{investigationCharges === "" ? "0.00" : Number(investigationCharges).toFixed(2)}</Col>
                   </Row>

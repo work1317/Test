@@ -356,3 +356,100 @@ class AllInvoiceListAPIView(APIView):
             },
             status=status.HTTP_200_OK
         )
+    
+
+
+
+class InvoicePrintAPIView(APIView):
+    def get(self, request, id):
+        try:
+            # patient = Patient.objects.get(patient_id=patient_id)
+            invoice = Invoice.objects.get(pk=id)
+            
+
+            if not invoice:
+                return Response(
+                    {
+                        "success": 0,
+                        "message": f"No invoice found for invoice_id {invoice.invoice_id}",
+                        "data": {}
+                    },
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            service_charges_data = ServiceChargeSerializer(invoice.service_charges.all(), many=True).data
+            investigation_data = InvestigationChargeSerializer(invoice.investigation_charges).data
+            pharmacy_data = PharmacyChargeSerializer(invoice.pharmacy_charges).data
+            consultation_data = ConsultationChargeSerializer(invoice.consultation_charges).data
+
+            service_total = sum(
+                float(sc['amount']) for sc in service_charges_data
+            )
+            consultation_total = float(consultation_data['no_of_visits']) * float(consultation_data['amount_per_visit'])
+            investigation_total = float(investigation_data['amount'])
+            pharmacy_total = float(pharmacy_data['amount'])
+            before_concession = service_total + consultation_total + investigation_total + pharmacy_total
+            final_total = before_concession - float(invoice.concession)
+
+            patient_info = {
+                "patient_name": invoice.patient.patient_name,
+                "appointment_type": invoice.patient.appointment_type,
+                "age": invoice.patient.age,
+                "gender": invoice.patient.gender,
+                "mobile_number": invoice.patient.phno,
+                "doctor_name": invoice.patient.doctor.d_name,
+                "ward": invoice.patient.ward_no
+            }
+
+            response_data = {
+                "success": 1,
+                "message": "Invoice and patient info retrieved successfully",
+                "data": {
+                    "invoice": {
+                        "id": invoice.id,
+                        "invoice_id":invoice.invoice_id,
+                        "patient": invoice.patient.patient_id,
+                        "due_on_receipt": invoice.due_on_receipt,
+                        "payment_method": invoice.payment_method,
+                        "notes": invoice.notes,
+                        "concession": str(invoice.concession),
+                        "service_charges": service_charges_data,
+                        "investigation_charges": investigation_data,
+                        "pharmacy_charges": pharmacy_data,
+                        "consultation_charges": consultation_data
+                    },
+                    "patient_info": patient_info,
+                    "totals": {
+                        "service": round(service_total, 2),
+                        "investigation": round(investigation_total, 2),
+                        "pharmacy": round(pharmacy_total, 2),
+                        "consultation": round(consultation_total, 2),
+                        "before_concession": round(before_concession, 2),
+                        "concession": float(invoice.concession),
+                        "final_total": round(final_total, 2)
+                    }
+                }
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except Patient.DoesNotExist:
+            return Response(
+                {
+                    "success": 0,
+                    "message": f"No patient found with patient_id {invoice.patient.patient_id}",
+                    "data": {}
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+
+
+        except Exception as e:
+            return Response(
+                {
+                    "success": 0,
+                    "message": f"Error: {str(e)}",
+                    "data": {}
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
