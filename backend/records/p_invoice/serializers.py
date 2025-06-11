@@ -135,12 +135,13 @@ class RecentPharmacyInvoicesSerializer(serializers.ModelSerializer):
     DiscountAmt = serializers.SerializerMethodField()
     AfterDiscount = serializers.SerializerMethodField()
     NetAmount = serializers.SerializerMethodField()
+    status = serializers.CharField(read_only=True)
  
     class Meta:
         model = PharmacyInvoice
         fields = [
             "Bill_No", "Bill_Date", "typeof_transaction", "patient_name","age","gender","doctor",
-            "appointment_type", "Amount", "DiscountAmt", "AfterDiscount","discount_approved",
+            "appointment_type", "Amount", "DiscountAmt", "AfterDiscount","discount_approved","status",
             "NetAmount", "items"  # Include items here
         ]
  

@@ -289,7 +289,7 @@ const handleBillNumberClick = (invoice) => {
                     <td>{totalDiscount.toFixed(2)}</td>
                     <td>{totalNetAmount.toFixed(2)}</td>
                     <td>{parseFloat(invoice.Dueamt || 0).toFixed(2)}</td>
-                    <td>{invoice.discount_approved ? "Approved" : "Pending"}</td>
+                    <td>{invoice.status}</td>
                   </tr>
                 );
               })}

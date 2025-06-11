@@ -540,18 +540,16 @@ class InvoiceDownloadAPIView(APIView):
         return FileResponse(buffer, as_attachment=True, filename=f"Invoice_{invoice.Bill_No}.pdf")
  
 # -------------------- RECENT ----------------------------------------
- 
- 
+
+
 class RecentPharmacyInvoicesAPIView(APIView):
     def get(self, request, *args, **kwargs):
         try:
-            # Extract query parameters
             start_date = request.query_params.get('start_date')
             end_date = request.query_params.get('end_date')
             appointment_type = request.query_params.get('appointment_type')
             payment_status = request.query_params.get('payment_status')
- 
-            # Build dynamic filters
+
             filters = Q()
             if start_date:
                 filters &= Q(Bill_Date__gte=start_date)
@@ -561,28 +559,44 @@ class RecentPharmacyInvoicesAPIView(APIView):
                 filters &= Q(appointment_type=appointment_type)
             if payment_status:
                 filters &= Q(typeof_transaction=payment_status)
- 
-            # Apply filters
+
             invoices_qs = PharmacyInvoice.objects.filter(filters).order_by('-id')
- 
-            # Aggregations
+
             total_paid_amount = invoices_qs.aggregate(total=Sum('paid_amount'))['total'] or 0
- 
+
             item_aggregates = PharmacyInvoiceItem.objects.filter(invoice__in=invoices_qs).aggregate(
                 total_discount_amount=Sum('discount_amount'),
                 total_net_amount=Sum('net_amount'),
             )
- 
+
             total_discount_amount = item_aggregates.get('total_discount_amount') or 0
             total_net_amount = item_aggregates.get('total_net_amount') or 0
- 
-            # Serialize invoices
-            serializer = RecentPharmacyInvoicesSerializer(invoices_qs, many=True)
- 
+
+            # Prepare data with status logic
+            invoice_data = []
+            for invoice in invoices_qs:
+                items = PharmacyInvoiceItem.objects.filter(invoice=invoice)
+                total_mrp = sum(item.mrp * item.quantity for item in items)
+                total_discount = sum(item.discount_amount for item in items)
+
+                discount_percent = (total_discount / total_mrp) * 100 if total_mrp > 0 else 0
+
+                if discount_percent <= 15:
+                    approval_status = 'NA'
+                elif invoice.discount_requires_approval:
+                    approval_status = 'Approved' if invoice.discount_approved==True else 'Rejected'
+                else:
+                    approval_status = 'Pending'
+
+                serialized = RecentPharmacyInvoicesSerializer(invoice).data
+                serialized['status'] = approval_status
+                serialized['discount_percent'] = round(discount_percent, 2)
+                invoice_data.append(serialized)
+
             return Response({
                 "success": 1,
                 "message": "Filtered invoices fetched successfully",
-                "data": serializer.data,
+                "data": invoice_data,
                 "totals": {
                     "total_amount": total_paid_amount,
                     "total_discount_amount": total_discount_amount,
@@ -590,7 +604,7 @@ class RecentPharmacyInvoicesAPIView(APIView):
                     "total_net_amount": total_net_amount,
                 }
             }, status=status.HTTP_200_OK)
- 
+
         except Exception as e:
             return Response({
                 "success": 0,
