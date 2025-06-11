@@ -99,6 +99,7 @@ function InvoiceForm({ handlerClose, saveButtons, patients }) {
                 />
               </div>
               <div className="col-md-6 mb-3">
+                <Form.Label>Status</Form.Label>
                 <Form.Select
                   className={styles.formsCon}
                   name="status"

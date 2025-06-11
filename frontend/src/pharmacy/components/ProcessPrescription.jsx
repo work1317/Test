@@ -144,7 +144,7 @@ const ProcessPrescription = ({ show, handleClose, patient_id, onUpdate }) => {
                     </Col>
                   </Row>
                   <Row className="mt-2">
-                    <p className="text-muted">{pres.summary}</p>
+                    <p className="text-muted text-break">{pres.summary}</p>
                   </Row>
                   <Row>
                     <Col>
