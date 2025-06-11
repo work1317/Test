@@ -169,7 +169,7 @@ function PharmacyDashboard() {
               >
                 Pharmacy Invoice
               </Button>
-              <Button className={`ms-2 ${styles.addmedica}`} onClick={() => setAddMedication(true)}>
+              <Button className={`ms-2 border border-white ${styles.addmedica}`} onClick={() => setAddMedication(true)}>
               <GoPlus /> Add Medication
               </Button>
               <AddMedication show={addMedication} handleClose={() => setAddMedication(false)}   onMedicationAdded={fetchStats}

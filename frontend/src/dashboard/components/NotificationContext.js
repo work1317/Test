@@ -7,10 +7,16 @@ export const useNotifications = () => useContext(NotificationContexts);
  
 function NotificationContext({ children }) {
   const [read, setRead] = useState(0);
-  const [showDot, setShowDot] = useState(false);
+  // const [showDot, setShowDot] = useState(false);
+  const [showDot, setShowDot] = useState(() => {
+    const saved = localStorage.getItem('showDot');
+    return saved === 'true' ? true : false;
+  });
   const [getdoctoradd,setgetdoctoradd]=useState(false);
   const [messages, setMessage] = useState("")
- 
+    useEffect(() => {
+    localStorage.setItem('showDot', showDot.toString());
+  }, [showDot]);
  
     const fetchNotifications = async () => {
       try {

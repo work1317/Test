@@ -213,18 +213,10 @@ const InvoicePrint = ({ show, handlePrintClose, patientId }) => {
     })) || []),
     {
       name: 'Investigation Charges',
-      days: getDateRangeWithDays(
-        invoiceData.invoice?.investigation_charges?.from_date,
-        invoiceData.invoice?.investigation_charges?.to_date
-      ),
       amount: Number(invoiceData.invoice?.investigation_charges?.amount) || 0,
     },
     {
       name: 'Pharmacy Charges',
-      days: getDateRangeWithDays(
-        invoiceData.invoice?.pharmacy_charges?.from_date,
-        invoiceData.invoice?.pharmacy_charges?.to_date
-      ),
       amount: Number(invoiceData.invoice?.pharmacy_charges?.amount) || 0,
     },
     {

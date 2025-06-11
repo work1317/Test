@@ -4,18 +4,22 @@ import axios from 'axios';
 import styles from '../css/Recentinvoice.module.css'; // Assuming you have custom styles
 import { Icon } from '@iconify/react';
 import api from '../../utils/axiosInstance';
-
+import InvoicePrint from './InvoicePrint';
+ 
 function Recentinvoice({ back }) {
     const [invoiceData, setInvoiceData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [showPrintModal, setShowPrintModal] = useState(false);
+const [selectedPatientId, setSelectedPatientId] = useState(null);
+ 
+ 
     // State for the search input and dropdowns
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [serviceQuery, setServiceQuery] = useState('');
-
+ 
     useEffect(() => {
         // Fetch invoice data from the new API (assuming it's available at localhost:8000/invoice/invoices/)
         const fetchData = async () => {
@@ -30,29 +34,29 @@ function Recentinvoice({ back }) {
                 setLoading(false);
             }
         };
-
+ 
         fetchData();
     }, []);
-
+ 
     // Handle the change in search query
     const handleSearchChange = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
     };
-
+ 
     // Handle department dropdown change
     const handleDepartmentChange = (e) => {
         setSelectedDepartment(e.target.value);
     };
-
+ 
     // Handle service input change
     const handleServiceChange = (e) => {
         setServiceQuery(e.target.value.toLowerCase());
     };
-
+ 
 useEffect(() => {
     let filtered = invoiceData;
-
+ 
     // 1. Patient Search Filter
     if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -61,7 +65,7 @@ useEffect(() => {
             const patientName = (patientInfo.patient_name || '').toLowerCase();
             const patientId = String(invoice.invoice?.patient || '').toLowerCase();
             const mobileNumber = patientInfo.mobile_number || '';
-
+ 
             return (
                 patientName.includes(query) ||
                 patientId.includes(query) ||
@@ -69,7 +73,7 @@ useEffect(() => {
             );
         });
     }
-
+ 
     // 2. Department Filter
     if (selectedDepartment) {
         filtered = filtered.filter((invoice) => {
@@ -77,7 +81,7 @@ useEffect(() => {
             return department.toLowerCase().includes(selectedDepartment.toLowerCase());
         });
     }
-
+ 
     // 3. Service Filter
     if (serviceQuery) {
         const serviceQueryLower = serviceQuery.toLowerCase();
@@ -88,13 +92,13 @@ useEffect(() => {
             );
         });
     }
-
+ 
     setFilteredData(filtered);
 }, [searchQuery, selectedDepartment, serviceQuery, invoiceData]);
-
+ 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
-
+ 
     return (
         <div className="container">
             <div className="d-flex justify-content-between mb-4 mt-4">
@@ -102,7 +106,7 @@ useEffect(() => {
                 {/* back to Invoice button */}
                 <Button onClick={back} className={styles.backbutton}>Back</Button>
             </div>
-
+ 
             {/* Header with Search Bar, Department, and Service Input Field */}
             <div className={styles.header}>
                 <Row className="m-4">
@@ -117,7 +121,7 @@ useEffect(() => {
                                 ))}
                         </Form.Select>
                     </Col>
-
+ 
                     <Col>
                         <h6>Services</h6>
                         <Form.Control
@@ -127,7 +131,7 @@ useEffect(() => {
                             placeholder="Search by service..."
                         />
                     </Col>
-
+ 
                     <Col>
                         <h6>Search Patient</h6>
                         <Form.Control
@@ -157,7 +161,16 @@ useEffect(() => {
         {filteredData.length > 0 ? (
           filteredData.map((invoice) => (
             <tr key={invoice.invoice.id}>
-                <td> {invoice.invoice.invoice_id} </td>
+                <td
+                    style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+                    onClick={() => {
+                        setSelectedPatientId(invoice.invoice.patient); // use patient ID
+                        setShowPrintModal(true);
+                    }}
+                    >
+                    {invoice.invoice.invoice_id}
+                    </td>
+ 
               <td>{invoice.patient_info.patient_name}</td>
               <td>{invoice.patient_info.department}</td>
               <td>
@@ -179,10 +192,16 @@ useEffect(() => {
         )}
       </tbody>
     </Table>
+    <InvoicePrint
+     show={showPrintModal}
+    handlePrintClose={() => setShowPrintModal(false)}
+    patientId={selectedPatientId}
+      />
+ 
   </div>
 </div>
 </div>
     );
 }
-
+ 
 export default Recentinvoice;
