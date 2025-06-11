@@ -99,12 +99,7 @@ class MedicationCombinedAPIView(APIView):
             ).count()
 
             # ✅ UPDATED prescription_pending_count to check NULL or EMPTY description
-            # prescription_pending_count = medicines.filter(
-            #     stock_quantity__isnull=True,
-            #     unit_price__isnull=True,
-            #     mrp__isnull=True,
-            #     expiry_date__isnull=True,
-            # ).filter(Q(description__isnull=True) | Q(description='')).count()
+
             prescription_pending_count = medicines.filter(
                 stock_quantity__isnull=True,
                 unit_price__isnull=True,

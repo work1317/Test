@@ -76,33 +76,6 @@ function GNursingNotes({ patient }) {
       )}
     </div>
   );
-
-
-  // return (
-  //   <div className='mb-4'>
-  //     {errorMessage ? (
-  //       <Alert variant="warning">{errorMessage}</Alert>
-  //     ) : (
-  //       notes.map((note, index) => (
-  //         <div key={index} className="mb-3 px-4">
-  //           <Row>
-  //             <h4> {note.nurse} </h4>
-  //           </Row>
-  //           <Row>
-  //             <Col>
-  //               <span>
-  //                 <Icon icon="weui:time-outlined" width="16" /> {note.created_at}
-  //               </span>
-  //             </Col>
-  //           </Row>
-  //           <Row>
-  //             <p className={styles.nurseNote}>{note.description}</p>
-  //           </Row>
-  //         </div>
-  //       ))
-  //     )}
-  //   </div>
-  // );
 }
 
 export default GNursingNotes;

@@ -66,44 +66,7 @@ class LabTestValidator(serializers.Serializer):
             raise serializers.ValidationError({"test_date": "Test date cannot be in the past."})
  
         return data
- 
- 
-# class LabInvoiceValidator(serializers.Serializer):
-#     patient = serializers.CharField(required=True, max_length=100, error_messages={
-#         "required": "Patient name is required.",
-#         "max_length": "Patient name must not exceed 100 characters."
-#     })
- 
-#     testname = serializers.CharField(required=True, max_length=100, error_messages={
-#         "required": "Test name is required.",
-#         "max_length": "Test name must not exceed 100 characters."
-#     })
- 
-#     amount = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, error_messages={
-#         "required": "Amount is required.",
-#         "invalid": "Enter a valid decimal amount."
-#     })
- 
-#     status = serializers.ChoiceField(choices=['Pending', 'InProgress', 'Completed'], default='Pending', error_messages={
-#         "invalid_choice": "Status must be 'Pending', 'InProgress', or 'Completed'."
-#     })
- 
-#     date = serializers.DateField(required=False, default=date.today, error_messages={
-#         "invalid": "Enter a valid date (YYYY-MM-DD)."
-#     })
- 
-#     def validate_patient(self, value):
-#         try:
-#             patient = Patient.objects.get(patient_name=value)
-#         except Patient.DoesNotExist:
-#             raise serializers.ValidationError("Patient with this name does not exist.")
-#         return patient  # You can return the patient object if your view uses it
-
-#     def validate(self, data):
-#         if 'date' in data and data['date'] < date.today():
-#             raise serializers.ValidationError({"date": "Invoice date cannot be in the past."})
-#         return data
-        
+         
     
 class LabInvoiceValidator(serializers.Serializer):
     patient_id = serializers.CharField(required=True, error_messages={

@@ -228,14 +228,6 @@ export default function InvoiceGenerator() {
                 <Card.Body>
                   <h5>Patient Details</h5>
                   <Row className="mb-2">
-                    {/* <Col>
-                      <Form.Label>Patient Id</Form.Label>
-                      <Form.Control
-                        placeholder="Enter Patient ID"
-                        value={patientId}
-                        onChange={(e) => setPatientId(e.target.value)} // Update patient ID
-                      />
-                    </Col> */}
 
                     <Col>
                       <Form.Label>Patient Id</Form.Label>
@@ -609,10 +601,6 @@ export default function InvoiceGenerator() {
                       <br />
                     </Col>
                     <Col>
-                      {/* {calculateDays(
-                        investigationDates.from,
-                        investigationDates.to
-                      )} */}
                     </Col>
                     <Col>{investigationCharges === "" ? "0.00" : Number(investigationCharges).toFixed(2)}</Col>
                   </Row>

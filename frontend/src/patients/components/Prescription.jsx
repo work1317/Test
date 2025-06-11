@@ -53,9 +53,6 @@ const Prescription = ({ patient_id }) => {
                       <p className="value">{prescription.dosage}</p>
                     </Col>
                     <Col xs={12} sm={4} className="detail">
-                      {/* Uncomment if needed */}
-                      {/* <p className="label">Frequency</p>
-                      <p className="value">{prescription.frequency}</p> */}
                     </Col>
                     <Col xs={12} sm={4} className="detail">
                       <p className="label">Duration</p>

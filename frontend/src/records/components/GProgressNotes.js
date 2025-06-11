@@ -75,34 +75,6 @@ function GProgressNotes({ patient }) {
     </div>
   );
 
-
-
-
-  // return (
-  //   <div className='mb-4'>
-  //     {errorMessage ? (
-  //       <Alert variant="warning">{errorMessage}</Alert>
-  //     ) : (
-  //       progress.map((note, index) => (
-  //         <div key={index} className="mx-4 mb-4">
-  //           <Row>
-  //             <h5>Dr. {patient?.doctor_name || 'Unknown Doctor'}</h5>
-  //           </Row>
-  //           <Row>
-  //             <Col>
-  //               <span><Icon icon="weui:time-outlined" width="16" /> {note.created_at}</span>
-  //             </Col>
-  //           </Row>
-  //           <Row>
-  //             <p className={styles.nurseNote}>
-  //               <strong>{note.status}</strong>
-  //             </p>
-  //           </Row>
-  //         </div>
-  //       ))
-  //     )}
-  //   </div>
-  // );
 }
 
 export default GProgressNotes;

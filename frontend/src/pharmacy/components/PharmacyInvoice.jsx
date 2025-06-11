@@ -424,6 +424,33 @@ const handleBatchChange = async (e, index) => {
       alert("Transaction type cannot be blank")
       return
     }
+    // Validate patient details if not guest
+  if (selectedValue === "no") {
+    const { patient_name, patient_id, age, gender, doctor } = patientDetails;
+    if (!patient_id || !patient_name || !age || !gender || !doctor) {
+      alert("Please fill all patient details.");
+      return;
+    }
+  }
+ 
+  // Validate at least one valid item
+  if (!invoiceData.items || invoiceData.items.length === 0) {
+    alert("Add at least one invoice item.");
+    return;
+  }
+ 
+  for (const item of invoiceData.items) {
+    if (!item.medication_name || !item.batch_no || !item.quantity || !item.mrp || !item.expiry_date) {
+      alert("Please fill all fields in each medicine item.");
+      return;
+    }
+  }
+ 
+  // Validate amount
+  if (!invoiceData.summary.total_paid_amount || isNaN(invoiceData.summary.total_paid_amount)) {
+    alert("Paid amount is required and must be a valid number.");
+    return;
+  }
     const payload = {
       patient_id: selectedValue === "yes" ? null : patientDetails.patient_id,
       patient_name: patientDetails.patient_name,
@@ -528,15 +555,24 @@ const handleBatchChange = async (e, index) => {
           });
 
           setSelectedValue("no");
+          setDiscount("");
+          setTax("");
+ 
         }
       } else {
         alert("Failed to create invoice.");
         console.log("Response error:", response.data);
       }
     } catch (error) {
-      console.error("Error creating invoice:", error.response?.data || error.message);
-      alert("An error occurred while creating the invoice.");
-    }
+  console.error("Error creating invoice:", error.response?.data || error.message);
+  const backendMessage = error.response?.data?.message;
+ 
+  if (backendMessage) {
+    alert(backendMessage); // ✅ Show actual backend error
+  } else {
+    alert("An error occurred while creating the invoice.");
+  }
+}
   };
 
 

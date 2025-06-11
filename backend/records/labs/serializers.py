@@ -44,21 +44,6 @@ class LabTestSerializer(serializers.ModelSerializer):
             raise DRFValidationError(e.message_dict)
         return attrs
 
-# class LabInvoiceSerializer(serializers.ModelSerializer):
-#     # Override patient field to show patient_name instead of ID
-#     patient = serializers.CharField(source='patient.patient_name', read_only=True)
-
-#     class Meta:
-#         model = LabInvoice
-#         fields = '__all__'
-
-#     def validate(self, attrs):
-#         instance = LabInvoice(**attrs)
-#         try:
-#             instance.clean()
-#         except DjangoValidationError as e:
-#             raise DRFValidationError(e.message_dict)
-#         return attrs
  
 class LabInvoiceSerializer(serializers.ModelSerializer):
     # Accept `patient_id` in the request

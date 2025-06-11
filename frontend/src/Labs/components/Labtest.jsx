@@ -350,61 +350,6 @@ function Labtest() {
 };
 
 
-// const saveButtons = async (e) => {
-//   e.preventDefault();
-
-//   const selectedDate = new Date(formsData1.date);
-//   const today = new Date();
-//   today.setHours(0, 0, 0, 0);
-//   selectedDate.setHours(0, 0, 0, 0);
-
-//   if (
-//     formsData1.patient_name.trim() === "" ||
-//     formsData1.testname.trim() === "" ||
-//     formsData1.amount.trim() === "" ||
-//     formsData1.status.trim() === "" ||
-//     formsData1.date.trim() === ""
-//   ) {
-//     alert("Please complete all invoice details.");
-//     return;
-//   }
-
-//   if (selectedDate < today) {
-//     alert("Date cannot be in the past.");
-//     return;
-//   }
-
-//   try {
-//     const normalizedData = {
-//       ...formsData1,
-//       date: new Date(formsData1.date).toISOString().split("T")[0],
-//     };
-
-//     const response = await api.post("labs/create_lab_invoice/", normalizedData);
-//     const saveData = response.data.data;
-
-//     await fetchNotifications();
-//     await onNotificationClick();
-
-//     setFormObj1([...formObj1, formsData1]);
-
-//     setFormsData1({
-//       patient_name: "",
-//       testname: "",
-//       amount: "",
-//       status: "Pending", // ✅ reset to default
-//       date: "",
-//     });
-
-//     await fetchingData();
-//     alert("Successfully Added!");
-//     handlerClose();
-//   } catch (error) {
-//     alert("Patient does not exist.");
-//   }
-// };
-
-
   return (
     <div className="lab">
       <div id="lab" className="bg-light min-vh-100">

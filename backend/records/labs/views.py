@@ -29,7 +29,6 @@ class LabInvoiceCreateAPIView(APIView):
             req_params = validator.validated_data
 
             # Fetch patient object by patient_name (from validated_data)
-            # patient_name = req_params['patient']
             patient_id = req_params['patient_id']
             try:
                 patient = models.Patient.objects.get(patient_id=patient_id)
@@ -37,13 +36,7 @@ class LabInvoiceCreateAPIView(APIView):
                 context["success"] = 0
                 context["message"] = f"Patient with ID '{patient_id}' does not exist."
                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
-            # try:
-            #     patient = models.Patient.objects.get(patient_name=patient_name)
-            # except models.Patient.DoesNotExist:
-            #     context["success"] = 0
-            #     context["message"] = f"Patient '{patient_name}' does not exist."
-            #     return Response(context, status=status.HTTP_400_BAD_REQUEST)
-
+            
             # Create LabInvoice instance
             lab_invoice = models.LabInvoice.objects.create(
                 patient=patient,

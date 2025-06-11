@@ -134,19 +134,6 @@ class GetPatientAPIView(APIView):
             progress = ProgressNote.objects.filter(status="critical").count()
             critical_cases = casualty+progress
 
-            # # Get status for a specific patient
-            # patient_status = None
-            # if patient_id:
-            #     try:
-            #         patient_obj = models.Patient.objects.get(patient_id=patient_id)
-            #         latest_note = patient_obj.progress_notes.order_by('-created_at').first()
-            #         if latest_note:
-            #             patient_status = latest_note.status
-            #     except models.Patient.DoesNotExist:
-            #         pass
-            
-
-
             if appointment_type and not any([search, gender, doctor_name, patient_id]):
                 count = patients.count()
                 context["data"] = {

@@ -171,49 +171,6 @@ class MarkAsReadView(APIView):
 
         return Response(context, status=status.HTTP_200_OK)
 
-# class NotificationApprovalAPIView(APIView):
-#     def post(self, request, pk):
-#         action = request.data.get("status")  # 'approved' or 'rejected'
-#         context = {"success": 0, "message": "Something went wrong"}
- 
-#         try:
-#             notification = Notification.objects.get(pk=pk)
- 
-#             if notification.notification_type != 'doctor':
-#                 context["message"] = "Only doctor notifications can be approved or rejected."
-#                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
- 
-#             doctor = notification.doctor
-#             if not doctor:
-#                 context["message"] = "Associated doctor not found."
-#                 return Response(context, status=status.HTTP_404_NOT_FOUND)
- 
-#             if action == "approved":
-#                 notification.message += "\nStatus: Approved"
-#                 context["success"] = 1
-#                 context["message"] = f"Doctor '{doctor.d_name}' approved successfully."
- 
-#             elif action == "rejected":
-#                 doctor_name = doctor.d_name  # capture before deletion
-#                 doctor.delete()
-#                 notification.doctor = None
-#                 notification.message += f"\nStatus: Rejected"
-#                 context["success"] = 1
-#                 context["message"] = f"Doctor '{doctor_name}' rejected."
- 
-#             else:
-#                 context["message"] = "Invalid status value. Use 'approved' or 'rejected'."
-#                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
- 
-#             notification.save()
- 
-#         except Notification.DoesNotExist:
-#             context["message"] = "Notification not found."
-#             return Response(context, status=status.HTTP_404_NOT_FOUND)
- 
-#         return Response(context)
-
-
 class NotificationApprovalAPIView(APIView):
     def post(self, request, pk):
         action = request.data.get("status")  # 'approved' or 'rejected'

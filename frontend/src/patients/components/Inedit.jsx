@@ -66,40 +66,6 @@ function Inedit({ show, handleClose, patientId, fetchPatients }) {
     }));
   };
 
-  // const handleSubmit = (e) => {
-   
-
-  //   // Only send fields that exist in PatientUpdateSerializer
-  //   const updatePayload = {
-  //     patient_name: formValues.patient_name,
-  //     doctor_name: formValues.doctor_name,
-  //     appointment_type: formValues.appointment_type,
-  //     diagnosis: formValues.diagnosis,
-  //     notes: formValues.notes,
-  //     ward_no: formValues.ward_no,
-  //     age: formValues.age,
-  //     gender: formValues.gender,
-  //     phno: formValues.phno,
-  //   };
-
-  //   api
-  //     .put(`/patients/update/${patientId}/`, updatePayload)
-  //     .then((res) => {
-  //       console.log("PUT response:", res);
-  //       if (res.data.success === 1) {
-  //         console.log(res.data.message)
-  //         alert(res.data.message);
-  //         handleClose();
-  //       } else {
-  //         setError(res.data.message || "Failed to update.");
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.error("PUT error:", err);
-  //       setError("Failed to update patient.");
-  //     })
-  //     .finally(() => setLoading(false));
-  // };
   const handleSubmit = (e) => {
   e.preventDefault();
  

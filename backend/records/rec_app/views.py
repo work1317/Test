@@ -27,6 +27,12 @@ from core.exceptions import SerializerError
 from core import messages  
 from django.core.exceptions import ObjectDoesNotExist
 import re
+from django.db import transaction
+import traceback
+from django.utils.timezone import now
+# from .models import Patient, Prescription, Medication
+from .serializers import PrescriptionSerializer
+
 
 # create your views here
 
@@ -290,162 +296,6 @@ class PrescriptionListAPIView(APIView):
 
 
 
-# class PrescriptionDetailView(APIView):
- 
-#     def get(self, request, patient_id):
-#         context = {
-#             "success": 1,
-#             "message": "Fetched successfully",
-#             "data": []
-#         }
- 
-#         try:
-#             patient = Patient.objects.get(patient_id=patient_id)
-#             prescriptions = Prescription.objects.filter(patient=patient).distinct()
- 
-#             serialized = []
-#             for pres in prescriptions:
-#                 stock_quantity = None  # Initialize stock_quantity to prevent undefined reference
-#                 try:
-#                     # medication = Medication.objects.get(medication_name__iexact=pres.medication_name)
-#                     # stock_quantity = medication.stock_quantity
-#                     # medications = Medication.objects.filter(medication_name__iexact=pres.medication_name)
-#                     # medication_data = [{"id": med.id, "stock_quantity": med.stock_quantity} for med in medications]
-
-#                     medications = Medication.objects.filter(medication_name__iexact=pres.medication_name)
-#                     medication = next((med for med in medications if med.stock_quantity > 0), None)
-
-
-#                     if medications.exists():  # Ensure at least one medication exists
-#                         stock_quantity = medications.first().stock_quantity  # Pick the first medication's stock
-
-#                 except Medication.DoesNotExist:
-#                     medication_data = []  # Ensure this variable is always defined
- 
-#                 serialized.append({
-#                     "id": pres.id,
-#                     "medication_name": pres.medication_name,
-#                     "medications": medication_data, 
-#                     "dosage": pres.dosage,
-#                     "quantity": pres.quantity,
-#                     "duration": pres.duration,
-#                     "category": pres.category,
-#                     "summary": pres.summary,
-#                     "status": pres.status,
-#                     "report": pres.report.url if pres.report else None,
-#                     "created_at": pres.created_at,
-#                     "last_updated_at": pres.last_updated_at,
-#                     "stock_quantity": stock_quantity,
-#                     "doctor_name": pres.patient.doctor.d_name
-#                 })
-
- 
-#             context["data"] = serialized
-#             return Response(context, status=status.HTTP_200_OK)
- 
-#         except Exception as e:
-#             context["success"] = 0
-#             context["message"] = str(e)
-#             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- 
-#     def put(self, request, patient_id):
-#         context = {
-#             "success": 1,
-#             "message": messages.DATA_UPDATED,
-#             "data": []
-#         }
- 
-#         try:
-#             patient = Patient.objects.get(patient_id=patient_id)
-#             data = request.data
- 
-#             prescriptions_data = data if isinstance(data, list) else [data]
- 
-#             with transaction.atomic():
-#                 updated_prescriptions = []
- 
-#                 for item in prescriptions_data:
-#                     medication_name = item.get("medication_name")
-#                     new_quantity_raw = item.get("quantity")
- 
-#                     if not medication_name:
-#                         raise ValidationError("Each item must include 'medication_name'.")
- 
-#                     # Fetch prescriptions (may be multiple)
-#                     prescriptions = Prescription.objects.filter(
-#                         patient=patient,
-#                         medication_name__iexact=medication_name
-#                     ).order_by('-created_at')
- 
-#                     if not prescriptions.exists():
-#                         raise ValidationError(f"Prescription for '{medication_name}' not found.")
- 
-#                     # Pick the most recent prescription
-#                     prescription = prescriptions.first()
- 
-#                     # Default status
-#                     item['status'] = prescription.status or 'pending'
- 
-#                     if new_quantity_raw is not None:
-#                         new_quantity = int(new_quantity_raw)
- 
-#                         try:
-#                             # medication = Medication.objects.get(medication_name__iexact=medication_name)
-#                             medications = Medication.objects.filter(medication_name__iexact=medication_name)
-#                             medication = Medication.objects.filter(medication_name__iexact=medication_name, stock_quantity__gt=0).first()
-#                             # medication_data = [{"id": med.id, "stock_quantity": med.stock_quantity} for med in medications]
-
-#                             # if medications.exists():  # Ensure at least one medication exists
-#                             #     stock_quantity = medications.first().stock_quantity  # Pick the first medication's stock
- 
-#                             if medication.stock_quantity is None or medication.stock_quantity == 0:
-#                                 item['status'] = 'pending'
-#                             elif new_quantity > medication.stock_quantity:
-#                                 item['status'] = 'pending'
-#                             else:
-#                                 # Sufficient stock, deduct it
-#                                 medication.stock_quantity -= new_quantity
-#                                 item['status'] = 'completed'
-#                                 medication.save()
- 
-#                         except Medication.DoesNotExist:
-#                             item['status'] = 'pending'
-#                     else:
-#                         item.pop('quantity', None)  # Remove if not provided
- 
-#                     # Update prescription
-#                     serializer = PrescriptionSerializer(prescription, data=item, partial=True)
-#                     if not serializer.is_valid():
-#                         raise ValidationError(serializer.errors)
- 
-#                     updated = serializer.save()
-#                     updated_prescriptions.append(PrescriptionSerializer(updated).data)
- 
-#                 # Set data field
-#                 context["data"] = (
-#                     updated_prescriptions[0]
-#                     if isinstance(data, dict)
-#                     else updated_prescriptions
-#                 )
- 
-#                 return Response(context, status=status.HTTP_200_OK)
- 
-#         except Exception as e:
-#             context["success"] = 0
-#             context["message"] = str(e)
-#             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- 
-
-
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.db import transaction
-from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404
-import traceback
-
 class PrescriptionDetailView(APIView):
 
     def get(self, request, patient_id):
@@ -461,23 +311,33 @@ class PrescriptionDetailView(APIView):
 
             serialized = []
             for pres in prescriptions:
-                stock_quantity = None  # Initialize to prevent undefined reference
+                # All medications (including expired) for transparency
+                medications = Medication.objects.filter(
+                    medication_name__iexact=pres.medication_name
+                )
 
-                # Fetch medications with the same name
-                medications = Medication.objects.filter(medication_name__iexact=pres.medication_name)
+                # Filter out expired medications
+                non_expired_meds = medications.filter(expiry_date__gte=now().date())
 
-                # Pick the first medication with available stock, if any
-                medication = next((med for med in medications if med.stock_quantity and med.stock_quantity > 0), None)
+                # Get the first available non-expired medication with stock
+                available_med = non_expired_meds.filter(stock_quantity__gt=0).order_by('expiry_date').first()
+                stock_quantity = available_med.stock_quantity if available_med else None
 
-                medication_data = [{"id": med.id, "stock_quantity": med.stock_quantity} for med in medications]
-
-                if medication:
-                    stock_quantity = medication.stock_quantity
+                # Only return non-expired medication data
+                medication_data = [
+                    {
+                        "id": med.id,
+                        "batch_no": med.batch_no,
+                        "stock_quantity": med.stock_quantity,
+                        "expiry_date": med.expiry_date
+                    }
+                    for med in non_expired_meds
+                ]
 
                 serialized.append({
                     "id": pres.id,
                     "medication_name": pres.medication_name,
-                    "medications": medication_data, 
+                    "medications": medication_data,
                     "dosage": pres.dosage,
                     "quantity": pres.quantity,
                     "duration": pres.duration,
@@ -487,7 +347,7 @@ class PrescriptionDetailView(APIView):
                     "report": pres.report.url if pres.report else None,
                     "created_at": pres.created_at,
                     "last_updated_at": pres.last_updated_at,
-                    "stock_quantity": stock_quantity,  # Ensured to always be defined
+                    "stock_quantity": stock_quantity,
                     "doctor_name": getattr(pres.patient.doctor, "d_name", "Unknown")
                 })
 
@@ -511,7 +371,6 @@ class PrescriptionDetailView(APIView):
         try:
             patient = get_object_or_404(Patient, patient_id=patient_id)
             data = request.data
-
             prescriptions_data = data if isinstance(data, list) else [data]
 
             with transaction.atomic():
@@ -524,7 +383,6 @@ class PrescriptionDetailView(APIView):
                     if not medication_name:
                         raise ValidationError("Each item must include 'medication_name'.")
 
-                    # Fetch prescriptions (may be multiple)
                     prescriptions = Prescription.objects.filter(
                         patient=patient,
                         medication_name__iexact=medication_name
@@ -533,35 +391,43 @@ class PrescriptionDetailView(APIView):
                     if not prescriptions.exists():
                         raise ValidationError(f"Prescription for '{medication_name}' not found.")
 
-                    # Pick the most recent prescription
                     prescription = prescriptions.first()
-
-                    # Default status
                     item['status'] = prescription.status or 'pending'
 
                     if new_quantity_raw is not None:
                         new_quantity = int(new_quantity_raw)
 
-                        try:
-                            medications = Medication.objects.filter(medication_name__iexact=medication_name)
-                            medication = next((med for med in medications if med.stock_quantity and med.stock_quantity > 0), None)
+                        # Only use non-expired medications with stock
+                        medications = Medication.objects.filter(
+                            medication_name__iexact=medication_name,
+                            stock_quantity__gt=0,
+                            expiry_date__gte=now().date()
+                        ).order_by('expiry_date')
 
-                            if not medication or medication.stock_quantity is None or medication.stock_quantity == 0:
-                                item['status'] = 'pending'
-                            elif new_quantity > medication.stock_quantity:
-                                item['status'] = 'pending'
-                            else:
-                                # Sufficient stock, deduct it
-                                medication.stock_quantity -= new_quantity
-                                item['status'] = 'completed'
-                                medication.save()
+                        quantity_to_deduct = new_quantity
+                        total_deducted = 0
 
-                        except Medication.DoesNotExist:
+                        for med in medications:
+                            if quantity_to_deduct <= 0:
+                                break
+
+                            deduct_qty = min(med.stock_quantity, quantity_to_deduct)
+                            med.stock_quantity -= deduct_qty
+                            med.save()
+
+                            quantity_to_deduct -= deduct_qty
+                            total_deducted += deduct_qty
+
+                        # Set status based on how much was fulfilled
+                        if total_deducted == new_quantity:
+                            item['status'] = 'completed'
+                        elif total_deducted > 0:
+                            item['status'] = 'partial'
+                        else:
                             item['status'] = 'pending'
                     else:
-                        item.pop('quantity', None)  # Remove if not provided
+                        item.pop('quantity', None)
 
-                    # Update prescription
                     serializer = PrescriptionSerializer(prescription, data=item, partial=True)
                     if not serializer.is_valid():
                         raise ValidationError(serializer.errors)
@@ -569,7 +435,6 @@ class PrescriptionDetailView(APIView):
                     updated = serializer.save()
                     updated_prescriptions.append(PrescriptionSerializer(updated).data)
 
-                # Set data field
                 context["data"] = (
                     updated_prescriptions[0]
                     if isinstance(data, dict)
@@ -584,6 +449,150 @@ class PrescriptionDetailView(APIView):
             context["success"] = 0
             context["message"] = str(e)
             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+# class PrescriptionDetailView(APIView):
+
+#     def get(self, request, patient_id):
+#         context = {
+#             "success": 1,
+#             "message": "Fetched successfully",
+#             "data": []
+#         }
+
+#         try:
+#             patient = get_object_or_404(Patient, patient_id=patient_id)
+#             prescriptions = Prescription.objects.filter(patient=patient).distinct()
+
+#             serialized = []
+#             for pres in prescriptions:
+#                 stock_quantity = None  # Initialize to prevent undefined reference
+
+#                 # Fetch medications with the same name
+#                 medications = Medication.objects.filter(medication_name__iexact=pres.medication_name)
+
+#                 # Pick the first medication with available stock, if any
+#                 medication = next((med for med in medications if med.stock_quantity and med.stock_quantity > 0), None)
+
+#                 medication_data = [{"id": med.id, "stock_quantity": med.stock_quantity} for med in medications]
+
+#                 if medication:
+#                     stock_quantity = medication.stock_quantity
+
+#                 serialized.append({
+#                     "id": pres.id,
+#                     "medication_name": pres.medication_name,
+#                     "medications": medication_data, 
+#                     "dosage": pres.dosage,
+#                     "quantity": pres.quantity,
+#                     "duration": pres.duration,
+#                     "category": pres.category if pres.category else "Unknown",
+#                     "summary": pres.summary if pres.summary else "No summary provided",
+#                     "status": pres.status,
+#                     "report": pres.report.url if pres.report else None,
+#                     "created_at": pres.created_at,
+#                     "last_updated_at": pres.last_updated_at,
+#                     "stock_quantity": stock_quantity,  # Ensured to always be defined
+#                     "doctor_name": getattr(pres.patient.doctor, "d_name", "Unknown")
+#                 })
+
+#             context["data"] = serialized
+#             return Response(context, status=status.HTTP_200_OK)
+
+#         except Exception as e:
+#             print("Error:", e)
+#             traceback.print_exc()
+#             context["success"] = 0
+#             context["message"] = str(e)
+#             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+#     def put(self, request, patient_id):
+#         context = {
+#             "success": 1,
+#             "message": "Prescription updated successfully",
+#             "data": []
+#         }
+
+#         try:
+#             patient = get_object_or_404(Patient, patient_id=patient_id)
+#             data = request.data
+
+#             prescriptions_data = data if isinstance(data, list) else [data]
+
+#             with transaction.atomic():
+#                 updated_prescriptions = []
+
+#                 for item in prescriptions_data:
+#                     medication_name = item.get("medication_name")
+#                     new_quantity_raw = item.get("quantity")
+
+#                     if not medication_name:
+#                         raise ValidationError("Each item must include 'medication_name'.")
+
+#                     # Fetch prescriptions (may be multiple)
+#                     prescriptions = Prescription.objects.filter(
+#                         patient=patient,
+#                         medication_name__iexact=medication_name
+#                     ).order_by('-created_at')
+
+#                     if not prescriptions.exists():
+#                         raise ValidationError(f"Prescription for '{medication_name}' not found.")
+
+#                     # Pick the most recent prescription
+#                     prescription = prescriptions.first()
+
+#                     # Default status
+#                     item['status'] = prescription.status or 'pending'
+
+#                     if new_quantity_raw is not None:
+#                         new_quantity = int(new_quantity_raw)
+
+#                         try:
+#                             medications = Medication.objects.filter(medication_name__iexact=medication_name)
+#                             medication = next((med for med in medications if med.stock_quantity and med.stock_quantity > 0), None)
+
+#                             if not medication or medication.stock_quantity is None or medication.stock_quantity == 0:
+#                                 item['status'] = 'pending'
+#                             elif new_quantity > medication.stock_quantity:
+#                                 item['status'] = 'pending'
+#                             else:
+#                                 # Sufficient stock, deduct it
+#                                 medication.stock_quantity -= new_quantity
+#                                 item['status'] = 'completed'
+#                                 medication.save()
+
+#                         except Medication.DoesNotExist:
+#                             item['status'] = 'pending'
+#                     else:
+#                         item.pop('quantity', None)  # Remove if not provided
+
+#                     # Update prescription
+#                     serializer = PrescriptionSerializer(prescription, data=item, partial=True)
+#                     if not serializer.is_valid():
+#                         raise ValidationError(serializer.errors)
+
+#                     updated = serializer.save()
+#                     updated_prescriptions.append(PrescriptionSerializer(updated).data)
+
+#                 # Set data field
+#                 context["data"] = (
+#                     updated_prescriptions[0]
+#                     if isinstance(data, dict)
+#                     else updated_prescriptions
+#                 )
+
+#                 return Response(context, status=status.HTTP_200_OK)
+
+#         except Exception as e:
+#             print("Error:", e)
+#             traceback.print_exc()
+#             context["success"] = 0
+#             context["message"] = str(e)
+#             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
  
 

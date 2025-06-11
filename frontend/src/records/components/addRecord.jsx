@@ -18,12 +18,6 @@ function AddRecordModal({show,handleClose,patientId}) {
   const [savedRecords, setSavedRecords] = useState([]);
   const [clearPreview, setClearPreview] = useState(false);
   const [formData, setFormData] = useState({
-    // lab_results: {
-    //   title: "",
-    //   summary: "",
-    //   category:"",
-    //   report: FileList | File,
-    // },
     Prescription: {
       medication_name: "",
       category:"",
@@ -32,12 +26,6 @@ function AddRecordModal({show,handleClose,patientId}) {
       summary: "",
       report: FileList | File,
     },
-    // imaging: {
-    //   title: "",
-    //   category:"",
-    //   summary: "",
-    //   report: FileList | File,
-    // },
     Vitals: {
       category:"",
       height: "",
