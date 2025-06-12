@@ -77,69 +77,6 @@ export default function InvoiceGenerator() {
     setIsPaymentMethodDisabled(value === "yes");
   };
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//       const invoice = response.data.data;
-
-
-//     const payload = {
-//       patient: patientId,
-//       due_on_receipt: dueOnReceipt,
-//       payment_method: paymentMethod,
-//       notes: note,
-//        concession: Number(concession).toFixed(2),
-//       service_charges: store.map((item) => ({
-//         service_name: item.service,
-//         days: Number(item.days),
-//         amount: Number(item.amount).toFixed(2),
-//       })),
-//       investigation_charges: {
-//         from_date: investigationDates.from,
-//         to_date: investigationDates.to,
-//         amount: investigationCharges === "" ? "0.00" : Number(investigationCharges).toFixed(2),
-//       },
-
-//      pharmacy_charges: {
-//       from_date: pharmacyDates.from,
-//       to_date: pharmacyDates.to,
-//       amount: pharmacyCharges === "" ? "0.00" : Number(pharmacyCharges).toFixed(2),
-
-// },
-
-//       consultation_charges: {
-//         no_of_visits:Number(consultationCharges.visits || 0),
-//         amount_per_visit: Number(consultationCharges.amountPerVisit || 0).toFixed(2),     },
-//     };
-
-//     try {
-//       const response = await api.post("invoice/create-invoice/", payload);
-//       await fetchNotifications();
-//       await onNotificationClick();
-
-//       setInvoiceData(invoice);
-//       setPatientId(invoice?.invoice?.patient || "");
-//       setInvoiceId(invoice?.invoice?.id || "");
-
-      
-//       // Update patientId state safely
-
-//       alert(response.data?.message || "Invoice created successfully!");
-
-//       setShowPrintModal(false); // Open print modal
-//     } catch (error) {
-//       const errorMessage =
-//         error.response?.data?.message ||
-//         "Failed to create invoice. Please try again.";
-//       alert(errorMessage);
-//       console.error(
-//         "Invoice creation error:",
-//         error.response?.data || error.message
-//       );
-//     }
-//   };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -303,15 +240,6 @@ export default function InvoiceGenerator() {
                 <Card.Body>
                   <h5>Patient Details</h5>
                   <Row className="mb-2">
-                    {/* <Col>
-                      <Form.Label>Patient Id</Form.Label>
-                      <Form.Control
-                        placeholder="Enter Patient ID"
-                        value={patientId}
-                        onChange={(e) => setPatientId(e.target.value)} // Update patient ID
-                      />
-                    </Col> */}
-
                     <Col>
                       <Form.Label>Patient Id</Form.Label>
                       <Form.Control

@@ -50,32 +50,62 @@ const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {
   };
  
   // NEW: iframe-based print handler for 1 page print
-  const handlePrint = () => {
-    if (!printRef.current) return;
+const handlePrint = () => {
+  if (!printRef.current || !invoiceData) return;
  
-    const content = printRef.current.innerHTML;
+  const {
+    invoice: { invoice_id, patient },
+    patient_info: { patient_name, age, gender, mobile_number }
+  } = invoiceData;
  
-    // Create iframe for printing
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.right = '0';
-    iframe.style.bottom = '0';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = '0';
-    document.body.appendChild(iframe);
+  // First page content (full invoice)
+  const firstPage = printRef.current.innerHTML;
  
-    const doc = iframe.contentWindow.document;
-    doc.open();
+  // Second page content (only header and patient info)
+  const secondPage = `
+    <div class="headerContainer">
+      <img src="${logo}" alt="Hospital Logo" class="logo" />
+      <div class="hospitalInfo">
+        <h3 style="color: #A34C51;">Sai Teja Multi Speciality Hospital</h3>
+        <h5>(A UNIT OF SAVITHA HEALTH CARE PVT.LTD)</h5>
+        <p><strong>Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035. Ph: 040 4006 2725, +91 84840 19791</strong></p>
+      </div>
+    </div>
+    <hr />
+    <div class="mx-4">
+      <h6>Invoice ID : ${invoice_id}</h6>
+      <p><strong>Patient Information</strong></p>
+     <div class="row">
+      <div class="col">Name: ${patient_name}</div>
+      <div class="col">Age: ${age} / Sex: ${gender}</div>
+    </div>
+    <div class="row">
+      <div class="col">Patient ID: ${patient}</div>
+      <div class="col">Mobile: ${mobile_number}</div>
+    </div>
+  </div>
+  <hr />
+  `;
  
-    // Inject styles inside iframe - add Bootstrap CDN + your styles + print-specific CSS for 1 page fit
-    doc.write(`
-      <html>
+ 
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.right = '0';
+  iframe.style.bottom = '0';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = '0';
+  document.body.appendChild(iframe);
+ 
+  const doc = iframe.contentWindow.document;
+  doc.open();
+ 
+  doc.write(`
+    <html>
       <head>
         <title>Print Invoice</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
         <style>
-          /* Basic resets */
           body {
             font-family: Arial, sans-serif;
             margin: 10mm;
@@ -91,94 +121,47 @@ const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {
           .logo {
             height: 80px;
           }
-          h3 {
+          .hospitalInfo h3 {
             margin: 0;
             color: #A34C51;
           }
-          h5 {
+          .hospitalInfo h5 {
             margin: 0;
             color: #007bff;
           }
-          p {
+          .hospitalInfo p {
             margin: 0;
           }
           hr {
             border: 1px solid #ccc;
             margin: 10px 0;
           }
-          .charge-summary > div {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
+          .num{
+            padding-right: 220px;
           }
-          .charge-summary .header {
-            font-weight: bold;
-            border-bottom: 1px solid #000;
-            padding-bottom: 6px;
-          }
-          .footerNote {
-            margin-top: 20px;
-            background-color: #A62855;
-            color: white;
-            text-align: center;
-            padding: 6px 0;
-            font-weight: bold;
-          }
-          /* Fit content to one A4 page */
           @page {
             size: A4;
             margin: 10mm;
           }
-          /* Hide buttons or other non-print elements */
-          .no-print {
-            display: none !important;
-          }
-          /* Prevent content overflow */
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-          }
-          th, td {
-            border: 1px solid #000;
-            padding: 4px 6px;
-            text-align: left;
-          }
-          /* Responsive flex for rows */
-          .d-flex {
-            display: flex !important;
-          }
-          .justify-between {
-            justify-content: space-between !important;
-          }
-          .w-50 {
-            width: 50% !important;
-          }
-          .w-20 {
-            width: 20% !important;
-          }
-          .w-30 {
-            width: 30% !important;
-          }
-          .num{
-            padding-right: 220px;
-          }
         </style>
       </head>
       <body>
-        ${content}
+        ${firstPage}
+        <div style="page-break-before: always;"></div>
+        ${secondPage}
       </body>
-      </html>
-    `);
+    </html>
+  `);
  
-    doc.close();
+  doc.close();
  
-    iframe.onload = () => {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-      setTimeout(() => document.body.removeChild(iframe), 1000);
-    };
+  iframe.onload = () => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    setTimeout(() => document.body.removeChild(iframe), 1000);
   };
+};
+ 
  
   if (!show) return null;
  
@@ -213,18 +196,10 @@ const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {
     })) || []),
     {
       name: 'Investigation Charges',
-      // days: getDateRangeWithDays(
-      //   invoiceData.invoice?.investigation_charges?.from_date,
-      //   invoiceData.invoice?.investigation_charges?.to_date
-      // ),
       amount: Number(invoiceData.invoice?.investigation_charges?.amount) || 0,
     },
     {
       name: 'Pharmacy Charges',
-      // days: getDateRangeWithDays(
-      //   invoiceData.invoice?.pharmacy_charges?.from_date,
-      //   invoiceData.invoice?.pharmacy_charges?.to_date
-      // ),
       amount: Number(invoiceData.invoice?.pharmacy_charges?.amount) || 0,
     },
     {
@@ -270,17 +245,13 @@ const handleDownload = () => {
     </div>
    </div>
 </Modal.Header>
- 
- 
- 
- 
         <Modal.Body>
           <div className="mx-4">
             <h6>Invoice ID : {invoiceData.invoice.invoice_id}</h6>
             <p><strong>Patient Information</strong></p>
             <Row>
               <Col>Name: {invoiceData.patient_info.patient_name}</Col>
-              <Col>Age: {invoiceData.patient_info.age} / Sex: {invoiceData.patient_info.gender}</Col>
+              <Col>Age: {invoiceData.patient_info.age} / Gender: {invoiceData.patient_info.gender}</Col>
             </Row>
             <Row>
               <Col>Patient ID: {invoiceData.invoice.patient}</Col>
@@ -357,5 +328,3 @@ const handleDownload = () => {
 };
  
 export default InvoicePrint;
- 
- 
