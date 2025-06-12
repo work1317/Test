@@ -201,7 +201,7 @@ const MainDashBoard = () => {
         <div className={styles.carheader}>
           <div>
             <h1 className={styles.cartitle}>Dashboard</h1>
-            <p className={styles.carsubtitle}>Welcome back, {user?.username}</p>
+            <p className={`ps-2 ${styles.carsubtitle}`}>Welcome back, {user?.username}</p>
           </div>
           <div>
             <p className={styles.carupdated}>Last updated: Just now</p>

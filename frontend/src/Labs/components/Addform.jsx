@@ -234,6 +234,7 @@ function Addform({ handlerClose, saveForms,patients }) {
                 <Form.Label className={styles.fl1}>Test Type</Form.Label>
                 <Form.Control
                   name="test_type"
+                  placeholder="Enter your Test Type"
                   value={formsData.test_type || ''}
                   onChange={formsChanges}
                   type="text"

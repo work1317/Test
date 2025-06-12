@@ -8,13 +8,11 @@ import styles from '../css/InvoicePrint.module.css';
 import { Icon } from '@iconify/react';
 import api from '../../utils/axiosInstance';
  
-const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {
-  const printRef = useRef();
-  const [invoiceData, setInvoiceData] = useState(null);
+const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {  const printRef = useRef();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
- 
-  useEffect(() => {
+ const [invoiceData, setInvoiceData] = useState(null);
+    useEffect(() => {
     if (!show || !invoiceId) return;
  
     const fetchInvoice = async () => {
@@ -39,6 +37,8 @@ const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {
     fetchInvoice();
   }, [show, invoiceId]);
  
+ 
+ 
   const getDateRangeWithDays = (fromDateStr, toDateStr) => {
     if (!fromDateStr || !toDateStr) return '';
     const from = new Date(fromDateStr);
@@ -55,7 +55,7 @@ const handlePrint = () => {
  
   const {
     invoice: { invoice_id, patient },
-    patient_info: { patient_name, age, gender, mobile_number }
+    patient_info: { patient_name, age, gender, mobile_number,appointment_type }
   } = invoiceData;
  
   // First page content (full invoice)
@@ -82,6 +82,9 @@ const handlePrint = () => {
     <div class="row">
       <div class="col">Patient ID: ${patient}</div>
       <div class="col">Mobile: ${mobile_number}</div>
+    </div>
+    <div class="row">
+    <div class="col">Appointment Type: ${appointment_type}</div>
     </div>
   </div>
   <hr />
@@ -121,6 +124,16 @@ const handlePrint = () => {
           .logo {
             height: 80px;
           }
+             .watermark {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            width: 400px;
+          }
           .hospitalInfo h3 {
             margin: 0;
             color: #A34C51;
@@ -137,7 +150,7 @@ const handlePrint = () => {
             margin: 10px 0;
           }
           .num{
-            padding-right: 220px;
+            padding-right: 230px;
           }
           @page {
             size: A4;
@@ -146,6 +159,8 @@ const handlePrint = () => {
         </style>
       </head>
       <body>
+      <img src="${logo}" class="watermark" />
+        <div class="content">
         ${firstPage}
         <div style="page-break-before: always;"></div>
         ${secondPage}
@@ -256,6 +271,9 @@ const handleDownload = () => {
             <Row>
               <Col>Patient ID: {invoiceData.invoice.patient}</Col>
               <Col>Mobile: {invoiceData.patient_info.mobile_number}</Col>
+            </Row>
+            <Row>
+              <Col>Appointment Type : {invoiceData.patient_info.appointment_type}</Col>
             </Row>
             <hr />
             <h6>Charge Summary</h6>

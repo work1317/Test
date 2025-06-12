@@ -274,7 +274,7 @@ class AllInvoiceListAPIView(APIView):
         # Base queryset
         invoices = Invoice.objects.select_related(
             'patient', 'investigation_charges', 'pharmacy_charges', 'consultation_charges'
-        ).prefetch_related('service_charges')
+        ).prefetch_related('service_charges').order_by('-created_at')
 
         # Filtering
         if patient_id or patient_name or mobile_number:

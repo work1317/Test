@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-
+from .models import InvestigationCharge  # replace with your model path
 # create your invoice serializers here
 
 class ServiceChargeSerializer(serializers.ModelSerializer):
@@ -19,49 +19,62 @@ class ServiceChargeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class InvestigationChargeSerializer(serializers.ModelSerializer):
+    from_date = serializers.DateField(required=False, allow_null=True)
+    to_date = serializers.DateField(required=False, allow_null=True)
+ 
+    def to_internal_value(self, data):
+        for field in ['from_date', 'to_date']:
+            if data.get(field) == '':
+                data[field] = None
+        return super().to_internal_value(data)
+ 
     def validate(self, data):
         from_date = data.get('from_date')
         to_date = data.get('to_date')
-
+ 
         if from_date and to_date and to_date < from_date:
             raise serializers.ValidationError("To date cannot be earlier than from date in Investigation charges.")
-
+ 
         if data.get('amount', 0) < 0:
             raise serializers.ValidationError("Investigation amount must be positive.")
-        
+ 
         return data
-    
-    from_date = serializers.DateField(required=False, allow_null=True)
-    to_date = serializers.DateField(required=False, allow_null=True)
-
+ 
     class Meta:
         model = InvestigationCharge
         fields = '__all__'
-
-
-
+ 
+ 
+ 
 class PharmacyChargeSerializer(serializers.ModelSerializer):
+    from_date = serializers.DateField(required=False, allow_null=True)
+    to_date = serializers.DateField(required=False, allow_null=True)
+ 
+    def to_internal_value(self, data):
+        for field in ['from_date', 'to_date']:
+            if data.get(field) == '':
+                data[field] = None
+        return super().to_internal_value(data)
+ 
     def validate(self, data):
         from_date = data.get('from_date')
         to_date = data.get('to_date')
-
+ 
         if from_date and to_date and to_date < from_date:
             raise serializers.ValidationError("To date cannot be earlier than from date in Pharmacy charges.")
-
+ 
         if data.get('amount', 0) < 0:
             raise serializers.ValidationError("Pharmacy amount must be positive.")
-
+ 
         return data
-
-    from_date = serializers.DateField(required=False, allow_null=True)
-    to_date = serializers.DateField(required=False, allow_null=True)
-
+ 
     class Meta:
         model = PharmacyCharge
         fields = '__all__'
-
+ 
+ 
+ 
 
 
 class ConsultationChargeSerializer(serializers.ModelSerializer):

@@ -5,7 +5,7 @@
  
 /* Header Address Styling */
 .address {
-  font-size: 12px;
+  font-size: 11px;
 }
  
 /* Hospital Title Styling */
@@ -33,7 +33,7 @@
 }
 .inputs{
   text-align: left;
-  padding-right: 150px;
+  padding-right: 140px;
 }
  
 /* Modal Footer Positioning */
@@ -88,3 +88,26 @@
     margin: 0 !important;
   }
 }
+.printContent {
+  position: relative;
+  background: white;
+  padding: 20px;
+}
+ 
+/* Watermark */
+.printContent::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../assets/images/sitelogo.svg'); /* Adjust path if needed */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%;
+  opacity: 0.1; /* Adjust opacity as needed */
+  pointer-events: none;
+  z-index: 0;
+}
+ 

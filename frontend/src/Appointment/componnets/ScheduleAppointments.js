@@ -102,7 +102,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Patient Name</Form.Label>
                 <Form.Control
-                  type="text" placeholder="patient" name="patient_name" value={formData.patient_name}
+                  type="text" placeholder="Enter Patient Name" name="patient_name" value={formData.patient_name}
                   onChange={handleChange} isInvalid={!!error.patient_name}
                 />
                 <Form.Control.Feedback type="invalid">{error.patient_name}</Form.Control.Feedback>
@@ -112,7 +112,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Doctor</Form.Label>
                 <Form.Control
-                  type="text" placeholder="doctor" name="doctor" value={formData.doctor}
+                  type="text" placeholder="Enter Doctor Name" name="doctor" value={formData.doctor}
                   onChange={handleChange} isInvalid={!!error.doctor}
                 />
                 <Form.Control.Feedback type="invalid">{error.doctor}</Form.Control.Feedback>
@@ -125,7 +125,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Mobile Number</Form.Label>
                 <Form.Control
-                  type="tel" placeholder="mobile" name="phno" value={formData.phno}
+                  type="tel" placeholder="Enter Mobile  Number" name="phno" value={formData.phno}
                   onChange={handleChange} isInvalid={!!error.phno}
                 />
                 <Form.Control.Feedback type="invalid">{error.phno}</Form.Control.Feedback>
@@ -135,7 +135,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Email</Form.Label>
                 <Form.Control
-                  type="email" placeholder="email" name="email" value={formData.email}
+                  type="email" placeholder="Enter Email" name="email" value={formData.email}
                   onChange={handleChange} isInvalid={!!error.email}
                 />
                 <Form.Control.Feedback type="invalid">{error.email}</Form.Control.Feedback>
@@ -148,7 +148,7 @@ const ScheduleAppointments = ({ show, handleClose }) => {
               <Form.Group>
                 <Form.Label>Age</Form.Label>
                 <Form.Control
-                  type="number" placeholder="age" name="age" value={formData.age}
+                  type="number" placeholder="Enter Age" name="age" value={formData.age}
                   onChange={handleChange} isInvalid={!!error.age}
                 />
                 <Form.Control.Feedback type="invalid">{error.age}</Form.Control.Feedback>

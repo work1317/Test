@@ -584,7 +584,10 @@ class RecentPharmacyInvoicesAPIView(APIView):
                 if discount_percent <= 15:
                     approval_status = 'NA'
                 elif invoice.discount_requires_approval:
-                    approval_status = 'Approved' if invoice.discount_approved==True else 'Rejected'
+                    if invoice.discount_approved is True:
+                        approval_status = 'Approved'
+                    else:
+                        approval_status = 'Pending'
                 else:
                     approval_status = 'Pending'
 

@@ -12,6 +12,7 @@ from rec_app.models import ProgressNote
 from .models import Patient
 from doctors.serializers import DoctorAvailabilitySerializer
 from appointments.models import Appointment
+from notifications.models import Notification
 
 # Create your views here.
 
@@ -41,7 +42,23 @@ class PatientAPIView(APIView):
                     "message": f"Doctor not found. Here are available doctors {doctors}.",
                     # "available_doctors": doctors
                 })
-                
+            
+            # Check if doctor has an approved notification
+            doctor_notification = Notification.objects.filter(doctor=doctor).order_by('-created_at').first()
+
+            if not doctor_notification or doctor_notification.approval_status != "approved":
+                raise Exception(f"Doctor '{doctor.d_name}' is not yet approved by the superadmin.")
+
+            # Check if patient already exists with same name, phone number, and email
+            existing_patient = models.Patient.objects.filter(
+                patient_name__iexact=req_params["patient_name"],
+                phno=req_params["phno"],
+                email__iexact=req_params["email"]
+            ).first()
+
+            if existing_patient:
+                raise Exception("A patient with the same name, phone number, and email already exists.")
+
 
             patient = models.Patient(
                 patient_name = req_params['patient_name'],

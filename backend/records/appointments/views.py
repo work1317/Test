@@ -20,6 +20,7 @@ from rest_framework.exceptions import ValidationError
 from datetime import datetime, timedelta, date
 from . import models, serializers, validators
 from patients.models import Patient
+from notifications.models import Notification
 
  
 # Create your views here.
@@ -48,6 +49,12 @@ class AppointmentCreateAPIView(APIView):
 
             if not doctor:
                 raise Exception("Doctor not found")
+            
+            # Check if doctor has an approved notification
+            doctor_notification = Notification.objects.filter(doctor=doctor).order_by('-created_at').first()
+
+            if not doctor_notification or doctor_notification.approval_status != "approved":
+                raise Exception(f"Doctor '{doctor.d_name}' is not yet approved by the superadmin.")
 
             # Convert date
             appointment_date = req_params["date"]
@@ -125,6 +132,16 @@ class AppointmentCreateAPIView(APIView):
                     ward_no=req_params.get("ward_no"),
                     diagnosis=req_params.get("diagnosis"),
                 )
+
+            # Check if an appointment already exists for the same doctor at the same date and time
+            existing_appointment = models.Appointment.objects.filter(
+                doctor=doctor,
+                date=appointment_date,
+                time=appointment_time
+            ).exists()
+
+            if existing_appointment:
+                raise Exception("An appointment is already scheduled for this doctor at the selected time. Please choose a different time slot.")
 
             # Create appointment
             appointment = models.Appointment.objects.create(

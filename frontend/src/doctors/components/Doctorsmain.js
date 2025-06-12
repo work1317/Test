@@ -138,16 +138,16 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
                 </div>
           </div>
         </div>
-        <hr></hr>
-        <div className="text-center mt-4">
-          <Button
+        {/* <hr></hr> */}
+        {/* <div className="text-center mt-4"> */}
+          {/* <Button
             className={`w-100 ${doctorstyle.button}`}
             onClick={handleClose}
           >
             Schedule Appointment
-          </Button>
+          </Button> */}
           {/* <ScheduleAppointments show={showUserModal} handleClose={() => setShowUserModal(false)} /> */}
-        </div>
+        {/* </div> */}
       </Modal.Body>
     </Modal>
   );
