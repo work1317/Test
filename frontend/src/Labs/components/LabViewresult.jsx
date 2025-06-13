@@ -86,7 +86,7 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
           <Row className="mb-3">
             <Col>
               <h5>Summary</h5>
-              <p style={{ fontSize: "1.1rem" }}>{selectedResult.summary}</p>
+              <p style={{ fontSize: "1.1rem" }}className="text-break">{selectedResult.summary}</p>
             </Col>
           </Row>
 
