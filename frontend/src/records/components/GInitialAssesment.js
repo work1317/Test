@@ -81,21 +81,21 @@ function GInitialAssesment({ patient }) {
       <Row>
         <Col>
           <label className={styles.labels}>Duration of Experience</label>
-          <p className={styles.data}>{assessment.duration_of_experience}</p>
+          <p className={` text-breK ${styles.data}`}>{assessment.duration_of_experience}</p>
         </Col>
       </Row>
 
       <Row>
         <Col>
           <label className={styles.labels}>Present Illness</label>
-          <p className={styles.data}>{assessment.present_illness}</p>
+          <p className={` text-breK ${styles.data}`}>{assessment.present_illness}</p>
         </Col>
       </Row>
 
       <Row>
         <Col>
           <label className={styles.labels}>Past Illness</label>
-          <p className={styles.data}>{assessment.past_illness}</p>
+          <p className={` text-breK ${styles.data}`}>{assessment.past_illness}</p>
         </Col>
       </Row>
 
@@ -108,14 +108,14 @@ function GInitialAssesment({ patient }) {
           <Col>
             <input className={styles.customCheckbox} type='checkbox' checked readOnly />
             <label className={styles.labels}>Experience Feedback</label>
-            <p className={styles.feedback}>{assessment.experience_feedback}</p>
+            <p className={`text-break ${styles.feedback}`}>{assessment.experience_feedback}</p>
           </Col>
         )}
         {assessment.health_feedback && (
           <Col>
             <input className={styles.customCheckbox} type='checkbox' checked readOnly />
             <label className={styles.labels}>Health Feedback</label>
-            <p className={styles.feedback}>{assessment.health_feedback}</p>
+            <p className={`text-break ${styles.feedback}`}>{assessment.health_feedback}</p>
           </Col>
         )}
       </Row>
@@ -125,14 +125,14 @@ function GInitialAssesment({ patient }) {
           <Col>
             <input className={styles.customCheckbox} type='checkbox' checked readOnly />
             <label className={styles.labels}>Heart Feedback</label>
-            <p className={styles.feedback}>{assessment.heart_feedback}</p>
+            <p className={`text-break ${styles.feedback}`}>{assessment.heart_feedback}</p>
           </Col>
         )}
         {assessment.stroke_feedback && (
           <Col>
             <input className={styles.customCheckbox} type='checkbox' checked readOnly />
             <label className={styles.labels}>Stroke Feedback</label>
-            <p className={styles.feedback}>{assessment.stroke_feedback}</p>
+            <p className={`text-break ${styles.feedback}`}>{assessment.stroke_feedback}</p>
           </Col>
         )}
       </Row>
@@ -142,7 +142,7 @@ function GInitialAssesment({ patient }) {
           <Col>
             <input className={styles.customCheckbox} type='checkbox' checked readOnly />
             <label className={styles.labels}>Other Feedback</label>
-            <p className={styles.otherfeedback}>{assessment.other_feedback}</p>
+            <p className={` ${styles.otherfeedback} text-break`}>{assessment.other_feedback}</p>
           </Col>
         </Row>
       )}

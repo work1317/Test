@@ -158,9 +158,8 @@ function PharmacyDashboard() {
           {/* Header */}
           <Row className="justify-content-between align-items-center mb-4">
             <Col>
-              <h1>Pharmacy Management</h1>
-              <p className='ms-2 mb-3'>Manage inventory and process prescriptions</p>
-            </Col>
+              <h1 className='mb-2'>Pharmacy Management</h1>
+  <p className='ms-2 mb-3'style={{fontSize:"20px",fontWeight:"400", font:"Poppins",color:"#9A9A9A"}}>Manage inventory and process prescriptions</p>            </Col>
             <Col className="text-end">
               <Button
                 variant="secondary"

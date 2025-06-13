@@ -197,64 +197,83 @@ const PharmacyInvoice = ({onBack}) => {
   }, [discount, tax]);
 
 const handlerInput = async (e, index) => {
-  const { name, value } = e.target;
-
-  if (name === "medication_name") {
-    setInvoiceData((prev) => {
-      const updatedItems = [...prev.items];
-      updatedItems[index][name] = value;
-      return { ...prev, items: updatedItems };
-    });
-
-    if (value.length >= 2) {
-      if (/^\d+$/.test(value)) {
+    const { name, value } = e.target;
+ 
+    if (name === "medication_name") {
+      setInvoiceData((prev) => {
+        const updatedItems = [...prev.items];
+        updatedItems[index][name] = value;
+        return { ...prev, items: updatedItems };
+      });
+ 
+      if (value.length >= 2) {
+        if (/^\d+$/.test(value)) {
+          setSuggestions([]);
+          setActiveRowIndex(null);
+          return;
+        }
+ 
+        try {
+          const response = await api.get("/p_invoice/pharmacy/search/", {
+            params: { q: value },
+          });
+ 
+          setSuggestions(
+            (response.data.suggestions || []).map((name) => ({
+              medication_name: name,
+            }))
+          );
+          setActiveRowIndex(index);
+        } catch (error) {
+          console.error("Error fetching suggestions:", error);
+          setSuggestions([]);
+          setActiveRowIndex(null);
+        }
+      } else {
         setSuggestions([]);
         setActiveRowIndex(null);
-        return;
       }
-
-      try {
-        const response = await api.get("/p_invoice/pharmacy/search/", {
-          params: { q: value }, // ✅ Query param for suggestions
-        });
-
-        setSuggestions(
-          (response.data.suggestions || []).map((name) => ({
-            medication_name: name,
-          }))
-        );
-        setActiveRowIndex(index);
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-        setSuggestions([]);
-        setActiveRowIndex(null);
-      }
-    } else {
-      setSuggestions([]);
-      setActiveRowIndex(null);
+ 
+      return;
     }
-
-    return;
-  }
-
-  // Handle other fields like quantity
-  setInvoiceData((prevData) => {
-    const updatedItems = [...prevData.items];
-    updatedItems[index] = {
-      ...updatedItems[index],
-      [name]: name === "quantity" ? Number(value) : value,
-    };
-    updatedItems[index].amount =
-      (updatedItems[index].mrp || 0) * (updatedItems[index].quantity || 0);
-    return {
-      ...prevData,
-      items: updatedItems,
-      summary: calculateSummary(updatedItems),
-    };
-  });
-};
-
-
+ 
+    // Replace logic for numeric fields (e.g., quantity, discount, etc.)
+    setInvoiceData((prevData) => {
+      const updatedItems = [...prevData.items];
+      const currentItem = updatedItems[index];
+      let newValue = value;
+ 
+      const numericFields = ["quantity", "discount", "mrp", "tax"]; // extend as needed
+      if (numericFields.includes(name)) {
+        if (value === "") {
+          newValue = "";
+        } else if (currentItem[name] === 0 || currentItem[name] === "0") {
+          // If current value is 0, replace it with last typed digit
+          newValue = Number(value[value.length - 1]);
+        } else {
+          newValue = Number(value);
+        }
+      }
+ 
+      updatedItems[index] = {
+        ...currentItem,
+        [name]: newValue,
+      };
+ 
+      // Update amount if quantity or mrp changed
+      if (name === "quantity" || name === "mrp") {
+        updatedItems[index].amount =
+          (updatedItems[index].mrp || 0) * (updatedItems[index].quantity || 0);
+      }
+ 
+      return {
+        ...prevData,
+        items: updatedItems,
+        summary: calculateSummary(updatedItems),
+      };
+    });
+  };
+ 
 
 const handleSuggestionClick = (medicine, index) => {
   api
@@ -943,16 +962,18 @@ const handleBatchChange = async (e, index) => {
               )}
               <div className="text-end mt-3">
                 <p>
-                   Discount % &nbsp;
+                  Discount % &nbsp;
                   <Form.Control
                     type="number"
                     name="discount"
+                    placeholder="0"
                     value={discount}
-                    onChange={(e) => setDiscount(Number(e.target.value))} // convert string to number
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDiscount(value === "" ? "" : Number(value));
+                    }}
                     style={{ display: "inline", width: "auto" }}
-                  >
-               
-                  </Form.Control>
+                  ></Form.Control>
                 </p>
                 <p>Net Amount: ₹{invoiceData.summary.net_amount}</p>
                 <p>
@@ -961,7 +982,10 @@ const handleBatchChange = async (e, index) => {
                     type="number"
                     name="tax"
                     value={tax}
-                    onChange={(e) => setTax(Number(e.target.value))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDiscount(value === "" ? "" : Number(value));
+                    }}
                     style={{ display: "inline", width: "auto" }}
                   >
                 
@@ -986,7 +1010,7 @@ const handleBatchChange = async (e, index) => {
                     value={paymentTerms}
                     onChange={(e) => setPaymentTerms(e.target.value)}
                   >
-                    <option value="Select payment terms" selected>Select Payment Terms </option>
+                    <option value="Select payment terms">Select Payment Terms </option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </Form.Select>

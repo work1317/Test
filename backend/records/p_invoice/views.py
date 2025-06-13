@@ -32,6 +32,7 @@ from django.utils.timezone import now
 from decimal import Decimal
 from django.db import models
 from django.db.models import Max
+from rec_app.models import Prescription  # Ensure this import is present
  
  
 # # -------------------- CREATE -------------------------------------
@@ -68,6 +69,63 @@ class CreatePharmacyInvoiceAPIView(APIView):
                 "message": "No patient found with this ID.",
                 "data": {}
             }, status=status.HTTP_404_NOT_FOUND)
+
+
+
+    # def get(self, request, *args, **kwargs):
+    #     patient_id = request.query_params.get("patient_id")
+    #     if not patient_id:
+    #         return Response({
+    #             "success": 0,
+    #             "message": "patient_id is required in query parameters",
+    #             "data": {}
+    #         }, status=status.HTTP_400_BAD_REQUEST)
+
+    #     try:
+    #         patient = Patient.objects.get(patient_id=patient_id)
+
+    #         # Filter completed prescriptions
+    #         completed_prescriptions = patient.prescriptions.filter(status='completed')
+
+    #         # Manual serialization of prescriptions
+    #         prescriptions_data = [
+    #             {
+    #                 "medication_name": p.medication_name,
+    #                 "dosage": p.dosage,
+    #                 "quantity": p.quantity,
+    #                 "duration": p.duration,
+    #                 "category": p.category,
+    #                 "summary": p.summary,
+    #                 "status": p.status,
+    #                 "report": request.build_absolute_uri(p.report.url) if p.report else None,
+    #                 "created_at": p.created_at
+    #             }
+    #             for p in completed_prescriptions
+    #         ]
+
+    #         data = {
+    #             "patient_id": patient.patient_id,
+    #             "patient_name": patient.patient_name,
+    #             "age": patient.age,
+    #             "gender": patient.gender,
+    #             "doctor": patient.doctor.d_name if hasattr(patient.doctor, 'd_name') else str(patient.doctor),
+    #             "appointment_type": patient.appointment_type,
+    #             "completed_prescriptions": prescriptions_data
+    #         }
+
+    #         return Response({
+    #             "success": 1,
+    #             "message": "Patient data fetched successfully",
+    #             "data": data
+    #         }, status=status.HTTP_200_OK)
+
+    #     except Patient.DoesNotExist:
+    #         return Response({
+    #             "success": 0,
+    #             "message": "No patient found with this ID.",
+    #             "data": {}
+    #         }, status=status.HTTP_404_NOT_FOUND)
+
 
     def post(self, request, *args, **kwargs):
         try:

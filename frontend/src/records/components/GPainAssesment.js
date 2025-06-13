@@ -82,7 +82,7 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
           transition={{ duration: 0.2 }}
           style={{
             height: "8px",
-            backgroundColor: "blue",
+            backgroundColor: "0000FF",
             borderRadius: "2px",
           }}
         />
@@ -94,11 +94,11 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
               key={value}
               whileHover={{
                 scale: 1.6,
-                backgroundColor: "blue",
+                backgroundColor: "0000FF",
                 top: num % 2 === 0 ? "-8px" : "-4px",
               }}
               animate={{
-                backgroundColor: value <= painIntensity ? "blue" : "gray",
+                backgroundColor: value <= painIntensity ? "0000FF" : "#808080",
                 scale: isSelected ? 2 : 1,
               }}
               transition={{ duration: 0.3 }}
@@ -115,7 +115,7 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
                     ? "20px"
                     : "15px",
                 top: num % 2 === 0 ? "-8px" : "-4px",
-                background: value <= painIntensity ? "blue" : "gray",
+                background: value <= painIntensity ? "0000FF" : "#808080",
                 borderRadius: "2px",
                 transform: "translateX(-50%)",
                 cursor: "pointer",
@@ -194,26 +194,27 @@ const GPainAssesment = ({ patient }) => {
                 <Row className="mt-1">
                   <label className={styles.title}>Quality of Service</label>
                 </Row>
-                <div className="d-flex mt-2">
-                  <div className="me-4">
-                    <input
-                      type="radio"
-                      className={styles.radiowrapper}
-                      checked={assessment.quality_of_service === "constant"}
-                      readOnly
-                    />
-                    <label className={styles.labels}>Constant Feedback</label>
-                  </div>
-                  <div className="me-4">
-                    <input
-                      type="radio"
-                      className={styles.radiowrapper}
-                      checked={assessment.quality_of_service === "intermittent"}
-                      readOnly
-                    />
-                    <label className={styles.labels}>Intermittent Feedback</label>
-                  </div>
-                </div>
+               <div className={styles.radioGroup}>
+  <div className={styles.radioOption}>
+    <input
+      type="radio"
+      className={styles.radiowrapper}
+      checked={assessment.quality_of_service === "constant"}
+      readOnly
+    />
+    <label className={styles.labels}>Constant Feedback</label>
+  </div>
+  <div className={styles.radioOption}>
+    <input
+      type="radio"
+      className={styles.radiowrapper}
+      checked={assessment.quality_of_service === "intermittent"}
+      readOnly
+    />
+    <label className={styles.labels}>Intermittent Feedback</label>
+  </div>
+</div>
+ 
 
       
                 <Row className="mt-2">

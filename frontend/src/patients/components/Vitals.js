@@ -42,8 +42,8 @@ function Vitals({ patient_id }) {
     <div>
       <div className="vitals-section">
         {vitalsList.map((vital, index) => (
-        <Card.Body className="p-1">
-          <div className="vitals-card" key={index}>
+        <Card.Body className="p-1" key={vital.id || index}>
+          <div className="vitals-card">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h5 className="vitals-title">Vitals Check</h5>
               <span className="vitals-time">

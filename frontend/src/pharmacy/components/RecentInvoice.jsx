@@ -273,12 +273,27 @@ const handleBillNumberClick = (invoice) => {
                 return (
                   <tr key={invoice.id || `${invoice.Bill_No}-${index}`}>
                     <td>{index + 1}</td>
-                  <button
+                  {/* <button
                     style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
                     onClick={() => handleBillNumberClick(invoice)}
                   >
                     {invoice.Bill_No || ''}
-                  </button>
+                  </button> */}
+
+                    <td>
+                      <button
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'blue',
+                          textDecoration: 'underline',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => handleBillNumberClick(invoice)}
+                      >
+                        {invoice.Bill_No || ''}
+                      </button>
+                    </td>
  
                     <td>{invoice.Bill_Date}</td>
                     <td>{invoice.typeof_transaction || ''}</td>

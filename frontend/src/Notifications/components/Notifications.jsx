@@ -90,6 +90,7 @@ useEffect(() => {
             discount_approval: <FaPercent className={Notificationstyle.discounts} />,
             user: <AiOutlineUser className={Notificationstyle.user} />,
             sales: <BsCurrencyDollar className={Notificationstyle.sales} />,
+            sale_complete: <BsCurrencyDollar className={Notificationstyle.sales} />,
             medication_add: <GiMedicalPack className={Notificationstyle.pharmacy} />,
             expiry: <GiMedicalPack className={Notificationstyle.pharmacy} />,
             invoice: <BsCurrencyDollar className={Notificationstyle.invoices} />,
@@ -139,6 +140,10 @@ useEffect(() => {
  
  
 const handleNotificationClick = async (id) => {
+    const note = allnotifications.find((n) => n.id === id);
+ 
+  // ✅ Don't proceed if already read
+  if (note?.isRead) return;
   try {
     await api.post(`notifications/mark-as-read/${id}/`);
    

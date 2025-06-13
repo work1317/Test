@@ -68,32 +68,32 @@ const paidAmount = parseFloat(getinvoice?.paid_amount || netAmount + totalTax) |
 <title>Print Invoice</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 <style>
-            body {
-              font-family: Arial, sans-serif;
-              padding: 20px;
-              margin: 0;
-            }
-            h2, h4, h5, p {
-              margin: 4px 0;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-            }
-            th, td {
-              border: 1px solid #000;
-              padding: 8px;
-              text-align: left;
-            }
-            .text-end { text-align: right; }
-            .text-primary { color: #007bff; }
-            .m-0 { margin: 0 !important; }
-            .mb-0 { margin-bottom: 0 !important; }
-            .mb-2 { margin-bottom: 0.5rem !important; }
-            .mb-3 { margin-bottom: 1rem !important; }
-            .pe-4 { padding-right: 1.5rem !important; }
-            .mt-2 { margin-top: 0.5rem !important; }
-            .no-print { display: none !important; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+    h2, h4, h5, p {
+      margin: 4px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: left;
+    }
+    .text-end { text-align: right; }
+    .text-primary { color: #007bff; }
+    .m-0 { margin: 0 !important; }
+    .mb-0 { margin-bottom: 0 !important; }
+    .mb-2 { margin-bottom: 0.5rem !important; }
+    .mb-3 { margin-bottom: 1rem !important; }
+    .pe-4 { padding-right: 1.5rem !important; }
+    .mt-2 { margin-top: 0.5rem !important; }
+    .no-print { display: none !important; }
 </style>
 </head>
 <body>${content}</body>
@@ -130,19 +130,19 @@ const paidAmount = parseFloat(getinvoice?.paid_amount || netAmount + totalTax) |
               <img
                 src={logo}
                 alt="Hospital Logo"
-                style={{ height: "120px", marginLeft: "20px" }}
+                style={{ height: "120px",marginLeft: "20px" }}
               />
               <div>
-                <h2 className="m-0" style={{ color: "#A34C51" }}>
+                <h2 className="m-0" style={{ color: "#A34C51",fontSize:"35px" }}>
                   Sai Teja Multi Speciality Hospital
                 </h2>
-                <h5 className="text-primary">
+                <h6 className="text-white mt-2 p-1 w-100 ms-2 text-center" style={{fontSize:"22px",backgroundColor:"#24A1F5"}}>
                   (A UNIT OF SAVITHA HEALTH CARE PVT.LTD)
-                </h5>
-                <p className="mb-0">
+                </h6>
+                <p className="ms-3" style={{fontSize:'11px'}}><strong>
                   Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035.{" "}
-                  <br />
-                  Ph: 040 4006 2725, +91 84840 19791
+           
+                  Ph: 040 4006 2725, +91 84840 19791</strong>
                 </p>
               </div>
             </div>
@@ -177,7 +177,6 @@ const paidAmount = parseFloat(getinvoice?.paid_amount || netAmount + totalTax) |
             </Col>
           </Row>
             <hr />
- 
             <Table striped bordered>
               <thead>
                 <tr>
@@ -252,3 +251,4 @@ const paidAmount = parseFloat(getinvoice?.paid_amount || netAmount + totalTax) |
 };
  
 export default PharmacyPrint;
+ 

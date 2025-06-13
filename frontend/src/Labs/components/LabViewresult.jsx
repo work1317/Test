@@ -65,12 +65,13 @@ function LabViewresult({ handlerClose, selectedResult, selectForm }) {
                   </small>
                 </div>
               </div>
+             
               <div className={styles.modCos} onClick={handlerClose}>
                <Icon icon="carbon:close-outline" height="24" width="24" color="#9A9A9A"/>
               </div>
             </div>
           </div>
-
+            <hr  className="mt-0"/>
           <Row className="mb-3">
             <Col md={6}>
               <h5>Doctor</h5>

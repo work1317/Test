@@ -57,35 +57,35 @@ function GCarePlan({ patient }) {
           <Row>
             <Col>
               <label className={styles.labels}>Feedback on Services</label>
-              <p className={styles.data}>{plan.feedback_on_services || '--'}</p>
+              <p className={`text-break ${styles.data}`}>{plan.feedback_on_services || '--'}</p>
             </Col>
           </Row>
 
           <Row>
             <Col>
               <label className={styles.labels}>Provisional Feedback</label>
-              <p className={styles.data}>{plan.provisional_feedback || '--'}</p>
+              <p className={`text-break ${styles.data}`}>{plan.provisional_feedback || '--'}</p>
             </Col>
           </Row>
 
           <Row>
             <Col>
               <label className={styles.labels}>Feedback Plan</label>
-              <p className={styles.data}>{plan.feedback_plan || '--'}</p>
+              <p className={`text-break ${styles.data}`}>{plan.feedback_plan || '--'}</p>
             </Col>
           </Row>
 
           <Row>
             <Col>
               <label className={styles.labels}>Expected Outcome</label>
-              <p className={styles.data}>{plan.expected_outcome || '--'}</p>
+              <p className={`text-break ${styles.data}`}>{plan.expected_outcome || '--'}</p>
             </Col>
           </Row>
 
           <Row>
             <Col>
               <label className={styles.labels}>Preventive Feedback Aspects</label>
-              <p className={styles.data}>{plan.preventive_feedback_aspects || '--'}</p>
+              <p className={`text-break ${styles.data}`}>{plan.preventive_feedback_aspects || '--'}</p>
             </Col>
           </Row>
           </div>

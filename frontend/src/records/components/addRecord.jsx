@@ -112,6 +112,34 @@ function AddRecordModal({show,handleClose,patientId}) {
       const response = await api.post("/records/records/create/", payload);
       const data = response.data;
       window.dispatchEvent(new Event("refreshAddRecordModal"));
+      setFormData({
+      Prescription: {
+      medication_name: "",
+      category:"",
+      duration: "",
+      dosage: "",
+      summary: "",
+      report: FileList | File,
+    },
+    Vitals: {
+      category:"",
+      height: "",
+      weight: "",
+      blood_pressure: "",
+      bmi: "",
+      grbs: "",
+      cvs: "",
+      respiratory_rate: "",
+      cns: "",
+      report: FileList | File ,
+    },
+    Service_procedure: {
+      title: "",
+      category:"",
+      summary: "",
+      report: FileList | File,
+    },
+    });
   
       console.log("API RESPONSE:", data);
   

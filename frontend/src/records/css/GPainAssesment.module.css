@@ -57,4 +57,41 @@
     height: 20px;
     margin: 3px;
   }
-  
+   /* ComponentName.module.css */
+.radioGroup {
+  display: flex;
+  margin-top: 0.5rem;
+}
+ 
+.radioOption {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+ 
+.radiowrapper {
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+ 
+.labels {
+  margin: 0;
+  vertical-align: middle;
+}
+.radioInput:checked + .customRadio::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  background-color: red; /* INNER DOT COLOR */
+  border-radius: 50%;
+}
+.radioInput {
+  display: none; /* Hide native radio */
+}
+ 
+ 

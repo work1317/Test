@@ -39,7 +39,7 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
                <Icon icon="carbon:close-outline" height="24" width="24" color="#9A9A9A"/>
             </div>
           </div>
-        
+         <hr  className="mt-0"/>
           
 
           <Row className="mb-3">
@@ -52,6 +52,7 @@ function InvoiceViewresult({ handlerClose, inSelectForm, selectedResult }) {
               <p>{inSelectForm.testname}</p>
             </Col>
           </Row>
+
 
           <Row className="mb-3">
             <Col>

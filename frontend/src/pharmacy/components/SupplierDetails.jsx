@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from "../../utils/axiosInstance";
 import { Row, Col, Container, Form, Table } from 'react-bootstrap';
 import styles from '../css/SupplierDetails.module.css';
-
+ 
 // Hardcoded Payment Modes
 const payment_mode = {
   CASH: 'cash',
@@ -63,12 +63,24 @@ const SupplierDetails = ({ supplierId, onBack }) => {
       console.log('Backend response:', response);
  
       if (response.data.success === 1) {
-        alert('Transaction added successfully!');
-        fetchSupplierDetails();
-      } else {
+            alert('Transaction added successfully!');
+            fetchSupplierDetails();
+ 
+            // ✅ Reset the form
+            setFormData({
+              date: '',
+              description: '',
+              amount: '',
+              due_on: '',
+              transaction_type: '',
+              payment_mode: '',
+              due_date_amount: '',
+            });
+          }
+ else {
         console.error('Backend error message:', response.data.message);
         alert(`Failed to add transaction: ${response.data.message || 'Unknown error'}`);
-      }
+     
  
       setFormData({
         date: '',
@@ -79,7 +91,7 @@ const SupplierDetails = ({ supplierId, onBack }) => {
         payment_mode: '',
         due_date_amount: '',
       });
-    } catch (error) {
+    }} catch (error) {
       console.error('Error during transaction post:', error);
       if (error.response?.data) {
         alert(`Server error: ${error.response.data.message || 'Unknown error'}`);
@@ -90,9 +102,12 @@ const SupplierDetails = ({ supplierId, onBack }) => {
   };
  
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const { name, value } = e.target;
+  setFormData(prevState => ({
+    ...prevState,
+    [name]: value,
+  }));
+};
  
   const filteredTransactions = transactions.filter((tx) => {
     const txDate = new Date(tx.date);
@@ -149,13 +164,13 @@ const SupplierDetails = ({ supplierId, onBack }) => {
               </Col>
               <Col>
                 <Form.Label>Description</Form.Label>
-                <Form.Control name="description" type="text" value={formData.description} onChange={handleInputChange} />
+                <Form.Control name="description" type="text" value={formData.description} onChange={handleInputChange} placeholder='Transaction Description'/>
               </Col>
             </Row>
             <Row className="mb-3">
               <Col>
                 <Form.Label>Amount</Form.Label>
-                <Form.Control name="amount" type="number" value={formData.amount} onChange={handleInputChange} />
+                <Form.Control name="amount" type="number" value={formData.amount} onChange={handleInputChange} placeholder='0.00' />
               </Col>
               <Col>
                 <Form.Label>Due On</Form.Label>
@@ -165,18 +180,36 @@ const SupplierDetails = ({ supplierId, onBack }) => {
             <Row className="mb-3">
               <Col xs={6}>
                 <Form.Label>Due Date Amount</Form.Label>
-                <Form.Control name="due_date_amount" type="number" value={formData.due_date_amount} onChange={handleInputChange} />
+                <Form.Control name="due_date_amount" type="number" value={formData.due_date_amount} onChange={handleInputChange}placeholder='0.00' />
               </Col>
             </Row>
-            <Form.Group className="mb-3">
-              <Row><Form.Label>Transaction Type</Form.Label></Row>
-              <Row className='m-2'>
-                <Form.Check type="radio" label="Debit(Increase balance)" value="debit" name="transaction_type" onChange={handleInputChange} inline />
-              </Row>
-              <Row className='m-2'>
-                <Form.Check type="radio" label="Credit (Decrease balance)" value="credit" name="transaction_type" onChange={handleInputChange} inline />
-              </Row>
-            </Form.Group>
+         <Form.Group className="mb-3">
+        <Row><Form.Label>Transaction Type</Form.Label></Row>
+        <Row className='m-2'>
+          <Form.Check
+            type="radio"
+            label="Debit (Increase balance)"
+            value="debit"
+            name="transaction_type"
+            onChange={handleInputChange}
+            checked={formData.transaction_type === "debit"}
+            inline
+          />
+        </Row>
+  <Row className='m-2'>
+    <Form.Check
+      type="radio"
+      label="Credit (Decrease balance)"
+      value="credit"
+      name="transaction_type"
+      onChange={handleInputChange}
+      checked={formData.transaction_type === "credit"}
+      inline
+    />
+  </Row>
+</Form.Group>
+ 
+ 
             <Form.Group>
               <Form.Label>Payment Mode</Form.Label>
               <Form.Select
@@ -268,3 +301,4 @@ const SupplierDetails = ({ supplierId, onBack }) => {
 };
  
 export default SupplierDetails;
+ 

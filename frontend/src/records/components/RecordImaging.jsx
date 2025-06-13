@@ -1,18 +1,26 @@
 import React, { useContext } from "react";
 import { doctors } from "./RecordLab";
-
+ 
 function RecordImaging({ transformData }) {
   const { selectedPatient } = useContext(doctors);
-
+ 
   const patientLabs = transformData.filter(
     (lab) => lab.patient_id === selectedPatient.patient_id
   );
-
+ 
   return (
-   <div>
+    <div
+      style={{
+        maxHeight: "500px", // You can adjust this height as needed
+        overflowY: "auto",
+        padding: "1rem",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        backgroundColor: "#f9f9f9",
+      }}
+    >
       {patientLabs.map((lab, index) => (
         <div key={index} className="text-center mt-4">
-          {/* Only render if URL exists */}
           {lab.result_download_url && (
             <>
               <img
@@ -25,7 +33,6 @@ function RecordImaging({ transformData }) {
                   boxShadow: "0 0 8px rgba(0, 0, 0, 0.1)",
                 }}
                 onError={(e) => {
-                  // Hide broken images & log error
                   console.error("Failed to load image:", lab.result_download_url);
                   e.target.style.display = "none";
                 }}
@@ -40,5 +47,5 @@ function RecordImaging({ transformData }) {
     </div>
   );
 }
-
+ 
 export default RecordImaging;

@@ -179,8 +179,8 @@ const RecordLab = () => {
     <Container className="mb-5">
       <Row className="mt-5 ms-2 d-flex justify-content-between">
         <Col md={8}>
-          <h1 className="fw-bolder me-1">Electronic Medical Records</h1>
-          <p className={`ms-2 ${Recordstyle.text}`}>Comprehensive patient health records</p>
+          <h1 className="fw-bolder me-1 mb-2">Electronic Medical Records</h1>
+          <p className={`ms-3 ${Recordstyle.text}`}>Comprehensive patient health records</p>
         </Col>
         <Col md={2} className="mt-3">
           <Button
@@ -217,7 +217,7 @@ const RecordLab = () => {
             {filteredPatients.slice(0, 3).map((patient, index) => (
                 <Row className="d-flex justify-content-around" key={index} onClick={() => handlePatientSelect(patient)} >
                   <Col xs={6} md={4} className="d-flex">
-                    <div className="d-flex mt-2 align-items-center">
+                    <div className="d-flex  align-items-center mt-0">
                       {/* <UserRound className={`m-3 ${Recordstyle.iconCss} p-1`} size={30} style={{ color: "#262872" }} /> */}
                           <Icon icon="iconamoon:profile" className={`m-3 p-2 ${Recordstyle.iconCss}`} width={50} height={50}></Icon>
                       <div>

@@ -146,6 +146,7 @@ const onClose = () => {
                   <Form.Label>Patient Name</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="Enter Patient Name"
                     name="patient_name"
                     value={formData.patient_name}
                     onChange={handleChange}
@@ -161,6 +162,7 @@ const onClose = () => {
                   <Form.Control
                     type="text"
                     name="doctor"
+                    placeholder="Enter Doctor Name"
                     value={formData.doctor}
                     onChange={handleChange}
                     isInvalid={!!error.doctor}
@@ -178,6 +180,7 @@ const onClose = () => {
                     <Form.Control
                       type="tel"
                       name="phno"
+                      placeholder="Enter Mobile Number"
                       value={formData.phno}
                       onChange={handleChange}
                       autoComplete="off"
@@ -193,6 +196,7 @@ const onClose = () => {
                   <Form.Control
                     type="email"
                     name="email"
+                    placeholder="Enter Email Address"
                     value={formData.email}
                     onChange={handleChange}
                     isInvalid={!!error.email}
@@ -210,6 +214,7 @@ const onClose = () => {
                     <Form.Control
                       type="number"
                       name="age"
+                      placeholder="Enter Age"
                       value={formData.age}
                       onChange={handleChange}
                       isInvalid={!!error.age}
