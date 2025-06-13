@@ -77,7 +77,7 @@ function GCarePlan({ patient }) {
 
           <Row>
             <Col>
-              <label className={styles.labels}>Expected Outcome</label>
+              <label className={styles.labels}>Expected Outcome of Feedback</label>
               <p className={`text-break ${styles.data}`}>{plan.expected_outcome || '--'}</p>
             </Col>
           </Row>

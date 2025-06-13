@@ -293,7 +293,7 @@ class PrescriptionListAPIView(APIView):
         return Response(context, status=status.HTTP_200_OK)
     
 
-
+from django.db.models import Sum
 
 class PrescriptionDetailView(APIView):
 
@@ -359,6 +359,7 @@ class PrescriptionDetailView(APIView):
             context["success"] = 0
             context["message"] = str(e)
             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
     def put(self, request, patient_id):
         context = {
@@ -391,37 +392,24 @@ class PrescriptionDetailView(APIView):
                         raise ValidationError(f"Prescription for '{medication_name}' not found.")
 
                     prescription = prescriptions.first()
-                    item['status'] = prescription.status or 'pending'
+                    item['status'] = prescription.status or 'processing'
 
                     if new_quantity_raw is not None:
-                        new_quantity = int(new_quantity_raw)
+                        try:
+                            new_quantity = int(new_quantity_raw)
+                        except ValueError:
+                            raise ValidationError("'quantity' must be a valid integer.")
 
-                        # Only use non-expired medications with stock
-                        medications = Medication.objects.filter(
+                        # Calculate total available stock for non-expired medications
+                        total_stock = Medication.objects.filter(
                             medication_name__iexact=medication_name,
                             stock_quantity__gt=0,
                             expiry_date__gte=now().date()
-                        ).order_by('expiry_date')
+                        ).aggregate(total=Sum('stock_quantity'))['total'] or 0
 
-                        quantity_to_deduct = new_quantity
-                        total_deducted = 0
-
-                        for med in medications:
-                            if quantity_to_deduct <= 0:
-                                break
-
-                            deduct_qty = min(med.stock_quantity, quantity_to_deduct)
-                            med.stock_quantity -= deduct_qty
-                            med.save()
-
-                            quantity_to_deduct -= deduct_qty
-                            total_deducted += deduct_qty
-
-                        # Set status based on how much was fulfilled
-                        if total_deducted == new_quantity:
+                        # Set status based on comparison (without deducting)
+                        if new_quantity <= total_stock:
                             item['status'] = 'completed'
-                        elif total_deducted > 0:
-                            item['status'] = 'partial'
                         else:
                             item['status'] = 'pending'
                     else:
@@ -448,6 +436,95 @@ class PrescriptionDetailView(APIView):
             context["success"] = 0
             context["message"] = str(e)
             return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # def put(self, request, patient_id):
+    #     context = {
+    #         "success": 1,
+    #         "message": "Prescription updated successfully",
+    #         "data": []
+    #     }
+
+    #     try:
+    #         patient = get_object_or_404(Patient, patient_id=patient_id)
+    #         data = request.data
+    #         prescriptions_data = data if isinstance(data, list) else [data]
+
+    #         with transaction.atomic():
+    #             updated_prescriptions = []
+
+    #             for item in prescriptions_data:
+    #                 medication_name = item.get("medication_name")
+    #                 new_quantity_raw = item.get("quantity")
+
+    #                 if not medication_name:
+    #                     raise ValidationError("Each item must include 'medication_name'.")
+
+    #                 prescriptions = Prescription.objects.filter(
+    #                     patient=patient,
+    #                     medication_name__iexact=medication_name
+    #                 ).order_by('-created_at')
+
+    #                 if not prescriptions.exists():
+    #                     raise ValidationError(f"Prescription for '{medication_name}' not found.")
+
+    #                 prescription = prescriptions.first()
+    #                 item['status'] = prescription.status or 'pending'
+
+    #                 if new_quantity_raw is not None:
+    #                     new_quantity = int(new_quantity_raw)
+
+    #                     # Only use non-expired medications with stock
+    #                     medications = Medication.objects.filter(
+    #                         medication_name__iexact=medication_name,
+    #                         stock_quantity__gt=0,
+    #                         expiry_date__gte=now().date()
+    #                     ).order_by('expiry_date')
+
+    #                     quantity_to_deduct = new_quantity
+    #                     total_deducted = 0
+
+    #                     for med in medications:
+    #                         if quantity_to_deduct <= 0:
+    #                             break
+
+    #                         deduct_qty = min(med.stock_quantity, quantity_to_deduct)
+    #                         med.stock_quantity -= deduct_qty
+    #                         med.save()
+
+    #                         quantity_to_deduct -= deduct_qty
+    #                         total_deducted += deduct_qty
+
+    #                     # Set status based on how much was fulfilled
+    #                     if total_deducted == new_quantity:
+    #                         item['status'] = 'completed'
+    #                     elif total_deducted > 0:
+    #                         item['status'] = 'partial'
+    #                     else:
+    #                         item['status'] = 'pending'
+    #                 else:
+    #                     item.pop('quantity', None)
+
+    #                 serializer = PrescriptionSerializer(prescription, data=item, partial=True)
+    #                 if not serializer.is_valid():
+    #                     raise ValidationError(serializer.errors)
+
+    #                 updated = serializer.save()
+    #                 updated_prescriptions.append(PrescriptionSerializer(updated).data)
+
+    #             context["data"] = (
+    #                 updated_prescriptions[0]
+    #                 if isinstance(data, dict)
+    #                 else updated_prescriptions
+    #             )
+
+    #             return Response(context, status=status.HTTP_200_OK)
+
+    #     except Exception as e:
+    #         print("Error:", e)
+    #         traceback.print_exc()
+    #         context["success"] = 0
+    #         context["message"] = str(e)
+    #         return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         
 
