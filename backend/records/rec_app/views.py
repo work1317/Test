@@ -132,6 +132,10 @@ class MedicalRecordCreateAPIView(APIView):
 
             # Add file to request data
             data = request.data.copy()
+
+            # Attach patient ID for validation
+            data["patient"] = patient.pk
+
             if report:
                 data["report"] = report  # Assign the file to serializer
 
@@ -142,7 +146,7 @@ class MedicalRecordCreateAPIView(APIView):
                 context["message"] = serializer.errors
                 return Response(context)
 
-            record = serializer.save(patient=patient)  # Associate with patient
+            record = serializer.save()  # Associate with patient
             context["data"] = serializer.data
             return Response(context)
 
