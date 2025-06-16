@@ -62,9 +62,22 @@ class DashboardAPIView(APIView):
             increased_patients = round((patients_this_month * 100) / patients_total) if patients_total else 0
  
             todays_appointments = Appointment.objects.filter(date=end_date).count()
-            casualty = Patient.objects.filter(appointment_type='casuality').count()
-            progress = ProgressNote.objects.filter(status="critical").count()
-            critical_cases = casualty + progress
+            # casualty = Patient.objects.filter(appointment_type='casuality').count()
+            # progress = ProgressNote.objects.filter(status="critical").count()
+            # critical_cases = casualty + progress
+            
+            # Get patient IDs who are 'casuality'
+            casualty_patients = Patient.objects.filter(appointment_type='casuality').values_list('id', flat=True)
+
+            # Get patient IDs from critical progress notes
+            critical_progress_patients = ProgressNote.objects.filter(status='critical').values_list('patient_id', flat=True)
+
+            # Union of both sets
+            all_critical_patient_ids = set(casualty_patients).union(set(critical_progress_patients))
+
+            # Final count of unique patients
+            critical_cases = len(all_critical_patient_ids)
+            
             urgent_appointments = Appointment.objects.filter(date=end_date, notes__icontains='urgent').count()
  
             # Department-wise doctor count

@@ -2,6 +2,7 @@ from django.db import models
 from patients.models import Patient
 from doctors.models import DoctorAvailability
 from django.contrib.auth.models import User
+from pharmacy.models import Medication
 
 # create your models here
 
@@ -47,7 +48,7 @@ class Prescription(MedicalRecord):
         ('pending','Pending')
     ]
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='prescriptions')
-    medication_name = models.CharField(max_length=100)
+    medication = models.ForeignKey(Medication, on_delete=models.CASCADE)
     dosage = models.CharField(max_length=50)
     quantity = models.IntegerField(null=True, blank=True)
     duration = models.CharField(max_length=50)

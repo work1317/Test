@@ -13,7 +13,8 @@ function UpdateStock({ medicationId, show, handleClose }) {
     unit_price: '',
     mrp: '',
     expiry_date: '',
-    description: ''
+    description: '',
+    batch_no: '',
   });
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +34,8 @@ function UpdateStock({ medicationId, show, handleClose }) {
             unit_price: data.unit_price,
             mrp: data.mrp,
             expiry_date: data.expiry_date,
-            description: data.description
+            description: data.description,
+            batch_no: data.batch_no
           });
         })
         .catch(err => {
@@ -107,6 +109,15 @@ function UpdateStock({ medicationId, show, handleClose }) {
                 type="text"
                 value={formValues.strength}
                 onChange={(e) => handleChange('strength', e.target.value)}
+              />
+            </Form.Group>
+
+              <Form.Group className="mb-3">
+              <Form.Label>Batch No</Form.Label>
+              <Form.Control
+                type="text"
+                value={formValues.batch_no}
+                onChange={(e) => handleChange('batch_no', e.target.value)}
               />
             </Form.Group>
 

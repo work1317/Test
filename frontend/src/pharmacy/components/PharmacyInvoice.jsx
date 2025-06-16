@@ -15,19 +15,18 @@ import PharmacyPrint from "./PharmacyPrint";
 import api from "../../utils/axiosInstance";
 import { useNotifications } from "../../dashboard/components/NotificationContext";
 
-const PharmacyInvoice = ({onBack}) => {
-  const {onNotificationClick, fetchNotifications} = useNotifications()
+const PharmacyInvoice = ({ onBack }) => {
+  const { onNotificationClick, fetchNotifications } = useNotifications();
   const navigate = useNavigate();
   const handleBack = () => {
-    onBack()
+    onBack();
   };
-  const {messages} =  useNotifications()
+  const { messages } = useNotifications();
 
   const [showRecentInvoices, setShowRecentInvoices] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [tax, setTax] = useState(0);
   const [paymentTerms, setPaymentTerms] = useState();
-
 
   const [suggestions, setSuggestions] = useState([]);
   const [activeRowIndex, setActiveRowIndex] = useState(null);
@@ -93,7 +92,7 @@ const PharmacyInvoice = ({onBack}) => {
     setShowRecentInvoices(!showRecentInvoices);
   };
 
-  const handleItemChange = async (index, field, value) => { };
+  const handleItemChange = async (index, field, value) => {};
 
   const [selectedValue, setSelectedValue] = useState("no");
   //  const [guestString, setGuestString] = useState("No");
@@ -168,11 +167,7 @@ const PharmacyInvoice = ({onBack}) => {
     }
   }, [discount, tax, invoiceData.items]);
 
-
-
-// ✅ Use invoiceId not invoice_id
-
-
+  // ✅ Use invoiceId not invoice_id
 
   const calculateSummary = (items) => {
     const subtotal = items.reduce((acc, item) => acc + (item.amount || 0), 0);
@@ -196,28 +191,28 @@ const PharmacyInvoice = ({onBack}) => {
     }));
   }, [discount, tax]);
 
-const handlerInput = async (e, index) => {
+  const handlerInput = async (e, index) => {
     const { name, value } = e.target;
- 
+
     if (name === "medication_name") {
       setInvoiceData((prev) => {
         const updatedItems = [...prev.items];
         updatedItems[index][name] = value;
         return { ...prev, items: updatedItems };
       });
- 
+
       if (value.length >= 2) {
         if (/^\d+$/.test(value)) {
           setSuggestions([]);
           setActiveRowIndex(null);
           return;
         }
- 
+
         try {
           const response = await api.get("/p_invoice/pharmacy/search/", {
             params: { q: value },
           });
- 
+
           setSuggestions(
             (response.data.suggestions || []).map((name) => ({
               medication_name: name,
@@ -233,16 +228,16 @@ const handlerInput = async (e, index) => {
         setSuggestions([]);
         setActiveRowIndex(null);
       }
- 
+
       return;
     }
- 
+
     // Replace logic for numeric fields (e.g., quantity, discount, etc.)
     setInvoiceData((prevData) => {
       const updatedItems = [...prevData.items];
       const currentItem = updatedItems[index];
       let newValue = value;
- 
+
       const numericFields = ["quantity", "discount", "mrp", "tax"]; // extend as needed
       if (numericFields.includes(name)) {
         if (value === "") {
@@ -254,18 +249,18 @@ const handlerInput = async (e, index) => {
           newValue = Number(value);
         }
       }
- 
+
       updatedItems[index] = {
         ...currentItem,
         [name]: newValue,
       };
- 
+
       // Update amount if quantity or mrp changed
       if (name === "quantity" || name === "mrp") {
         updatedItems[index].amount =
           (updatedItems[index].mrp || 0) * (updatedItems[index].quantity || 0);
       }
- 
+
       return {
         ...prevData,
         items: updatedItems,
@@ -273,121 +268,140 @@ const handlerInput = async (e, index) => {
       };
     });
   };
- 
 
-const handleSuggestionClick = (medicine, index) => {
-  api
-    .get(`/p_invoice/pharmacy/search/`, {
-      params: { medication_name: medicine.medication_name },
-    })
-    .then((response) => {
-      const allBatchNos = response.data.batches || [];
-      const batchOptions = allBatchNos.map((b) => ({ batch_no: b }));
-      const defaultBatchNo = batchOptions[0]?.batch_no || "";
+  const handleSuggestionClick = (medicine, index) => {
+    api
+      .get(`/p_invoice/pharmacy/search/`, {
+        params: { medication_name: medicine.medication_name },
+      })
+      .then((response) => {
+        const allBatchNos = response.data.batches || [];
+        const batchOptions = allBatchNos.map((b) => ({ batch_no: b }));
+        const defaultBatchNo = batchOptions[0]?.batch_no || "";
 
-      // Set medication_name, batch list, and default batch_no
-      setInvoiceData((prev) => {
-        const updatedItems = [...prev.items];
-        updatedItems[index] = {
-          ...updatedItems[index],
-          medication_name: medicine.medication_name,
-          batches: batchOptions,
-          batch_no: defaultBatchNo,
-        };
-        return { ...prev, items: updatedItems };
+        // Set medication_name, batch list, and default batch_no
+        setInvoiceData((prev) => {
+          const updatedItems = [...prev.items];
+          updatedItems[index] = {
+            ...updatedItems[index],
+            medication_name: medicine.medication_name,
+            batches: batchOptions,
+            batch_no: defaultBatchNo,
+          };
+          return { ...prev, items: updatedItems };
+        });
+
+        // ✅ Now fetch MRP + expiry_date for that first batch
+        if (defaultBatchNo) {
+          api
+            .get(`/p_invoice/pharmacy/search/`, {
+              params: {
+                medication_name: medicine.medication_name,
+                batch_no: defaultBatchNo,
+              },
+            })
+            .then((res) => {
+              const data = res.data.data || {};
+              setInvoiceData((prev) => {
+                const updatedItems = [...prev.items];
+                updatedItems[index] = {
+                  ...updatedItems[index],
+                  mrp: Number(data.mrp) || 0,
+                  expiry_date: data.expiry_date || "",
+                  amount:
+                    (Number(data.mrp) || 0) *
+                    (updatedItems[index].quantity || 0),
+                };
+                return {
+                  ...prev,
+                  items: updatedItems,
+                  summary: calculateSummary(updatedItems),
+                };
+              });
+            })
+            .catch((err) =>
+              console.error("Error fetching batch details:", err)
+            );
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching batches", err);
       });
 
-      // ✅ Now fetch MRP + expiry_date for that first batch
-      if (defaultBatchNo) {
-        api
-          .get(`/p_invoice/pharmacy/search/`, {
-            params: {
-              medication_name: medicine.medication_name,
-              batch_no: defaultBatchNo,
-            },
-          })
-          .then((res) => {
-            const data = res.data.data || {};
-            setInvoiceData((prev) => {
-              const updatedItems = [...prev.items];
-              updatedItems[index] = {
-                ...updatedItems[index],
-                mrp: Number(data.mrp) || 0,
-                expiry_date: data.expiry_date || "",
-                amount:
-                  (Number(data.mrp) || 0) *
-                  (updatedItems[index].quantity || 0),
-              };
-              return {
-                ...prev,
-                items: updatedItems,
-                summary: calculateSummary(updatedItems),
-              };
-            });
-          })
-          .catch((err) =>
-            console.error("Error fetching batch details:", err)
-          );
-      }
-    })
-    .catch((err) => {
-      console.error("Error fetching batches", err);
-    });
+    setSuggestions([]);
+    setActiveRowIndex(null);
+  };
 
-  setSuggestions([]);
-  setActiveRowIndex(null);
-};
-
-const clearPatientDetails = () => {
-  setPatientDetails((prev) => ({
-    ...prev,
-    patient_name: "",
-    age: "",
-    gender: "",
-    doctor: "",
-  }));
-};
+  const clearPatientDetails = () => {
+    setPatientDetails((prev) => ({
+      ...prev,
+      patient_name: "",
+      age: "",
+      gender: "",
+      doctor: "",
+    }));
+  };
 
   const handleChange = (e) => {
     setInvoiceData({ ...invoiceData, [e.target.name]: e.target.value });
   };
-
   const fetchPatientDetails = async (patientId) => {
-  try {
-    const response = await api.get(`p_invoice/create-invoice-with-items/`, {
-      params: { patient_id: patientId },
-    });
- 
-    console.log("Fetched patient details:", response.data.data);
- 
-    if (response.status === 200 && response.data.success === 1) {
-      const { patient_name, age, gender, doctor } = response.data.data;
- 
-      setPatientDetails((prev) => ({
-        ...prev,
-        patient_name,
-        age,
-        gender,
-        doctor,
-      }));
- 
-      const newInvoiceId = response.data.invoice_id || response.data.data?.id;
-      if (newInvoiceId) {
-        setInvoiceId(newInvoiceId);
+    try {
+      const response = await api.get(`p_invoice/create-invoice-with-items/`, {
+        params: { patient_id: patientId },
+      });
+
+      console.log("Fetched patient details:", response.data.data);
+
+      if (response.status === 200 && response.data.success === 1) {
+        const {
+          patient_name,
+          age,
+          gender,
+          doctor,
+          completed_prescriptions = [],
+        } = response.data.data;
+
+        setPatientDetails((prev) => ({
+          ...prev,
+          patient_id: patientId,
+          patient_name,
+          age,
+          gender,
+          doctor,
+        }));
+
+        const newInvoiceId = response.data.invoice_id || response.data.data?.id;
+        if (newInvoiceId) {
+          setInvoiceId(newInvoiceId);
+        }
+
+        // Set invoice items based on prescriptions
+        const items = completed_prescriptions.map((prescription) => ({
+          medication_name: prescription.medication_name,
+          dosage: prescription.dosage,
+          quantity: prescription.quantity,
+          duration: prescription.duration,
+          batch_no: "", // initially empty
+          expiry_date: "",
+          mrp: 0,
+          amount: 0,
+          batches: prescription.batches || [], // pre-fill dropdown
+        }));
+
+        setInvoiceData((prev) => ({
+          ...prev,
+          items,
+          summary: calculateSummary(items),
+        }));
+      } else {
+        clearPatientDetails();
       }
-    } else {
-      // Invalid patient_id or not found
+    } catch (error) {
+      console.error("Error fetching patient details: ", error);
       clearPatientDetails();
     }
-  } catch (error) {
-    console.error("Error fetching patient details: ", error);
- 
-    // Clear previous patient data on error
-    clearPatientDetails();
-  }
-};
- 
- 
+  };
 
   useEffect(() => {
     if (selectedValue === "no" && patientDetails.patient_id) {
@@ -395,81 +409,86 @@ const clearPatientDetails = () => {
     }
   }, [patientDetails.patient_id, selectedValue]);
 
-const handleBatchChange = async (e, index) => {
-  const selectedBatchNo = e.target.value;
-  const medicationName = invoiceData.items[index].medication_name;
+  const handleBatchChange = async (e, index) => {
+    const selectedBatchNo = e.target.value;
+    const medicationName = invoiceData.items[index].medication_name;
 
-  if (!selectedBatchNo || !medicationName) return;
+    if (!selectedBatchNo || !medicationName) return;
 
-  try {
-    const response = await api.get(`/p_invoice/pharmacy/search/`, {
-      params: {
-        medication_name: medicationName,
-        batch_no: selectedBatchNo,
-      },
-    });
+    try {
+      const response = await api.get(`/p_invoice/pharmacy/search/`, {
+        params: {
+          medication_name: medicationName,
+          batch_no: selectedBatchNo,
+        },
+      });
 
-    const data = response.data.data || {};
+      const data = response.data.data || {};
 
-    setInvoiceData((prev) => {
-      const updatedItems = [...prev.items];
-      updatedItems[index] = {
-        ...updatedItems[index],
-        batch_no: selectedBatchNo,
-        mrp: data.mrp || 0,
-        expiry_date: data.expiry_date || "",
-        amount:
-          (data.mrp || 0) * (updatedItems[index].quantity || 0),
-      };
-      return {
-        ...prev,
-        items: updatedItems,
-        summary: calculateSummary(updatedItems),
-      };
-    });
-  } catch (error) {
-    console.error("Failed to fetch batch details:", error);
-  }
-};
+      setInvoiceData((prev) => {
+        const updatedItems = [...prev.items];
+        updatedItems[index] = {
+          ...updatedItems[index],
+          batch_no: selectedBatchNo,
+          mrp: data.mrp || 0,
+          expiry_date: data.expiry_date || "",
+          amount: (data.mrp || 0) * (updatedItems[index].quantity || 0),
+        };
+        return {
+          ...prev,
+          items: updatedItems,
+          summary: calculateSummary(updatedItems),
+        };
+      });
+    } catch (error) {
+      console.error("Failed to fetch batch details:", error);
+    }
+  };
 
-
-
-  
   const handleSaveInvoice = async () => {
     const discountValue = parseFloat(discount || 0);
     const taxValue = parseFloat(tax || 0);
 
-    if(invoiceData.typeof_transaction === ""){
-      alert("Transaction type cannot be blank")
-      return
+    if (invoiceData.typeof_transaction === "") {
+      alert("Transaction type cannot be blank");
+      return;
     }
     // Validate patient details if not guest
-  if (selectedValue === "no") {
-    const { patient_name, patient_id, age, gender, doctor } = patientDetails;
-    if (!patient_id || !patient_name || !age || !gender || !doctor) {
-      alert("Please fill all patient details.");
+    if (selectedValue === "no") {
+      const { patient_name, patient_id, age, gender, doctor } = patientDetails;
+      if (!patient_id || !patient_name || !age || !gender || !doctor) {
+        alert("Please fill all patient details.");
+        return;
+      }
+    }
+
+    // Validate at least one valid item
+    if (!invoiceData.items || invoiceData.items.length === 0) {
+      alert("Add at least one invoice item.");
       return;
     }
-  }
- 
-  // Validate at least one valid item
-  if (!invoiceData.items || invoiceData.items.length === 0) {
-    alert("Add at least one invoice item.");
-    return;
-  }
- 
-  for (const item of invoiceData.items) {
-    if (!item.medication_name || !item.batch_no || !item.quantity || !item.mrp || !item.expiry_date) {
-      alert("Please fill all fields in each medicine item.");
+
+    for (const item of invoiceData.items) {
+      if (
+        !item.medication_name ||
+        !item.batch_no ||
+        !item.quantity ||
+        !item.mrp ||
+        !item.expiry_date
+      ) {
+        alert("Please fill all fields in each medicine item.");
+        return;
+      }
+    }
+
+    // Validate amount
+    if (
+      !invoiceData.summary.total_paid_amount ||
+      isNaN(invoiceData.summary.total_paid_amount)
+    ) {
+      alert("Paid amount is required and must be a valid number.");
       return;
     }
-  }
- 
-  // Validate amount
-  if (!invoiceData.summary.total_paid_amount || isNaN(invoiceData.summary.total_paid_amount)) {
-    alert("Paid amount is required and must be a valid number.");
-    return;
-  }
     const payload = {
       patient_id: selectedValue === "yes" ? null : patientDetails.patient_id,
       patient_name: patientDetails.patient_name,
@@ -515,8 +534,8 @@ const handleBatchChange = async (e, index) => {
       );
 
       if (response?.data?.success) {
-        await fetchNotifications()
-        await onNotificationClick()
+        await fetchNotifications();
+        await onNotificationClick();
         setSuccessMessage(response.data.message || "Invoice created!");
         window.dispatchEvent(new Event("refreshPharmacyInvoice"));
         console.log("✅ Invoice saved:", response.data);
@@ -525,8 +544,11 @@ const handleBatchChange = async (e, index) => {
         const newInvoiceId = response.data.invoice_id || response.data.data?.id;
         const BillNo = response.data.Bill_No || response.data.data?.Bill_No;
         // const BillDate = response.data.Bill_Date || response.data.data?.Bill_Date;
-        const rawDate = response.data.Bill_Date || response.data.data?.Bill_Date;
-        const BillDate = rawDate ? new Date(rawDate).toISOString().split("T")[0] : "";
+        const rawDate =
+          response.data.Bill_Date || response.data.data?.Bill_Date;
+        const BillDate = rawDate
+          ? new Date(rawDate).toISOString().split("T")[0]
+          : "";
 
         // ✅ Set invoice data including bill details
         setGetInvoice({
@@ -576,24 +598,25 @@ const handleBatchChange = async (e, index) => {
           setSelectedValue("no");
           setDiscount("");
           setTax("");
- 
         }
       } else {
         alert("Failed to create invoice.");
         console.log("Response error:", response.data);
       }
     } catch (error) {
-  console.error("Error creating invoice:", error.response?.data || error.message);
-  const backendMessage = error.response?.data?.message;
- 
-  if (backendMessage) {
-    alert(backendMessage); // ✅ Show actual backend error
-  } else {
-    alert("An error occurred while creating the invoice.");
-  }
-}
-  };
+      console.error(
+        "Error creating invoice:",
+        error.response?.data || error.message
+      );
+      const backendMessage = error.response?.data?.message;
 
+      if (backendMessage) {
+        alert(backendMessage); // ✅ Show actual backend error
+      } else {
+        alert("An error occurred while creating the invoice.");
+      }
+    }
+  };
 
   useEffect(() => {
     if (successMessage) {
@@ -602,18 +625,21 @@ const handleBatchChange = async (e, index) => {
         setSuccessMessage("");
         // setShowModal(true)
       }, 6000); // 6000ms = 6 seconds
- 
+
       // Cleanup the timer on unmount or when message changes
       return () => clearTimeout(timer);
     }
   }, [successMessage]);
 
-
   const headerStyle = { backgroundColor: "#002072", color: "white" };
   return (
     <Container className="p-4">
       {!showRecentInvoices && (
-        <Button onClick={handleBack} variant="outline-secondary" className="mb-4" >
+        <Button
+          onClick={handleBack}
+          variant="outline-secondary"
+          className="mb-4"
+        >
           ← Back
         </Button>
       )}
@@ -629,13 +655,15 @@ const handleBatchChange = async (e, index) => {
       {/* Header */}
       <Row className="mb-4 mt-3">
         <Col>
-        {/* {messages && <p style={{ color: "green" }}>{messages}</p>} */}
-        {messages && (
-          <p style={{ color: messages.includes("approve") ? "green" : "red" }}>
-            {messages}
-          </p>
-        )}
-        
+          {/* {messages && <p style={{ color: "green" }}>{messages}</p>} */}
+          {messages && (
+            <p
+              style={{ color: messages.includes("approve") ? "green" : "red" }}
+            >
+              {messages}
+            </p>
+          )}
+
           <h2>
             {showRecentInvoices
               ? "Recent Invoices"
@@ -858,7 +886,9 @@ const handleBatchChange = async (e, index) => {
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => deleteMedicineRow(invoiceData.items.length - 1)}
+                    onClick={() =>
+                      deleteMedicineRow(invoiceData.items.length - 1)
+                    }
                     disabled={invoiceData.items.length === 0} // Optional: disables button if no rows
                   >
                     Delete
@@ -886,7 +916,6 @@ const handleBatchChange = async (e, index) => {
                           name="medication_name"
                           value={item.medication_name}
                           onChange={(e) => handlerInput(e, idx)}
-
                           onFocus={() => setActiveRowIndex(idx)} // optional
                         />
 
@@ -924,7 +953,19 @@ const handleBatchChange = async (e, index) => {
                         )}
                       </td>
 
-                    <td>
+                      <td>
+                        {/* <Form.Select
+                          value={item.batch_no || ""}
+                          onChange={(e) => handleBatchChange(e, idx)}
+                        >
+                          <option value="">Select Batch</option>
+                          {item.batches?.map((batch, i) => (
+                            <option key={i} value={batch.batch_no}>
+                              {batch.batch_no}
+                            </option>
+                          ))}
+                        </Form.Select> */}
+
                         <Form.Select
                           value={item.batch_no || ""}
                           onChange={(e) => handleBatchChange(e, idx)}
@@ -987,9 +1028,7 @@ const handleBatchChange = async (e, index) => {
                       setTax(value === "" ? "" : Number(value));
                     }}
                     style={{ display: "inline", width: "auto" }}
-                  >
-                
-                  </Form.Control>
+                  ></Form.Control>
                 </p>
                 <p>Final Amount: ₹{invoiceData.summary.final_amount}</p>
                 <h5>Paid Amount: ₹{invoiceData.summary.total_paid_amount}</h5>
@@ -1010,7 +1049,7 @@ const handleBatchChange = async (e, index) => {
                     value={paymentTerms}
                     onChange={(e) => setPaymentTerms(e.target.value)}
                   >
-                    <option value="">Select Payment Terms </option>
+                    <option value="Select payment terms">Select Payment Terms </option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </Form.Select>
@@ -1028,11 +1067,13 @@ const handleBatchChange = async (e, index) => {
                     }
                     disabled={paymentTerms === "Yes"}
                   >
-                    <option value= "">Select Payment Methods</option>
+                    <option value="">Select Payment Methods</option>
                     <option value="Cash">Cash</option>
                     <option value="Debit/Credit">Debit/Credit</option>
                     <option value="UPI">UPI</option>
-                    <option value="Multiple (Cash+Card), (Cash+UPI)">Multiple (Cash+Card), (Cash+UPI)</option>
+                    <option value="Multiple (Cash+Card), (Cash+UPI)">
+                      Multiple (Cash+Card), (Cash+UPI)
+                    </option>
                   </Form.Select>
                 </Form.Group>
               </Form>
