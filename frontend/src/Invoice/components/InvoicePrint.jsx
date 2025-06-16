@@ -120,11 +120,13 @@ const handlePrint = () => {
             align-items: center;
             gap: 20px;
             margin-bottom: 20px;
+            
           }
           .logo {
-            height: 80px;
+            height: 100px;
+            width: 100px;
           }
-             .watermark {
+         .watermark {
             position: fixed;
             top: 30%;
             left: 50%;
@@ -134,16 +136,26 @@ const handlePrint = () => {
             pointer-events: none;
             width: 400px;
           }
+          .hospitalInfo{
+            padding-left:50px;
+          }
           .hospitalInfo h3 {
             margin: 0;
             color: #A34C51;
+            font-size:45px;
           }
           .hospitalInfo h5 {
-            margin: 0;
-            color: #007bff;
+            background-color: #24A1F5;
+            color:white;
+            font-size:30px;
+            width: 96%;
+            padding-left:5px;
+            padding-right:5px;
+
           }
           .hospitalInfo p {
             margin: 0;
+            font-size:15px;
           }
           hr {
             border: 1px solid #ccc;
@@ -247,11 +259,11 @@ const handleDownload = () => {
           <Modal.Header>
    <div className={` d-flex  ${styles.headerContainer}`}>
     <img src={logo} alt="Hospital Logo" className={styles.logo} />
-    <div className={`ms-3 ${styles.hospitalInfo}`}>
+    <div className={`ms-3 ${styles.hospitalInfo} hospitalInfo`}>
       <h3 className={styles.title} style={{ color: '#A34C51' }}>
         Sai Teja Multi Speciality Hospital
       </h3>
-      <h5 className={` ${styles.pvt}`}>(A UNIT OF SAVITHA HEALTH CARE PVT.LTD)</h5>
+      <h5 className={`${styles.pvt}`}>(A UNIT OF SAVITHA HEALTH CARE PVT.LTD)</h5>
       <p className={styles.address}>
        <strong>
          Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035. Ph: 040 4006 2725, +91 84840 19791
