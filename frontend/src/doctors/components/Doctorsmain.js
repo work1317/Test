@@ -120,7 +120,7 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
           <div className={`col-md-6`}>
             <h5 className="mt-4">Education & Certifications</h5>
             <h5 style={{ color: "#484848" }}>Education</h5>
-            <div style={{ color: "#979797" }}>
+            <div style={{ color: "#979797" }} className="text-break">
               {doctor.d_education_info?.split(",").map((item, index) => (
                 <div key={index}>{item.trim()}</div>
  
@@ -131,7 +131,7 @@ const Doctorsmain = ({ doctor, show, handlerClose,slots }) => {
           
           <div className={`col-md-6 mt-5`}>
             <h5  className="mt-3" style={{ color: "#484848" }}>Certifications</h5>
-              <div style={{ color: "#979797" }}>
+              <div style={{ color: "#979797" }} className="text-break">
                   {doctor.d_certifications?.split(",").map((item, index) => (
                     <div key={index}>{item.trim()}</div>
                   ))}
