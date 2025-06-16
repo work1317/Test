@@ -272,7 +272,7 @@ useEffect(() => {
       <div className={Notificationstyle.fixedHeader}>
         <Row className="m-3 ms-3">
           <Col
-            className={`d-flex flex-wrap justify-content-start gap-3 ${Notificationstyle.buttonContainer}`}
+            className={`d-flex flex-wrap justify-content-start gap-4 ${Notificationstyle.buttonContainer}`}
           >
           {tabs.map((tab,idx) => (
           <Button

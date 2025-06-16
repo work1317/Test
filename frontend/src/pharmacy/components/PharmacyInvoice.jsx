@@ -984,7 +984,7 @@ const handleBatchChange = async (e, index) => {
                     value={tax}
                     onChange={(e) => {
                       const value = e.target.value;
-                      setDiscount(value === "" ? "" : Number(value));
+                      setTax(value === "" ? "" : Number(value));
                     }}
                     style={{ display: "inline", width: "auto" }}
                   >
@@ -1010,7 +1010,7 @@ const handleBatchChange = async (e, index) => {
                     value={paymentTerms}
                     onChange={(e) => setPaymentTerms(e.target.value)}
                   >
-                    <option value="Select payment terms">Select Payment Terms </option>
+                    <option value="">Select Payment Terms </option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </Form.Select>
