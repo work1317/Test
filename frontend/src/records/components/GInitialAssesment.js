@@ -81,21 +81,21 @@ function GInitialAssesment({ patient }) {
       <Row>
         <Col>
           <label className={styles.labels}>Duration of Experience</label>
-          <p className={` text-breK ${styles.data}`}>{assessment.duration_of_experience}</p>
+          <p className={` text-break ${styles.data}`}>{assessment.duration_of_experience}</p>
         </Col>
       </Row>
 
       <Row>
         <Col>
           <label className={styles.labels}>Present Illness</label>
-          <p className={` text-breK ${styles.data}`}>{assessment.present_illness}</p>
+          <p className={` text-break ${styles.data}`}>{assessment.present_illness}</p>
         </Col>
       </Row>
 
       <Row>
         <Col>
           <label className={styles.labels}>Past Illness</label>
-          <p className={` text-breK ${styles.data}`}>{assessment.past_illness}</p>
+          <p className={` text-break ${styles.data}`}>{assessment.past_illness}</p>
         </Col>
       </Row>
 

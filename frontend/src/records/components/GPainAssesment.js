@@ -1,12 +1,15 @@
-import React, { useState,useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import api from "../../utils/axiosInstance";
-import { Row, Col } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import { motion } from "framer-motion";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import styles from "../css/GPainAssesment.module.css";
+ 
 const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
   const [isDragging, setIsDragging] = useState(false);
   const progressRef = useRef(null);
-
+ 
   const updatePainIntensity = (event) => {
     if (!progressRef.current) return;
     const rect = progressRef.current.getBoundingClientRect();
@@ -15,20 +18,20 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
     newPainLevel = Math.max(0, Math.min(10, newPainLevel));
     setPainIntensity(newPainLevel);
   };
-
+ 
   const handleMouseDown = (event) => {
     setIsDragging(true);
     updatePainIntensity(event);
   };
-
+ 
   const handleMouseMove = (event) => {
     if (isDragging) updatePainIntensity(event);
   };
-
+ 
   const handleMouseUp = () => {
     setIsDragging(false);
   };
-
+ 
   useEffect(() => {
     if (isDragging) {
       window.addEventListener("mousemove", handleMouseMove);
@@ -42,12 +45,14 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging]);
-
+ 
   return (
     <div className="mx-5 mt-4">
       <h5 className="fw-bold">Pain Assessment</h5>
-      <p className="text-muted">Pain Intensity <span className="badge bg-secondary text-info">{painIntensity} </span> </p>
-
+      <p className="text-muted">
+        Pain Intensity <span className="badge bg-secondary text-info">{painIntensity} </span>{" "}
+      </p>
+ 
       <div className="d-flex justify-content-between mb-4 mx-2">
         {[...Array(21).keys()].map((num) => {
           const value = num / 2;
@@ -65,7 +70,7 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
           );
         })}
       </div>
-
+ 
       <div
         ref={progressRef}
         className="position-relative mt-2"
@@ -82,7 +87,7 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
           transition={{ duration: 0.2 }}
           style={{
             height: "8px",
-            backgroundColor: "0000FF",
+            backgroundColor: "blue",
             borderRadius: "2px",
           }}
         />
@@ -94,11 +99,11 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
               key={value}
               whileHover={{
                 scale: 1.6,
-                backgroundColor: "0000FF",
+                backgroundColor: "blue",
                 top: num % 2 === 0 ? "-8px" : "-4px",
               }}
               animate={{
-                backgroundColor: value <= painIntensity ? "0000FF" : "#808080",
+                backgroundColor: value <= painIntensity ? "blue" : "gray",
                 scale: isSelected ? 2 : 1,
               }}
               transition={{ duration: 0.3 }}
@@ -115,7 +120,7 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
                     ? "20px"
                     : "15px",
                 top: num % 2 === 0 ? "-8px" : "-4px",
-                background: value <= painIntensity ? "0000FF" : "#808080",
+                background: value <= painIntensity ? "blue" : "gray",
                 borderRadius: "2px",
                 transform: "translateX(-50%)",
                 cursor: "pointer",
@@ -124,7 +129,7 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
           );
         })}
       </div>
-
+ 
       <div className="d-flex justify-content-between mt-4 mx-2">
         <span>No Pain</span>
         <span>Worst Possible Pain</span>
@@ -132,21 +137,33 @@ const PainIntensityBar = ({ painIntensity, setPainIntensity }) => {
     </div>
   );
 };
-
+ 
 const GPainAssesment = ({ patient }) => {
-    const [assessment, setAssessment] = useState(null);
-    const [message, setMessage] = useState("");
-    const [painIntensity, setPainIntensity] = useState(0);
-  
-    useEffect(() => {
-      const fecthingData =  () => {
+  const [assessment, setAssessment] = useState(null);
+  const [message, setMessage] = useState("");
+  const [painIntensity, setPainIntensity] = useState(0);
+  const printRef = useRef();
+ 
+  const handleDownloadPDF = async () => {
+    const input = printRef.current;
+    const canvas = await html2canvas(input);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF();
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`pain_assessment_${patient?.patient_name || "patient"}.pdf`);
+  };
+ 
+  useEffect(() => {
+    const fecthingData = () => {
       if (patient && patient.patient_id) {
         api
           .get(`/records/get-pain-assessment/${patient.patient_id}`)
           .then((response) => {
             if (response.data.success === 1 && response.data.data) {
               const data = response.data.data;
-              console.log(data)
               setAssessment(data);
               setPainIntensity(data.pain_intensity);
               setMessage("");
@@ -163,38 +180,45 @@ const GPainAssesment = ({ patient }) => {
             );
           });
       }
-    }
+    };
+ 
     fecthingData();
-     const handleRefresh = () => fecthingData(); // Refresh on event
+ 
+    const handleRefresh = () => fecthingData();
  
     window.addEventListener("refreshPainAssessment", handleRefresh);
  
     return () => {
       window.removeEventListener("refreshPainAssessment", handleRefresh);
     };
-
-   
-    }, [patient]);
-  
-    return (
-        <div className="mb-4">
-          {assessment ? (
-            <>
-              <PainIntensityBar
-                painIntensity={painIntensity}
-                setPainIntensity={() => {}}
-              />
-      
-              <div className="mt-4 mx-5">
-                <Row>
-                  <label>Location of Service</label>
-                  <p className={styles.firstRow}>{assessment.location_of_service}</p>
-                </Row>
-      
-                <Row className="mt-1">
-                  <label className={styles.title}>Quality of Service</label>
-                </Row>
-               <div className={styles.radioGroup}>
+  }, [patient]);
+ 
+  return (
+    <div className="mb-4">
+      {assessment ? (
+        <>
+          <div className="text-end mx-5 mb-2">
+            <button className="btn btn-primary" onClick={handleDownloadPDF}>
+              Download PDF
+            </button>
+          </div>
+ 
+          <div ref={printRef}>
+            <PainIntensityBar
+              painIntensity={painIntensity}
+              setPainIntensity={() => {}} // read-only
+            />
+ 
+            <div className="mt-4 mx-5">
+              <Row>
+                <label>Location of Service</label>
+                <p className={styles.firstRow}>{assessment.location_of_service}</p>
+              </Row>
+ 
+              <Row className="mt-1">
+                <label className={styles.title}>Quality of Service</label>
+              </Row>
+              <div className={styles.radioGroup}>
   <div className={styles.radioOption}>
     <input
       type="radio"
@@ -215,75 +239,73 @@ const GPainAssesment = ({ patient }) => {
   </div>
 </div>
  
-
-      
-                <Row className="mt-2">
-                    <label className={styles.title}>Character of Service</label>
-                    <div className="d-flex mt-2">
-                    {["lacerating", "burning", "radiating"].map((type) => {
-                            const isChecked = assessment.character_of_service.includes(type);
-                            return (
-                              <div
-                                key={type}
-                                className={`${styles.checkboxWrapper} ${isChecked ? styles.checkedBox : ""}`}
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={isChecked}
-                                  readOnly
-                                  className={styles.checkboxLarge}
-                                />
-                                <label className={styles.labels}>
-                                  {type.charAt(0).toUpperCase() + type.slice(1)} Feedback
-                                </label>
-                              </div>
-                            );
-                          })}
-                    </div>
-                  </Row>
-
-
-      
-                <Row className="mt-2">
-                  <label className={styles.title}>Factors Affecting Rating</label>
-                  <p className={styles.firstRow}>{assessment.factors_affecting_rating}</p>
-                </Row>
-      
-                <Row className="mt-2">
-                    <label className={styles.title}>Factors Improving Experience</label>
-                    <div className="d-flex mt-2">
-                      {["reset", "medication"].map((factor) => {
-                        const isChecked = assessment.factors_improving_experience.includes(factor);
-                        return (
-                          <div
-                            key={factor}
-                            className={`${styles.checkboxWrapper} ${isChecked ? styles.checkedBox : ""}`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              readOnly
-                              className={styles.checkboxLarge}
-                            />
-                            <label className={styles.labels}>
-                              {factor.charAt(0).toUpperCase() + factor.slice(1)} Feedback
-                            </label>
-                          </div>
-                        );
-                      })}
-                    </div>
-                </Row>
-              </div>
-            </>
-          ) : (
-            <div className="mb-4">
-            <p className="alert alert-warning ">{message}</p>
+ 
+              <Row className="mt-2">
+                <label className={styles.title}>Character of Service</label>
+                <div className="d-flex mt-2">
+                  {["lacerating", "burning", "radiating"].map((type) => {
+                    const isChecked = assessment.character_of_service.includes(type);
+                    return (
+                      <div
+                        key={type}
+                        className={`${styles.checkboxWrapper} ${isChecked ? styles.checkedBox : ""}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          readOnly
+                          className={styles.checkboxLarge}
+                        />
+                        <label className={styles.labels}>
+                          {type.charAt(0).toUpperCase() + type.slice(1)} Feedback
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Row>
+ 
+              <Row className="mt-2">
+                <label className={styles.title}>Factors Affecting Rating</label>
+                <p className={styles.firstRow}>{assessment.factors_affecting_rating}</p>
+              </Row>
+ 
+              <Row className="mt-2">
+                <label className={styles.title}>Factors Improving Experience</label>
+                <div className="d-flex mt-2">
+                  {["reset", "medication"].map((factor) => {
+                    const isChecked = assessment.factors_improving_experience.includes(factor);
+                    return (
+                      <div
+                        key={factor}
+                        className={`${styles.checkboxWrapper} ${isChecked ? styles.checkedBox : ""}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          readOnly
+                          className={styles.checkboxLarge}
+                        />
+                        <label className={styles.labels}>
+                          {factor.charAt(0).toUpperCase() + factor.slice(1)} Feedback
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Row>
             </div>
-          )}
+          </div>
+        </>
+      ) : (
+        <div className="mb-4">
+          <p className="alert alert-warning ">{message}</p>
         </div>
-      );
-      
-    
-  };
-  
-  export default GPainAssesment;
+      )}
+    </div>
+  );
+};
+ 
+export default GPainAssesment;
+ 
+ 

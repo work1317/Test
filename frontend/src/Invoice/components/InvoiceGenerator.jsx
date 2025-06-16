@@ -1148,7 +1148,7 @@ const [pharmacyDates, setPharmacyDates] = useState({ from: null, to: null });
          <p className={styles.subTitle}>Investigation Charges</p>
          <Row className="mb-2">
           <Col className="col-sm-4">
-  <Form.Label>From</Form.Label>
+  <Form.Label>From date</Form.Label>
   <Form.Control
     type="date"
     value={investigationDates.from || ''}
@@ -1162,7 +1162,7 @@ const [pharmacyDates, setPharmacyDates] = useState({ from: null, to: null });
 </Col>
 
 <Col className="col-sm-4">
-  <Form.Label>To</Form.Label>
+  <Form.Label>To date</Form.Label>
   <Form.Control
     type="date"
     value={investigationDates.to || ''}
@@ -1204,7 +1204,7 @@ const [pharmacyDates, setPharmacyDates] = useState({ from: null, to: null });
          <p className={styles.subTitle}>Pharmacy Charges</p>
          <Row className="mb-2">
            <Col className="col-sm-4">
-             <Form.Label>From</Form.Label>
+             <Form.Label>From date</Form.Label>
              <Form.Control
   type="date"
   value={pharmacyDates.from || ''}
@@ -1217,7 +1217,7 @@ const [pharmacyDates, setPharmacyDates] = useState({ from: null, to: null });
 />
            </Col>
            <Col className="col-sm-4">
-             <Form.Label>To</Form.Label>
+             <Form.Label>To date</Form.Label>
              <Form.Control
                type="date"
                value={pharmacyDates.to}

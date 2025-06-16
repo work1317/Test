@@ -68,7 +68,7 @@ function GNursingNotes({ patient }) {
                 </Col>
               </Row>
               <Row>
-                <p className={styles.nurseNote}>{note.description}</p>
+                <p className={`text-break ${styles.nurseNote}`} >{note.description}</p>
               </Row>
             </div>
           );
