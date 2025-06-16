@@ -107,11 +107,7 @@ class MedicationCombinedAPIView(APIView):
                 expiry_date__isnull=True,
             ).filter(
                 Q(description__isnull=True) | Q(description=''),
-                medication_name__isnull=False,
-                category__isnull=False,
-                manufacturer__isnull=False,
-                strength__isnull=False,
-                batch_no__isnull=False,
+                medication_name__isnull=False
             ).exclude(
                 medication_name='',
                 category='',

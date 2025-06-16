@@ -57,10 +57,9 @@ class VitalsSerializer(serializers.ModelSerializer):
 
 
 class PrescriptionSerializer(serializers.ModelSerializer):
-    # Accept medication name as input (write-only) and expose the medication ID as read-only
     medication_name = serializers.CharField(write_only=True)
     medication = serializers.PrimaryKeyRelatedField(read_only=True)
-    
+
     patient = serializers.PrimaryKeyRelatedField(
         queryset=Patient.objects.all(),
         required=False
@@ -75,8 +74,8 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         fields = [
             'patient',
             'doctor_name',
-            'medication_name',  # Input
-            'medication',       # Output
+            'medication_name',  # Input only
+            'medication',       # Read-only
             'dosage',
             'quantity',
             'status',
@@ -89,50 +88,43 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         ]
 
     def validate_medication_name(self, value):
-        """
-        Ensure a valid medication exists with available stock and non-expired.
-        """
-        medication_qs = Medication.objects.filter(
-            medication_name__iexact=value.strip(),
-            stock_quantity__gt=0,
-            expiry_date__gte=now().date()
-        ).order_by('expiry_date')
+        name = value.strip()
+        medication_qs = Medication.objects.filter(medication_name__iexact=name)
 
-        if not medication_qs.exists():
-            raise serializers.ValidationError(
-                f"Medication '{value}' does not exist, is out of stock, or expired."
+        if medication_qs.exists():
+            self.context['medication_obj'] = medication_qs.first()
+        else:
+            # Create medication
+            medication = Medication.objects.create(
+                medication_name=name,
+                category=" "
+                
             )
+            self.context['medication_obj'] = medication
 
-        # Choose the earliest-expiring valid medication
-        self.context['medication_obj'] = medication_qs.first()
-        return value
+        return name
 
     def create(self, validated_data):
-        """
-        Replace medication_name with a valid Medication instance.
-        """
         validated_data.pop('medication_name')
         validated_data['medication'] = self.context['medication_obj']
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        """
-        Optional: handle medication name update if needed in PUT/PATCH.
-        """
         medication_name = validated_data.pop('medication_name', None)
         if medication_name:
-            medication_qs = Medication.objects.filter(
-                medication_name__iexact=medication_name.strip(),
-                stock_quantity__gt=0,
-                expiry_date__gte=now().date()
-            ).order_by('expiry_date')
+            name = medication_name.strip()
+            medication_qs = Medication.objects.filter(medication_name__iexact=name)
 
-            if not medication_qs.exists():
-                raise serializers.ValidationError(
-                    f"Medication '{medication_name}' does not exist, is out of stock, or expired."
+            if medication_qs.exists():
+                validated_data['medication'] = medication_qs.first()
+            else:
+                # Create new medication with expiry_date = None
+                medication = Medication.objects.create(
+                    medication_name=name,
+                    stock_quantity=0,
+                    expiry_date=None
                 )
-
-            validated_data['medication'] = medication_qs.first()
+                validated_data['medication'] = medication
 
         return super().update(instance, validated_data)
 

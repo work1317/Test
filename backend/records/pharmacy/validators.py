@@ -12,28 +12,15 @@ class MedicationValidator(serializers.Serializer):
         "required": "Medication name is required.",
         "blank": "Medication name cannot be blank.",
     })
-    category = serializers.CharField(required=True, allow_blank=False, max_length=100, error_messages={
-        "required": "Category is required.",
-        "blank": "Category cannot be blank.",
-    })
-    manufacturer = serializers.CharField(required=True, allow_blank=False, max_length=100, error_messages={
-        "required": "Manufacturer is required.",
-        "blank": "Manufacturer cannot be blank.",
-    })
-    strength = serializers.CharField(required=True, allow_blank=False, max_length=50, error_messages={
-        "required": "Strength is required.",
-        "blank": "Strength cannot be blank.",
-    })
-    batch_no = serializers.CharField(required=True,allow_blank=False,max_length=50,error_messages={
-        "required": "Batch number is required.",
-        "blank": "Batch Number cannot be blank.",
-    })
+    category = serializers.CharField(required=False, allow_blank=True)
+    manufacturer = serializers.CharField(required=False, allow_blank=True)
+    strength = serializers.CharField(required=False, allow_blank=True)
+    batch_no = serializers.CharField(required=False,allow_blank=True)
     stock_quantity = serializers.IntegerField(required=False, allow_null=True)
     unit_price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
     mrp = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
     expiry_date = serializers.DateField(required=False, allow_null=True,default=None)
     description = serializers.CharField(required=False, allow_blank=True)
-    # batch_no = serializers.CharField(required=False, allow_blank=True, max_length=50) 
 
     def validate(self, data):
         """
