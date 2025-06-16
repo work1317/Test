@@ -7,8 +7,7 @@ import { Icon } from "@iconify/react";
 import Vector from "../../assets/images/Vector.svg";
 import AddPatient from "../../assets/images/Vectors2.svg";
 import PatientRegistration from "./PatientRegistratiob";
-import Addnotes from "./Addnotes";
-import Outpatient from "./Outpatient";
+
 import api from "../../utils/axiosInstance";
 import { Button, Result } from 'antd';
 
