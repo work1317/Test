@@ -403,6 +403,16 @@ class AppointmentRescheduleAPIView(APIView):
 
             doctor = appointment.doctor
 
+            # Check if the slot is already taken by another appointment
+            conflicting_appointment = models.Appointment.objects.filter(
+                doctor=doctor,
+                date=appointment_date,
+                time=appointment_time
+            ).exclude(appointment_id=appointment_id).exists()
+
+            if conflicting_appointment:
+                raise ValidationError("This slot is not available. Someone already booked this slot.")
+
             # Validate doctor's available day
             day_name = calendar.day_name[appointment_date.weekday()]
             if day_name not in doctor.d_available_days:
