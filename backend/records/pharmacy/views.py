@@ -185,6 +185,16 @@ class MedicationUpdateAPIView(APIView):
             old_serializer = serializers.MedicationSeralizer(medication)
             current_data = old_serializer.data
 
+                        # Get new data from request
+            medication_name = request.data.get('medication_name', medication.medication_name)
+            batch_no = request.data.get('batch_no', medication.batch_no)
+ 
+            # Check for duplicate medicine with same name and batch_no but different ID
+            if models.Medication.objects.filter(medication_name=medication_name, batch_no=batch_no).exclude(id=pk).exists():
+                context['success'] = 0
+                context['message'] = "Medication with the same name and batch number cannot be updated."
+                return Response(context)
+
             # Get new data from request
             medication_name = request.data.get('medication_name', medication.medication_name)
             batch_no = request.data.get('batch_no', medication.batch_no)

@@ -61,8 +61,13 @@ class PharmacyInvoice(models.Model):
             if not self.doctor:
                 raise ValidationError("doctor is required for guest.")
             self.patient = None  # ensure patient FK is null for guest
-            self.age = None
-            self.gender = None
+            
+            # 🛠️ Only nullify if not provided
+            if self.age in [None, ""]:
+                self.age = None
+            if self.gender in [None, ""]:
+                self.gender = None
+
         else:
             if not self.patient:
                 raise ValidationError("patient is required for registered patients.")

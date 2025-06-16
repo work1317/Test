@@ -26,45 +26,61 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
     items = PharmacyInvoiceItemSerializer(many=True)
     patient_id = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     patient_name = serializers.CharField(required=False, allow_blank=True)
-    age = serializers.IntegerField(required=False)
-    gender = serializers.CharField(required=False, allow_blank=True)
+    age = serializers.IntegerField(required=False, allow_null=True)
+    gender = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     doctor = serializers.CharField(required=False, allow_blank=True)
     Bill_No = serializers.ReadOnlyField()
     Bill_Date = serializers.ReadOnlyField()
-    typeof_transaction = serializers.CharField(required=True, allow_null=False, allow_blank=False,
-                                               error_messages = {
-                                                   "required":"Type of Transaction is required",
-                                                   "blank":"Type of Transaction cannot be blank",
-                                                   "null":"Type of Transaction cannot be null"
-                                               }   
-                                               )
+    typeof_transaction = serializers.CharField(
+        required=True,
+        allow_null=False,
+        allow_blank=False,
+        error_messages={
+            "required": "Type of Transaction is required",
+            "blank": "Type of Transaction cannot be blank",
+            "null": "Type of Transaction cannot be null"
+        }
+    )
  
     class Meta:
         model = PharmacyInvoice
         fields = '__all__'
  
+    # ✅ Clean and normalize age
+    def validate_age(self, value):
+        if value in ["", None]:
+            return None
+        try:
+            return int(value)
+        except ValueError:
+            raise serializers.ValidationError("Age must be a valid number.")
+ 
+    # ✅ Clean and normalize gender
+    def validate_gender(self, value):
+        return value if value not in ["", None] else None
+ 
     def validate(self, attrs):
         guest = attrs.get('guest', False)
  
         if guest:
-            # For guest patients, ensure manual patient_name and doctor are provided
             required_fields = ['patient_name', 'doctor']
             for field in required_fields:
                 if not attrs.get(field):
                     raise serializers.ValidationError({field: f"{field} is required for guests."})
-            # Also record the entered patient_id (optional for traceability)
+ 
+            # ✅ Optional: also track provided patient_id for guests
             if 'patient_id' in self.initial_data:
                 attrs['patient_id_value'] = self.initial_data.get('patient_id')
         else:
             patient_id = attrs.get('patient_id')
             if not patient_id:
                 raise serializers.ValidationError({'patient_id': 'patient_id is required for registered patients.'})
+ 
             try:
                 patient = Patient.objects.get(patient_id=patient_id)
             except Patient.DoesNotExist:
                 raise serializers.ValidationError({'patient_id': 'No patient found with this ID.'})
  
-            # Assign patient instance to FK field
             attrs['patient'] = patient
             attrs.pop('patient_id', None)
  
@@ -74,9 +90,9 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
             attrs['gender'] = patient.gender
             attrs['doctor'] = patient.doctor
             attrs['appointment_type'] = patient.appointment_type
-            attrs['patient_id_value'] = patient.patient_id  # for fallback in notifications
+            attrs['patient_id_value'] = patient.patient_id
  
-        # Check if any item has discount > 15% (approval workflow)
+        # Check for discount > 15%
         items_data = self.initial_data.get('items', [])
         discount_exceeds_limit = any(
             Decimal(str(item.get('discount_percentage', 0))) > 15 for item in items_data
@@ -92,9 +108,7 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
         validated_data['discount_requires_approval'] = discount_requires_approval
         validated_data['discount_approved'] = validated_data.get('discount_approved', False)
  
-        # Pop patient if provided (can be None for guest)
         patient = validated_data.pop('patient', None)
- 
         invoice = PharmacyInvoice.objects.create(patient=patient, **validated_data)
  
         for item_data in items_data:
@@ -113,9 +127,9 @@ class PharmacyInvoiceSerializer(serializers.ModelSerializer):
  
             item_data['medication_name'] = medication
             PharmacyInvoiceItem.objects.create(invoice=invoice, **item_data)
+        print("DEBUG - Final validated_data before create:", validated_data)
  
-        return invoice
- 
+        return invoice 
  
  
  

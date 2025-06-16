@@ -49,19 +49,37 @@ function UpdateStock({ medicationId, show, handleClose }) {
     setFormValues(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = () => {
-    api.put(`/pharmacy/update_medicine/${medicationId}/`, formValues)
-      .then(res => {
-        console.log('UpdateStock response',res);
-        alert("Medication updated successfully!");
-         window.dispatchEvent(new Event("refreshUpdateStock"));
+  // const handleSubmit = () => {
+  //   api.put(`/pharmacy/update_medicine/${medicationId}/`, formValues)
+  //     .then(res => {
+  //       console.log('UpdateStock response',res);
+  //       alert("Medication updated successfully!");
+  //        window.dispatchEvent(new Event("refreshUpdateStock"));
+  //       handleClose();
+  //     })
+  //     .catch(err => {
+  //       console.error("Update failed:", err);
+  //       alert("Failed to update medication.");
+  //     });
+  // };
+  const handleSubmit = async () => {
+    try {
+      const res = await api.put(`/pharmacy/update_medicine/${medicationId}/`, formValues);
+      console.log('UpdateStock response', res);
+ 
+      if (res.data.success === 1) {
+        alert(res.data.message);
+        window.dispatchEvent(new Event("refreshUpdateStock"));
         handleClose();
-      })
-      .catch(err => {
-        console.error("Update failed:", err);
-        alert("Failed to update medication.");
-      });
+      }else {
+      alert(res.data.message || "Update failed.");
+    }
+    } catch (err) {
+      console.error("Update failed:", err);
+      alert("Update failed. Please try again.");
+    }
   };
+ 
 
   return (
     <Modal show={show} onHide={handleClose} size="lg">

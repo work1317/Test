@@ -731,7 +731,7 @@ const PharmacyInvoice = ({ onBack }) => {
                     type="text"
                     name="gst_no"
                     value={invoiceData.gst_no}
-                    placeholder="36GXDPS888251ZH"
+                    placeholder="36GXDPS8882J1ZH"
                     className="w-50 text-black"
                     readOnly
                   />

@@ -69,8 +69,9 @@ class MedicationValidator(serializers.Serializer):
             )
  
         return data
-      
-
+     
+ 
+ 
 phone_no_validator=[
     MinLengthValidator(10, message = "Phone number must be 10 digits."),
     MaxLengthValidator(10,message="Phone number must be 10 digits."),
