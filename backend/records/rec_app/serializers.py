@@ -4,7 +4,8 @@ from patients.models import Patient
 from doctors.models import DoctorAvailability
 from .models import NursingNotes,ProgressNote,TreatmentChart, PainAssessment,InitialAssessment,CarePlanFeedback,RiskFactor1,RiskFactor2,RiskFactor3,RiskFactor4
 from .validators import validate_character_of_service,validate_factors_improving_experience,RiskFactor1Validator,RiskFactor2Validator,RiskFactor3Validator,RiskFactor4Validator
-
+from pharmacy.models import Medication
+from django.utils.timezone import now
 
 # serializers for Adding Records
 
@@ -17,13 +18,126 @@ class VitalsSerializer(serializers.ModelSerializer):
         fields = ['patient', 'doctor_name','blood_pressure', 'bmi', 'grbs','cns','cvs', 'respiratory_rate', 'weight', 'height','category','summary','report','created_at','last_updated_at']
 
 
+# class PrescriptionSerializer(serializers.ModelSerializer):
+#     # Allow medication name as input instead of medication ID
+#     medication_name = serializers.CharField(write_only=True)
+#     medication = serializers.PrimaryKeyRelatedField(read_only=True)
+#     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False)
+#     doctor_name = serializers.CharField(source='patient.doctor.d_name', read_only=True)
+
+#     class Meta:
+#         model = Prescription
+#         fields = [
+#             'patient', 'doctor_name',
+#             'medication_name', 'medication',  # medication is FK, name is input
+#             'dosage', 'quantity', 'status', 'duration',
+#             'category', 'summary', 'report', 'created_at', 'last_updated_at'
+#         ]
+
+#     def validate_medication_name(self, value):
+#         try:
+#             # medication = Medication.objects.get(medication_name=value)
+#             medication = Medication.objects.filter(
+#                 medication_name=value,
+#                 stock_quantity__gt=0,
+#                 expiry_date__gte=now().date()
+#             ).order_by('expiry_date')
+            
+#         except Medication.DoesNotExist:
+#             raise serializers.ValidationError(f"Medication '{value}' does not exist.")
+#         self.context['medication_obj'] = medication
+#         return value
+
+#     def create(self, validated_data):
+#         # Pop medication_name, use pre-fetched medication object
+#         validated_data.pop('medication_name')
+#         validated_data['medication'] = self.context['medication_obj']
+#         return super().create(validated_data)
+
+
+
 class PrescriptionSerializer(serializers.ModelSerializer):
-    patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False) 
-    doctor_name = serializers.CharField(source='patient.doctor.d_name', read_only=True)
+    # Accept medication name as input (write-only) and expose the medication ID as read-only
+    medication_name = serializers.CharField(write_only=True)
+    medication = serializers.PrimaryKeyRelatedField(read_only=True)
+    
+    patient = serializers.PrimaryKeyRelatedField(
+        queryset=Patient.objects.all(),
+        required=False
+    )
+    doctor_name = serializers.CharField(
+        source='patient.doctor.d_name',
+        read_only=True
+    )
+
     class Meta:
         model = Prescription
-        fields = ['patient','doctor_name','medication_name','dosage','quantity','status','duration','category','summary','report','created_at','last_updated_at']
+        fields = [
+            'patient',
+            'doctor_name',
+            'medication_name',  # Input
+            'medication',       # Output
+            'dosage',
+            'quantity',
+            'status',
+            'duration',
+            'category',
+            'summary',
+            'report',
+            'created_at',
+            'last_updated_at'
+        ]
 
+    def validate_medication_name(self, value):
+        """
+        Ensure a valid medication exists with available stock and non-expired.
+        """
+        medication_qs = Medication.objects.filter(
+            medication_name__iexact=value.strip(),
+            stock_quantity__gt=0,
+            expiry_date__gte=now().date()
+        ).order_by('expiry_date')
+
+        if not medication_qs.exists():
+            raise serializers.ValidationError(
+                f"Medication '{value}' does not exist, is out of stock, or expired."
+            )
+
+        # Choose the earliest-expiring valid medication
+        self.context['medication_obj'] = medication_qs.first()
+        return value
+
+    def create(self, validated_data):
+        """
+        Replace medication_name with a valid Medication instance.
+        """
+        validated_data.pop('medication_name')
+        validated_data['medication'] = self.context['medication_obj']
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Optional: handle medication name update if needed in PUT/PATCH.
+        """
+        medication_name = validated_data.pop('medication_name', None)
+        if medication_name:
+            medication_qs = Medication.objects.filter(
+                medication_name__iexact=medication_name.strip(),
+                stock_quantity__gt=0,
+                expiry_date__gte=now().date()
+            ).order_by('expiry_date')
+
+            if not medication_qs.exists():
+                raise serializers.ValidationError(
+                    f"Medication '{medication_name}' does not exist, is out of stock, or expired."
+                )
+
+            validated_data['medication'] = medication_qs.first()
+
+        return super().update(instance, validated_data)
+
+
+    
 class ServiceProcedureSerializer(serializers.ModelSerializer):
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), required=False) 
     doctor_name = serializers.CharField(source='patient.doctor.d_name', read_only=True)

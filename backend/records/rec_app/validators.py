@@ -65,12 +65,12 @@ class PrescriptionValidator(serializers.Serializer):
         "invalid": "Invalid patient ID."
     })
 
-    medication_name = serializers.CharField(required=True, allow_null=False, allow_blank=False, max_length=100, error_messages={
-        "required": "Medication name is a required field.",
-        "null": "Medication name cannot be null.",
-        "blank": "Medication name cannot be empty.",
-        "max_length": "Medication name cannot exceed 100 characters."
-    })
+    # medication_name = serializers.CharField(required=True, allow_null=False, allow_blank=False, max_length=100, error_messages={
+    #     "required": "Medication name is a required field.",
+    #     "null": "Medication name cannot be null.",
+    #     "blank": "Medication name cannot be empty.",
+    #     "max_length": "Medication name cannot exceed 100 characters."
+    # })
 
     dosage = serializers.CharField(required=True, max_length=50, error_messages={
         "required": "Dosage is a required field.",

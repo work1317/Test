@@ -39,36 +39,36 @@ from rec_app.models import Prescription  # Ensure this import is present
 
 class CreatePharmacyInvoiceAPIView(APIView):
 
-    def get(self, request, *args, **kwargs):
-        patient_id = request.query_params.get("patient_id")
-        if not patient_id:
-            return Response({
-                "success": 0,
-                "message": "patient_id is required in query parameters",
-                "data": {}
-            }, status=status.HTTP_400_BAD_REQUEST)
+    # def get(self, request, *args, **kwargs):
+    #     patient_id = request.query_params.get("patient_id")
+    #     if not patient_id:
+    #         return Response({
+    #             "success": 0,
+    #             "message": "patient_id is required in query parameters",
+    #             "data": {}
+    #         }, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            patient = Patient.objects.get(patient_id=patient_id)
-            data = {
-                "patient_id": patient.patient_id,
-                "patient_name": patient.patient_name,
-                "age": patient.age,
-                "gender": patient.gender,
-                "doctor": patient.doctor.d_name if hasattr(patient.doctor, 'd_name') else str(patient.doctor),
-                "appointment_type": patient.appointment_type
-            }
-            return Response({
-                "success": 1,
-                "message": "Patient data fetched successfully",
-                "data": data
-            }, status=status.HTTP_200_OK)
-        except Patient.DoesNotExist:
-            return Response({
-                "success": 0,
-                "message": "No patient found with this ID.",
-                "data": {}
-            }, status=status.HTTP_404_NOT_FOUND)
+    #     try:
+    #         patient = Patient.objects.get(patient_id=patient_id)
+    #         data = {
+    #             "patient_id": patient.patient_id,
+    #             "patient_name": patient.patient_name,
+    #             "age": patient.age,
+    #             "gender": patient.gender,
+    #             "doctor": patient.doctor.d_name if hasattr(patient.doctor, 'd_name') else str(patient.doctor),
+    #             "appointment_type": patient.appointment_type
+    #         }
+    #         return Response({
+    #             "success": 1,
+    #             "message": "Patient data fetched successfully",
+    #             "data": data
+    #         }, status=status.HTTP_200_OK)
+    #     except Patient.DoesNotExist:
+    #         return Response({
+    #             "success": 0,
+    #             "message": "No patient found with this ID.",
+    #             "data": {}
+    #         }, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -125,6 +125,69 @@ class CreatePharmacyInvoiceAPIView(APIView):
     #             "message": "No patient found with this ID.",
     #             "data": {}
     #         }, status=status.HTTP_404_NOT_FOUND)
+    
+    
+    def get(self, request, *args, **kwargs):
+        patient_id = request.query_params.get("patient_id")
+        if not patient_id:
+            return Response({
+                "success": 0,
+                "message": "patient_id is required in query parameters",
+                "data": {}
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            patient = Patient.objects.get(patient_id=patient_id)
+
+            completed_prescriptions = patient.prescriptions.filter(status="completed")
+            prescription_data = []
+
+            for prescription in completed_prescriptions:
+                # Fetch all batches of medication with the same medication_name
+                medications = Medication.objects.filter(medication_name=prescription.medication.medication_name)
+
+                batches = []
+                for med in medications:
+                    batches.append({
+                        "batch_no": med.batch_no,
+                        "expiry_date": med.expiry_date,
+                        "mrp": med.mrp,
+                    })
+
+                prescription_data.append({
+                    "medication_name": prescription.medication.medication_name,
+                    "dosage": prescription.dosage,
+                    "quantity": prescription.quantity,
+                    "duration": prescription.duration,
+                    "status": prescription.status,
+                    "category": prescription.category,
+                    "summary": prescription.summary,
+                    "batches": batches,
+                })
+
+            data = {
+                "patient_id": patient.patient_id,
+                "patient_name": patient.patient_name,
+                "age": patient.age,
+                "gender": patient.gender,
+                "doctor": patient.doctor.d_name if hasattr(patient.doctor, 'd_name') else str(patient.doctor),
+                "appointment_type": patient.appointment_type,
+                "completed_prescriptions": prescription_data
+            }
+
+            return Response({
+                "success": 1,
+                "message": "Patient data fetched successfully",
+                "data": data
+            }, status=status.HTTP_200_OK)
+
+        except Patient.DoesNotExist:
+            return Response({
+                "success": 0,
+                "message": "No patient found with this ID.",
+                "data": {}
+            }, status=status.HTTP_404_NOT_FOUND)
+
 
 
     def post(self, request, *args, **kwargs):

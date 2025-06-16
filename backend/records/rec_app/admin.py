@@ -9,7 +9,7 @@ class VitalsAdmin(admin.ModelAdmin):
 
 @admin.register(Prescription)
 class PrescriptionAdmin(admin.ModelAdmin):
-    list_display = ['patient','medication_name','dosage','duration','summary','report','created_at','last_updated_at']
+    list_display = ['patient','medication','dosage','duration','summary','report','created_at','last_updated_at']
 
 @admin.register(ServiceProcedure)
 class ServiceProcedureAdmin(admin.ModelAdmin):
