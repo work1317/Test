@@ -24,8 +24,8 @@ const PharmacyInvoice = ({ onBack }) => {
   const { messages } = useNotifications();
 
   const [showRecentInvoices, setShowRecentInvoices] = useState(false);
-  const [discount, setDiscount] = useState(0);
-  const [tax, setTax] = useState(0);
+  const [discount, setDiscount] = useState("");
+  const [tax, setTax] = useState("");
   const [paymentTerms, setPaymentTerms] = useState();
 
   const [suggestions, setSuggestions] = useState([]);
@@ -781,20 +781,24 @@ const PharmacyInvoice = ({ onBack }) => {
               </h5>
               <Form>
                 <Form.Group>
+                       {patientDetails.guest !== "Yes" && (
+                <Form.Group>                
                   <Form.Label>Patient Id</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="patient_id"
-                    value={patientDetails.patient_id || ""}
-                    onChange={(e) =>
-                      setPatientDetails({
-                        ...patientDetails,
-                        patient_id: e.target.value,
-                      })
-                    }
-                    className="w-50"
-                    disabled={patientDetails.guest === "Yes"}
-                  />
+                    <Form.Control
+                      type="text"
+                      name="patient_id"
+                      value={patientDetails.patient_id || ""}
+                      onChange={(e) =>
+                        setPatientDetails({
+                          ...patientDetails,
+                          patient_id: e.target.value,
+                        })
+                      }
+                      className="w-50"
+                    />
+                </Form.Group>
+              )}
+ 
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Patient Name</Form.Label>
@@ -1022,6 +1026,7 @@ const PharmacyInvoice = ({ onBack }) => {
                   <Form.Control
                     type="number"
                     name="tax"
+                    placeholder="0"
                     value={tax}
                     onChange={(e) => {
                       const value = e.target.value;
