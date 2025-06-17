@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'invoice',
     'dashboard',
     'p_invoice',
+    'rangefilter',
 ]
 
 MIDDLEWARE = [

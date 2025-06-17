@@ -29,7 +29,7 @@ function PharmacyDashboard() {
     NearingExpiry: 0,
     StagnantDrugs: 0,
     PrescriptionPending: 0,
-    SupplierDues:0,
+    UpcomingSupplierDues:0,
     Value: 0,
   });
 
@@ -64,7 +64,7 @@ function PharmacyDashboard() {
           NearingExpiry: stats.NearingExpiry || 0,
           StagnantDrugs: stats.StagnantDrugs || 0,
           PrescriptionPending: stats.PrescriptionPending || 0,
-          SupplierDues:stats.SupplierDues || 0,
+          UpcomingSupplierDues:stats.UpcomingSupplierDues || 0,
           Value: stats.Value || 0,
         });
       }
@@ -79,7 +79,7 @@ function PharmacyDashboard() {
     { icon: 'pepicons-pencil:file', color: '#9333EA', text: 'Pending', value: cardStats.PrescriptionPending || 0, description: 'Pending Medications', bgColor:'#F0E0FF',descriptionColor: '#9A9A9A'},
     { icon: 'proicons:graph', color: '#16A34A', text: 'Value', value: `₹ ${cardStats.Value || 0}`, description: 'Total Inventory Value', bgColor:'#DDFFE8',descriptionColor: '#9A9A9A' },
     { icon: 'iwwa:alert', color: '#CC931C', text: 'Alerts', value: cardStats.NearingExpiry || 0, description: 'Drugs Nearing Expiry', bgColor:'#FFE9BA' ,descriptionColor: '#9A9A9A'},
-    { icon: 'flowbite:bell-outline', color: '#888A2D', text: 'Pending',value:cardStats.SupplierDues|| 0, description: 'Supplier Due Notification', bgColor:'#FCFFDF',descriptionColor: '#9A9A9A'},
+    { icon: 'flowbite:bell-outline', color: '#888A2D', text: 'Pending',value:cardStats.UpcomingSupplierDues|| 0, description: 'Supplier Due Notification', bgColor:'#FCFFDF',descriptionColor: '#9A9A9A'},
     { icon: 'iwwa:alert', color: '#CC931C', text: 'Alerts', value: cardStats.StagnantDrugs || 0, description: 'Stagnant Drugs', bgColor:'#FFE9BA' ,  descriptionColor: '#9A9A9A'},
   ];
 
