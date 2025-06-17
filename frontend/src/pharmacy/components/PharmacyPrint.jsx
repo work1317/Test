@@ -65,7 +65,7 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
     doc.write(`
       <html>
         <head>
-          <title>Print Invoice</title>
+          
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
           <style>
             body {
@@ -81,14 +81,14 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
               border-collapse: collapse;
             }
             th, td {
-              border: 1px solid #000;
+              border: 1px solid #fff;
               padding: 8px;
               text-align: left;
             }
             thead th {
               background-color: #002072 !important;
               color: white !important;
-              border: 1px solid #000 !important;
+              border: 1px solid #fff !important;
             }
             .text-end { text-align: right; }
             .text-primary { color: #007bff; }
