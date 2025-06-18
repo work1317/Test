@@ -147,7 +147,7 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                 >
                   (A UNIT OF SAVITHA HEALTH CARE PVT.LTD)
                 </h6>
-                <p className="ms-3" style={{ fontSize: "11px" }}>
+                <p className="ms-3" style={{ fontSize: "10px" }}>
                   <strong>
                     Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035.{" "}
                     Ph: 040 4006 2725, +91 84840 19791
