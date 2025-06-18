@@ -149,12 +149,12 @@ useEffect(() => {
     <Table bordered hover responsive>
       <thead>
         <tr>
-          <th>Invoice ID</th>
-          <th>Patient Name</th>
-          <th>Department</th>
-          <th>Service</th>
-          <th>Date</th>
-          <th>Amount</th>
+          <th className={styles.theader}>Invoice ID</th>
+          <th  className={styles.theader}>Patient Name</th>
+          <th  className={styles.theader}>Department</th>
+          <th  className={styles.theader}>Service</th>
+          <th  className={styles.theader}>Date</th>
+          <th  className={styles.theader}>Amount</th>
         </tr>
       </thead>
       <tbody>

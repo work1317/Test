@@ -16,3 +16,7 @@
   /* Optional: to keep table headers fixed */
   display: block;
 }
+.theader{
+  background-color:#002072 !important ;
+  color: #ffffff !important ;
+}
