@@ -102,7 +102,7 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
             .no-print { display: none !important; }
             .footerNote {
             position: fixed;
-            bottom: 0;
+            bottom: 1%;
             width: 100%;
             left:0;
             background-color: #A62855;

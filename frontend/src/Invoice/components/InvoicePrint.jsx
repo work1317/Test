@@ -162,9 +162,9 @@ const handlePrint = () => {
           .num{
             padding-right: 230px;
           }
-            .footerNote {
+          .footerNote {
             position: fixed;
-            bottom: 0;
+            bottom: 1%;
             width: 100%;
             background-color: #A62855;
             color: white;
@@ -175,7 +175,7 @@ const handlePrint = () => {
           }
           @page {
             size: A4;
-            margin: 10mm 15mm;
+            margin: 10mm 10mm;
           }
         </style>
       </head>
