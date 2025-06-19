@@ -45,12 +45,16 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-    def save(self, *args, **kwargs):
+
+    def save(self,*args,**kwargs):
         if not self.appointment_id:
-            last_appointment = Appointment.objects.aggregate(max_id=Max('id')) 
-            last_id = last_appointment['max_id'] if last_appointment['max_id'] else 0
-            self.appointment_id = f'A{last_id + 1:03}'
-        super().save(*args, **kwargs)
+            last_appointment = Appointment.objects.order_by('-id').first()
+            if last_appointment and last_appointment.appointment_id:
+                last_id=int(last_appointment.appointment_id[1:])+1
+            else:
+                last_id=1
+            self.appointment_id = f'A{last_id :03d}'
+        super().save(*args,**kwargs)
 
     def __str__(self):
         return self.patient_name

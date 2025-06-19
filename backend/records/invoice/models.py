@@ -52,12 +52,16 @@ class Invoice(models.Model):
     concession = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
+
+    def save(self,*args,**kwargs):
         if not self.invoice_id:
-            last_invoice = Invoice.objects.aggregate(max_id =Max('id'))
-            last_id = last_invoice['max_id'] if last_invoice['max_id'] else 0
-            self.invoice_id = f'INV{last_id + 1:03}'
-        super().save(*args, **kwargs)
+            last_invoice = Invoice.objects.order_by('-id').first()
+            if last_invoice and last_invoice.invoice_id:
+                last_id=int(last_invoice.invoice_id[1:])+1
+            else:
+                last_id=1
+            self.invoice_id = f'INV{last_id :03d}'
+        super().save(*args,**kwargs)
 
 
 class InvoiceServiceCharge(models.Model):

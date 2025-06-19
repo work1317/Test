@@ -52,12 +52,14 @@ class Patient(models.Model):
     
     def save(self,*args,**kwargs):
         if not self.patient_id:
-            last_patient = Patient.objects.aggregate(max_id=Max('id')) 
-            last_id = last_patient['max_id'] if last_patient['max_id'] else 0
-            self.patient_id = f'P{last_id + 1:03}'
-        super(Patient,self).save(*args,**kwargs)
+            last_patient = Patient.objects.order_by('-id').first()
+            if last_patient and last_patient.patient_id:
+                last_id=int(last_patient.patient_id[1:])+1
+            else:
+                last_id=1
+            self.patient_id = f'P{last_id :03d}'
+        super().save(*args,**kwargs)
     
     def __str__(self):
         return self.patient_name
-    
     
