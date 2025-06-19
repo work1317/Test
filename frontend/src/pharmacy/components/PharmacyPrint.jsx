@@ -28,7 +28,8 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
   );
 
   const netAmount = parseFloat(totalAmount - totalDiscount) || 0;
-  const paidAmount = parseFloat(getinvoice?.paid_amount || netAmount + totalTax) || 0;
+  const paidAmount =
+    parseFloat(getinvoice?.paid_amount || netAmount + totalTax) || 0;
 
   const printRef = useRef();
 
@@ -99,9 +100,24 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
             .pe-4 { padding-right: 1.5rem !important; }
             .mt-2 { margin-top: 0.5rem !important; }
             .no-print { display: none !important; }
+            .footerNote {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left:0;
+            background-color: #A62855;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            padding: 6px 0;
+          }
           </style>
         </head>
-        <body>${content}</body>
+        <body>${content}
+        <div class="footerNote">
+          ROUND THE CLOCK EMERGENCY SERVICES
+        </div>
+        </body>
       </html>
     `);
     doc.close();
@@ -138,7 +154,10 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                 style={{ height: "120px", marginLeft: "20px" }}
               />
               <div>
-                <h2 className="m-0" style={{ color: "#A34C51", fontSize: "35px" }}>
+                <h2
+                  className="m-0"
+                  style={{ color: "#A34C51", fontSize: "35px" }}
+                >
                   Sai Teja Multi Speciality Hospital
                 </h2>
                 <h6
@@ -149,8 +168,8 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                 </h6>
                 <p className="ms-3" style={{ fontSize: "10px" }}>
                   <strong>
-                    Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035.{" "}
-                    Ph: 040 4006 2725, +91 84840 19791
+                    Huda Colony, Kothapet, Saroornagar, Hyderabad – 500 035. Ph:
+                    040 4006 2725, +91 84840 19791
                   </strong>
                 </p>
               </div>
@@ -215,7 +234,10 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
               <p>- Discount: ₹{(Number(totalDiscount) || 0).toFixed(2)}</p>
               <p>Net Amount: ₹{(Number(netAmount) || 0).toFixed(2)}</p>
               <p>+ Tax: ₹{(Number(totalTax) || 0).toFixed(2)}</p>
-              <p>Paid Amount: ₹{(Number(getinvoice?.paid_amount) || 0).toFixed(2)}</p>
+              <p>
+                Paid Amount: ₹
+                {(Number(getinvoice?.paid_amount) || 0).toFixed(2)}
+              </p>
               <hr style={{ height: "3px", backgroundColor: "#ccc" }} />
               <h5>Total Payable: ₹{(Number(paidAmount) || 0).toFixed(2)}</h5>
             </div>
@@ -228,9 +250,7 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
                 fontSize: "20px",
                 marginBottom: "-12px",
               }}
-            >
-              <p className="mt-2">ROUND THE CLOCK EMERGENCY SERVICES</p>
-            </div>
+            ></div>
           </>
         ) : (
           <p>No invoice data available.</p>
@@ -238,15 +258,40 @@ const PharmacyPrint = ({ invoiceId, getinvoice, show, onClose }) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button className="no-print" variant="success" onClick={handleDownloadPDF}>
-          <Icon icon="mdi:download" /> Download PDF
-        </Button>
-        <Button className="no-print" variant="outline-primary" onClick={handlePrint}>
-          <Icon icon="mdi:printer" className="me-1" /> Print
-        </Button>
-        <Button className="no-print" variant="secondary" onClick={onClose}>
-          Close
-        </Button>
+        <div className="">
+        <div
+          style={{
+            backgroundColor: "#A62855",
+            color: "white",
+            textAlign: "center",
+            width:"750px",
+            fontSize: "20px",
+            marginBottom: "10px",
+          }}
+        >
+          <h6 className=" p-1 mt-2">ROUND THE CLOCK EMERGENCY SERVICES</h6>
+        </div>
+
+        <div className="mt-2 text-end">
+          <Button
+            className="no-print"
+            variant="success"
+            onClick={handleDownloadPDF}
+          >
+            <Icon icon="mdi:download" /> Download PDF
+          </Button>
+          <Button
+            className="no-print ms-3"
+            variant="outline-primary"
+            onClick={handlePrint}
+          >
+            <Icon icon="mdi:printer" className="me-1" /> Print
+          </Button>
+          <Button className="no-print ms-3" variant="secondary" onClick={onClose}>
+            Close
+          </Button>
+        </div>
+        </div>
       </Modal.Footer>
     </Modal>
   );

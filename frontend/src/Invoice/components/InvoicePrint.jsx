@@ -63,7 +63,7 @@ const handlePrint = () => {
  
   // Second page content (only header and patient info)
   const secondPage = `
-    <div class="headerContainer">
+    <div class="headerContainer m-4">
       <img src="${logo}" alt="Hospital Logo" class="logo" />
       <div class="hospitalInfo">
         <h3 style="color: #A34C51;">Sai Teja Multi Speciality Hospital</h3>
@@ -72,7 +72,7 @@ const handlePrint = () => {
       </div>
     </div>
     <hr />
-    <div class="mx-4">
+    <div class="mx-5 my-2">
       <h6>Invoice ID : ${invoice_id}</h6>
       <p><strong>Patient Information</strong></p>
      <div class="row">
@@ -106,25 +106,25 @@ const handlePrint = () => {
   doc.write(`
     <html>
       <head>
-        <title>Print Invoice</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
         <style>
-          body {
+           html, body {
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            margin: 10mm;
-            color: #000;
-            font-size: 12px;
+            font-size: 20px;
+            width: 100%;
+            height: auto;
           }
           .headerContainer {
             display: flex;
             align-items: center;
             gap: 20px;
             margin-bottom: 20px;
-            
           }
           .logo {
-            height: 100px;
-            width: 100px;
+            height: 150px;
+            width: 150px;
           }
          .watermark {
             position: fixed;
@@ -137,21 +137,19 @@ const handlePrint = () => {
             width: 400px;
           }
           .hospitalInfo{
-            padding-left:50px;
+            padding-left:30px;
           }
-          .hospitalInfo h3 {
+         .hospitalInfo h3 {
             margin: 0;
             color: #A34C51;
-            font-size:45px;
+            font-size: 48px;
           }
-          .hospitalInfo h5 {
+           .hospitalInfo h5 {
             background-color: #24A1F5;
-            color:white;
-            font-size:30px;
-            width: 96%;
-            padding-left:5px;
-            padding-right:5px;
-
+            color: white;
+            font-size: 30px;
+            padding: 5px 16px;
+            margin: 6px 9px;
           }
           .hospitalInfo p {
             margin: 0;
@@ -164,9 +162,20 @@ const handlePrint = () => {
           .num{
             padding-right: 230px;
           }
+            .footerNote {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #A62855;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            padding: 6px 0;
+            left:0px;
+          }
           @page {
             size: A4;
-            margin: 10mm;
+            margin: 10mm 15mm;
           }
         </style>
       </head>
@@ -176,6 +185,9 @@ const handlePrint = () => {
         ${firstPage}
         <div style="page-break-before: always;"></div>
         ${secondPage}
+        <div class="footerNote">
+          ROUND THE CLOCK EMERGENCY SERVICES
+        </div>
       </body>
     </html>
   `);
@@ -257,8 +269,8 @@ const handleDownload = () => {
     <Modal show={show} onHide={handlePrintClose} dialogClassName={styles.custom} size="md">
       <div className={styles.printContent} ref={printRef}>
           <Modal.Header>
-   <div className={` d-flex  ${styles.headerContainer}`}>
-    <img src={logo} alt="Hospital Logo" className={styles.logo} />
+   <div className={` d-flex  ${styles.headerContainer} headerContainer`}>
+    <img src={logo} alt="Hospital Logo" className='logo' />
     <div className={`ms-3 ${styles.hospitalInfo} hospitalInfo`}>
       <h3 className={styles.title} style={{ color: '#A34C51' }}>
         Sai Teja Multi Speciality Hospital
@@ -329,7 +341,7 @@ const handleDownload = () => {
               <div style={{ width: '30%', float:"left"}}>{finalAmount.toFixed(2)}</div>
             </div>
           </div>
- 
+{/*  
           <div className={styles.footerNote} style={{
                 backgroundColor: "#A62855",
                 color: "white",
@@ -338,21 +350,33 @@ const handleDownload = () => {
                 marginBottom: "-12px",
               }}>
             <h6 className="m-0 p-1 mt-2">ROUND THE CLOCK EMERGENCY SERVICES</h6>
-          </div>
+          </div> */}
         </Modal.Body>
       </div>
  
-      <Modal.Footer className="down no-print">
-        <Button variant="success" onClick={handleDownload}>
+     <Modal.Footer className="down no-print">
+         <div className={styles.footerNote} style={{
+                backgroundColor: "#A62855",
+                color: "white",
+                textAlign: "center",
+                fontSize: "20px",
+                marginBottom: "-12px",
+              }}>
+            <h6 className=" p-1 mt-2">ROUND THE CLOCK EMERGENCY SERVICES</h6>
+          </div>
+          <div className='mt-4'>
+        <Button variant="success " onClick={handleDownload}>
           <Icon icon="mdi:download" /> Download PDF
         </Button>
-        <Button variant="outline-primary" onClick={handlePrint}>
+        <Button variant="outline-primary ms-2" onClick={handlePrint}>
           <Icon icon="mdi:printer" className="me-1" /> Print
         </Button>
-        <Button variant="secondary" onClick={handlePrintClose}>
+        <Button variant="secondary ms-2" onClick={handlePrintClose}>
           Close
         </Button>
+        </div>
       </Modal.Footer>
+    
     </Modal>
   );
 };
