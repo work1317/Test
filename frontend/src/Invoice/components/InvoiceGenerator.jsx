@@ -1140,7 +1140,7 @@ export default function InvoiceGenerator() {
                         />
                       </Col>
                       <Col>
-                        <Form.Label>Admitted date</Form.Label>
+                        <Form.Label>Admitted ate</Form.Label>
                         <Form.Control
                           type="date"
                           value={insuranceFields.admittedDate}
@@ -1377,7 +1377,7 @@ export default function InvoiceGenerator() {
                   <h6>Other Charges</h6>
 
                   <p className={styles.subTitle}>Investigation Charges</p>
-                  <Row className="mb-2">
+                  <Row className="mb-2" >
                     <Col className="col-sm-4">
                       <Form.Label>From date</Form.Label>
                       <Form.Control

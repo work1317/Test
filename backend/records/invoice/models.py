@@ -57,7 +57,7 @@ class Invoice(models.Model):
         if not self.invoice_id:
             last_invoice = Invoice.objects.order_by('-id').first()
             if last_invoice and last_invoice.invoice_id:
-                last_id=int(last_invoice.invoice_id[1:])+1
+                last_id=int(last_invoice.invoice_id[3:])+1
             else:
                 last_id=1
             self.invoice_id = f'INV{last_id :03d}'

@@ -14,6 +14,7 @@ import RecentInvoice from "./RecentInvoice";
 import PharmacyPrint from "./PharmacyPrint";
 import api from "../../utils/axiosInstance";
 import { useNotifications } from "../../dashboard/components/NotificationContext";
+import pharmacy from '../css/PharmacyInvoice.module.css'
 
 const PharmacyInvoice = ({ onBack }) => {
   const { onNotificationClick, fetchNotifications } = useNotifications();
@@ -989,6 +990,7 @@ const PharmacyInvoice = ({ onBack }) => {
                         <Form.Control
                           type="number"
                           name="quantity"
+                          className={pharmacy.inputNumber}
                           value={item.quantity}
                           onChange={(e) => handlerInput(e, idx)}
                         />
@@ -1011,6 +1013,7 @@ const PharmacyInvoice = ({ onBack }) => {
                   <Form.Control
                     type="number"
                     name="discount"
+                    className={pharmacy.inputNumber}
                     placeholder="0"
                     value={discount}
                     onChange={(e) => {
@@ -1027,6 +1030,7 @@ const PharmacyInvoice = ({ onBack }) => {
                     type="number"
                     name="tax"
                     placeholder="0"
+                    className={pharmacy.inputNumber}
                     value={tax}
                     onChange={(e) => {
                       const value = e.target.value;

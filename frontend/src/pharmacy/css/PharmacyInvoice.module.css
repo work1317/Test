@@ -1,0 +1,16 @@
+/* InputField.module.css */
+.inputNumber {
+  /* Normal input styles can go here */
+  padding: 8px;
+  font-size: 16px;
+ 
+  /* For Firefox */
+  -moz-appearance: textfield;
+}
+ 
+/* For Chrome, Edge, Safari */
+.inputNumber::-webkit-inner-spin-button,
+.inputNumber::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
