@@ -813,6 +813,9 @@ export default function InvoiceGenerator() {
     attendantMobile: "",
     admittedDate: "",
     dischargedDate: "",
+    settlementAmount:"",
+    receivedAmount:"",
+    dueAmount:"",
   });
 
   useEffect(() => {
@@ -981,10 +984,6 @@ export default function InvoiceGenerator() {
                   show={showPrintModal}
                   handlePrintClose={() => setShowPrintModal(false)}
                   invoiceData={invoiceData}
-                  pass
-                  full
-                  invoice
-                  data
                   patientId={invoiceData.invoice?.patient || ""} // pass patientId safely
                   invoiceId={invoiceId}
                 />
@@ -1372,6 +1371,7 @@ export default function InvoiceGenerator() {
               </Card>
 
               {/* Other Charges */}
+               {showInsuranceComponent ? (
               <Card className={styles.card}>
                 <Card.Body>
                   <h6>Other Charges</h6>
@@ -1532,10 +1532,207 @@ export default function InvoiceGenerator() {
                       />
                     </Col>
                   </Row>
+                  <Row>
+                      <Col>
+                         <Form.Label>Settlement Amount</Form.Label>
+                         <Form.Control
+                              value={insuranceFields.settlementAmount}
+                             onChange={(e) =>
+                            setInsuranceFields({
+                              ...insuranceFields,
+                              settlementAmount: e.target.value,
+                            })}
+                         />
+                      </Col>
+                      <Col>
+                         <Form.Label>Received Amount</Form.Label>
+                        <Form.Control
+                              value={insuranceFields.receivedAmount}
+                             onChange={(e) =>
+                            setInsuranceFields({
+                              ...insuranceFields,
+                               receivedAmount: e.target.value,
+                            })}
+                         />
+                      </Col><Col>
+                         <Form.Label>Due Amount</Form.Label>
+                          <Form.Control
+                              value={insuranceFields.dueAmount}
+                             onChange={(e) =>
+                            setInsuranceFields({
+                              ...insuranceFields,
+                              dueAmount: e.target.value,
+                            })}
+                         />
+                      </Col>
+                 </Row>
                 </Card.Body>
               </Card>
-            </Col>
+              ): (<Card className={styles.card}>
+                <Card.Body>
+                  <h6>Other Charges</h6>
 
+                  <p className={styles.subTitle}>Investigation Charges</p>
+                  <Row className="mb-2">
+                    <Col className="col-sm-4">
+                      <Form.Label>From date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={investigationDates.from || ""}
+                        onChange={(e) =>
+                          setInvestigationDates({
+                            ...investigationDates,
+                            from: e.target.value || null,
+                          })
+                        }
+                      />
+                    </Col>
+
+                    <Col className="col-sm-4">
+                      <Form.Label>To date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={investigationDates.to || ""}
+                        onChange={(e) =>
+                          setInvestigationDates({
+                            ...investigationDates,
+                            to: e.target.value || null,
+                          })
+                        }
+                      />
+                    </Col>
+                    <Col className="col-sm-4">
+                      <Form.Label>Amount</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Amount"
+                        value={investigationCharges}
+                        onChange={(e) => {
+                          let val = e.target.value;
+
+                          //Allow empty input
+                          if (val === "") {
+                            setInvestigationCharges("");
+                            return;
+                          }
+
+                          //Only allow digits
+                          if (/^\d+$/.test(val)) {
+                            //Remove leading zeros except if single zero
+                            val = val.replace(/^0+(?=\d)/, "");
+                            setInvestigationCharges(val);
+                          }
+                        }}
+                      />
+                    </Col>
+                  </Row>
+
+                  <p className={styles.subTitle}>Pharmacy Charges</p>
+                  <Row className="mb-2">
+                    <Col className="col-sm-4">
+                      <Form.Label>From date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={pharmacyDates.from || ""}
+                        onChange={(e) =>
+                          setPharmacyDates({
+                            ...pharmacyDates,
+                            from: e.target.value || null,
+                          })
+                        }
+                      />
+                    </Col>
+                    <Col className="col-sm-4">
+                      <Form.Label>To date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={pharmacyDates.to}
+                        onChange={(e) =>
+                          setPharmacyDates({
+                            ...pharmacyDates,
+                            to: e.target.value,
+                          })
+                        }
+                      />
+                    </Col>
+                    <Col className="col-sm-4">
+                      <Form.Label>Amount</Form.Label>
+                      <Form.Control
+                        type="text" //changed to "text" to allow custom control
+                        placeholder="Amount"
+                        value={pharmacyCharges}
+                        onChange={(e) => {
+                          let val = e.target.value;
+
+                          //Allow empty input
+                          if (val === "") {
+                            setPharmacyCharges("");
+                            return;
+                          }
+
+                          //Only allow digits
+                          if (/^\d+$/.test(val)) {
+                            //Remove leading zeros except if single zero
+                            val = val.replace(/^0+(?=\d)/, "");
+                            setPharmacyCharges(val);
+                          }
+                        }}
+                      />
+                    </Col>
+                  </Row>
+
+                  <p className={styles.subTitle}>Consultation Charges</p>
+
+                  <Row>
+                    <Col>
+                      <Form.Label>No.of Visits</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Enter number of visits"
+                        value={consultationCharges.visits}
+                        onChange={(e) => {
+                          const value = e.target.value;
+
+                          //Remove leading zeros unless it's "0" or empty
+                          const cleaned = value.replace(/^0+(?=\d)/, "");
+
+                          setConsultationCharges({
+                            ...consultationCharges,
+                            visits: cleaned,
+                          });
+                        }}
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Amount per Visit</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Enter amount"
+                        value={consultationCharges.amountPerVisit}
+                        onChange={(e) => {
+                          const value = e.target.value;
+
+                          // Prevent leading zero unless it's a decimal like "0.5"
+                          if (/^0[0-9]+/.test(value)) {
+                            setConsultationCharges({
+                              ...consultationCharges,
+                              amountPerVisit: value.replace(/^0+/, ""), // remove leading zeros
+                            });
+                          } else {
+                            setConsultationCharges({
+                              ...consultationCharges,
+                              amountPerVisit: value,
+                            });
+                          }
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  
+                </Card.Body>
+              </Card>)}
+            </Col>
+       
             {/* Right Column - Bill Preview */}
             {!showInsuranceComponent && (
               <Col md={6}>
