@@ -54,7 +54,7 @@ class LabInvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = LabInvoice
         fields = [
-            'id', 'patient_id', 'patient_name',
+            'id', 'lab_id', 'patient_id', 'patient_name',
             'testname', 'amount', 'status', 'date'
         ]
 

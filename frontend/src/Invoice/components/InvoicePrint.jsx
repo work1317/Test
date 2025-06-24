@@ -22,6 +22,7 @@ const InvoicePrint = ({ show, handlePrintClose, invoiceId }) => {  const printRe
         if (response.data.success === 1) {
           setInvoiceData(response.data.data);
           setError(null);
+          console.log("Response = ",response.data)
         } else {
           setError('Failed to fetch invoice data');
           setInvoiceData(null);

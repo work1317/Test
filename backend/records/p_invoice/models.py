@@ -36,6 +36,7 @@ class PharmacyInvoice(models.Model):
     discount_approved = models.BooleanField(default=False)
     discount_approved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='approved_pharmacy_invoices')
     discount_approval_date = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def generate_next_number(self, field_name, prefix):
         last_entry = PharmacyInvoice.objects.filter(**{f"{field_name}__startswith": prefix}).order_by('-id').first()
