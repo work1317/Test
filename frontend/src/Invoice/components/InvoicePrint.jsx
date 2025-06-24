@@ -127,16 +127,18 @@ const handlePrint = () => {
             height: 150px;
             width: 150px;
           }
-         .watermark {
-            position: fixed;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.08;
-            z-index: 0;
-            pointer-events: none;
-            width: 400px;
-          }
+                  .watermark {
+                      position: fixed;
+                      top: 50%;
+                      left: 50%;
+                      transform: translate(-50%, -50%);
+                      opacity: 0.06; /* Optional: reduce slightly for larger watermark */
+                      z-index: 0;
+                      pointer-events: none;
+                      width: 800px; /* Increased size */
+                      max-width: 100%; /* Ensure it doesn't overflow the page */
+                    }
+
           .hospitalInfo{
             padding-left:30px;
           }
