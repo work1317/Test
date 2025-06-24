@@ -1,0 +1,471 @@
+.page {
+  padding: 20px;
+  background-color: white;
+  font-family: "Arial", sans-serif;
+}
+.overlayContainer {
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 3px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+}
+
+.img {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.hospitalName {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 100%;
+  letter-spacing: 0%;
+
+  color: #a32451;
+}
+
+.unit {
+  color: #ffffff;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 1.4rem;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+
+  background: #24a1f5;
+}
+
+.address {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 0.8rem;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.invoiceContainer {
+  padding: 10px;
+}
+
+.insuranceBox,
+.servicesBox {
+  width: 700px;
+  top: 154px;
+  left: 67px;
+  border-radius: 8px;
+  border-width: 1px;
+  border: 1px solid lightgray;
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  background: #a62855;
+  color: white;
+  padding: 8px 12px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.buttonCenter {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.detailBtn {
+  background-color: #003366 !important;
+  border: none;
+  font-size: 13px;
+  padding: 3px 12px;
+}
+.custom {
+  max-width: 750px;
+  /* Set to preferred modal width */
+}
+.customs {
+  max-width: 750px;
+  margin-top: 150%;
+}
+/* .infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 10px;
+  column-gap: 30px;
+  padding: 0.9rem;
+  padding-left: 2rem;
+  font-size: 14px;
+}
+.infoGrid1{
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+} */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0.5rem 2rem;
+  max-width: 100%;
+  padding: 0.9rem;
+  padding-left: 2rem;
+  font-size: 14px;
+}
+
+.infoGrid > div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.label {
+  min-width: 160px;
+  font-weight: bold;
+}
+
+.value {
+  margin-left: 1.5rem;
+}
+
+.table {
+  width: 530px;
+  height: 97px;
+  top: 486px;
+  left: 117px;
+  border-width: 0.5px;
+}
+.table th {
+  background-color: #003366;
+  color: white;
+}
+
+.table th,
+.table td {
+  font-size: 14px;
+  text-align: start;
+}
+
+.footer {
+  width: 100%;
+  height: 45px;
+  padding-top: 1rem;
+  top: 668px;
+  background-color: #a62855;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer p {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+/* payment method */
+
+.moduls1 {
+
+}
+.moduls1 p {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 100%;
+  padding: 1rem;
+}
+.modules2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.table1 {
+  width: 430px;
+  height: 74px;
+  top: 244px;
+  left: 117px;
+  border-width: 0.5px;
+}
+.table1 th {
+  background-color: #003366;
+  color: white;
+}
+.table1 th,
+.table1 td {
+  font-size: 0.9rem;
+  text-align: start;
+}
+/* bills */
+.modules3{
+  padding: 1.3rem;
+  padding-right: 2rem;
+}
+
+/* phy */
+/* .modules4{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.table2{
+  width: 538px;
+height: 28px;
+top: 402px;
+left: 73px;
+}
+.pharmacyHeader {
+  background-color: #003366;
+  color: white;
+  text-align: center;
+  
+}
+
+.table2 th,
+.table2 td {
+  font-size: 0.9rem;
+  text-align: start;
+} */
+
+
+.modules4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem; /* Optional spacing */
+}
+
+.table2 {
+  height: 38px; /* Or whatever suits your layout */
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.pharmacyHeader {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.table2 th,
+.table2 td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: start;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.table2 thead tr:nth-child(2) {
+  background-color: #f5f5f5;
+  font-weight: 500;
+}
+/* Tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .img {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+    padding-left: 1rem;
+  }
+
+  .insuranceBox,
+  .servicesBox {
+    width: 100%;
+  }
+
+  .table,
+  .table1,
+  .table2 {
+    width: 100%;
+  }
+}
+
+/* Medium Tablet & Large Mobile (≤768px) */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .logo {
+    width: 80px;
+  }
+
+  .hospitalName {
+    font-size: 1.6rem;
+  }
+
+  .unit {
+    font-size: 1.2rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding-left: 1rem;
+  }
+
+  .label {
+    min-width: 120px;
+  }
+
+  .value {
+    margin-left: 1rem;
+  }
+
+  .table,
+  .table1,
+  .table2 {
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .footer p {
+    font-size: 16px;
+  }
+
+  .moduls1 p {
+    font-size: 1rem;
+  }
+
+  .modules3 {
+    padding: 1rem;
+  }
+}
+
+/* Small Mobile (≤480px) */
+@media (max-width: 480px) {
+  .hospitalName {
+    font-size: 1.3rem;
+  }
+
+  .unit {
+    font-size: 1rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .address {
+    font-size: 0.7rem;
+  }
+
+  .sectionTitle {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .label {
+    font-size: 13px;
+    min-width: 100px;
+  }
+
+  .value {
+    font-size: 13px;
+    margin-left: 0.5rem;
+  }
+
+  .table,
+  .table1,
+  .table2 {
+    font-size: 12px;
+  }
+
+  .footer p {
+    font-size: 14px;
+  }
+
+  .moduls1 p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra Small Mobile (≤390px) */
+@media (max-width: 390px) {
+  .hospitalName {
+    font-size: 1.1rem;
+  }
+
+  .unit {
+    font-size: 0.9rem;
+  }
+
+  .sectionTitle {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .label,
+  .value {
+    font-size: 12px;
+  }
+
+  .moduls1 p {
+    font-size: 0.9rem;
+  }
+
+  .footer p {
+    font-size: 13px;
+  }
+
+  .table th,
+  .table td,
+  .table1 th,
+  .table1 td,
+  .table2 th,
+  .table2 td {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+}
+
+/* Ultra Small Mobile (≤320px) */
+@media (max-width: 320px) {
+  .hospitalName {
+    font-size: 1rem;
+  }
+
+  .unit {
+    font-size: 0.85rem;
+  }
+
+  .label,
+  .value {
+    font-size: 11px;
+  }
+
+  .moduls1 p {
+    font-size: 0.85rem;
+  }
+
+  .footer p {
+    font-size: 12px;
+  }
+
+  .table th,
+  .table td,
+  .table1 th,
+  .table1 td,
+  .table2 th,
+  .table2 td {
+    font-size: 10px;
+    padding: 5px;
+  }
+}
