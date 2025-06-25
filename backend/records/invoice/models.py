@@ -50,13 +50,6 @@ class Invoice(models.Model):
     payment_method = models.CharField(max_length=40, choices=PAYMENT_CHOICES)
     notes = models.TextField(max_length=100, null=True, blank=True)
     concession = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
-    consultant = models.CharField(max_length=30, blank=True, null=True)
-    room_type = models.CharField(max_length=20, blank=True, null=True)
-    attendant_name = models.CharField(max_length=30, blank=True, null=True)
-    attendant_phno = models.CharField(max_length=10, blank=True, null=True)
-    admitted_date = models.DateField(blank=True, null=True)
-    discharged_date = models.DateField(blank=True, null=True)
-    care_type = models.CharField(max_length=30, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
