@@ -136,13 +136,6 @@ class InvoiceAPIView(APIView):
                     "payment_method": invoice.payment_method,
                     "notes": invoice.notes,
                     "concession": str(invoice.concession),
-                    "consultant":invoice.consultant,
-                    "room_type":invoice.room_type,
-                    "attendant_name":invoice.attendant_name,
-                    "attendant_phno":invoice.attendant_phno,
-                    "admitted_date":invoice.admitted_date,
-                    "discharged_date":invoice.discharged_date,
-                    "care_type":invoice.care_type,
                     "date":invoice.created_at.date(),
                     "service_charges": service_charges_data,
                     "investigation_charges": investigation_data,
@@ -324,13 +317,6 @@ class AllInvoiceListAPIView(APIView):
                     "payment_method": invoice.payment_method,
                     "notes": invoice.notes,
                     "concession": str(invoice.concession),
-                    "consultant":invoice.consultant,
-                    "room_type":invoice.room_type,
-                    "attendant_name":invoice.attendant_name,
-                    "attendant_phno":invoice.attendant_phno,
-                    "admitted_date":invoice.admitted_date,
-                    "discharged_date":invoice.discharged_date,
-                    "care_type":invoice.care_type,
                     "date":invoice.created_at.date(),
                     "service_charges": service_charges_data,
                     "investigation_charges": investigation_data,
@@ -347,7 +333,6 @@ class AllInvoiceListAPIView(APIView):
                     "ward": patient.ward_no,
                     "department":patient.doctor.d_department.name
                 },
-                # "pharmacy_info":pharmacy_info,
                 "totals": {
                     "service": round(service_total, 2),
                     "investigation": round(investigation_total, 2),
@@ -395,41 +380,6 @@ class InvoicePrintAPIView(APIView):
             pharmacy_data = PharmacyChargeSerializer(invoice.pharmacy_charges).data
             consultation_data = ConsultationChargeSerializer(invoice.consultation_charges).data
 
-            start_date_str = investigation_data['from_date']
-            end_date_str = investigation_data['to_date']
-
-            # Convert to date objects
-            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
-            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
-
-            # Cover the full day range
-            start_datetime = timezone.make_aware(datetime.combine(start_date, time.min))
-            end_datetime = timezone.make_aware(datetime.combine(end_date, time.max))
-
-            pharmacy_invoices = PharmacyInvoice.objects.filter(created_at__range=(start_datetime, end_datetime), patient=invoice.patient).prefetch_related("items")
-            lab_invoices = LabInvoice.objects.filter(created_at__range=(start_datetime, end_datetime), patient=invoice.patient)
-            
-            pharmacy_info = []
-            lab_info = []
-
-            for pharmacy_invoice in pharmacy_invoices:
-                for item in pharmacy_invoice.items.all():
-                    pharmacy_info.append({
-                        "Bill_No":pharmacy_invoice.Bill_No,
-                        "created_date":pharmacy_invoice.created_at.date(),
-                        "total_amount":float(item.amount),
-                        "discount_amount":float(item.discount_amount),
-                        "net_amount":float(item.net_amount),
-                        "paid_amount":float(item.final_amount)
-                    })
-
-            for lab_invoice in lab_invoices:
-                lab_info.append({
-                    "bill_no":lab_invoice.lab_id,
-                    "created_at":lab_invoice.created_at.date(),
-                    "total_amount":lab_invoice.amount
-                })
-
             service_total = sum(
                 float(sc['amount']) for sc in service_charges_data
             )
@@ -439,12 +389,6 @@ class InvoicePrintAPIView(APIView):
             before_concession = service_total + consultation_total + investigation_total + pharmacy_total
             final_total = before_concession - float(invoice.concession)
 
-            words = num2words(final_total, to='cardinal', lang='en')
-            words = words.replace(',', '')  # Removes commas if any
-            words_in_rupees = words.title() + " Rupees Only"
-
-
-            progress = ProgressNote.objects.get(patient=invoice.patient)
 
             patient_info = {
                 "patient_name": invoice.patient.patient_name,
@@ -468,25 +412,13 @@ class InvoicePrintAPIView(APIView):
                         "payment_method": invoice.payment_method,
                         "notes": invoice.notes,
                         "concession": str(invoice.concession),
-                        "consultant":invoice.consultant,
-                        "room_type":invoice.room_type,
-                        "attendant_name":invoice.attendant_name,
-                        "attendant_phno":invoice.attendant_phno,
-                        "admitted_date":invoice.admitted_date,
-                        "discharged_date":invoice.discharged_date,
-                        "care_type":invoice.care_type,
                         "date":invoice.created_at.date(),
-                        "time":invoice.created_at.time(),
-                        "progress_status":progress.status,
-                        "progress_notes":progress.notes,
                         "service_charges": service_charges_data,
                         "investigation_charges": investigation_data,
                         "pharmacy_charges": pharmacy_data,
                         "consultation_charges": consultation_data
                     },
                     "patient_info": patient_info,
-                    "pharmacy_info":pharmacy_info,
-                    "lab_info":lab_info,
                     "totals": {
                         "service": round(service_total, 2),
                         "investigation": round(investigation_total, 2),
@@ -495,7 +427,6 @@ class InvoicePrintAPIView(APIView):
                         "before_concession": round(before_concession, 2),
                         "concession": float(invoice.concession),
                         "final_total": round(final_total, 2),
-                        "words_in_rupees":words_in_rupees
                     }
                 }
             }

@@ -115,13 +115,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
                                            }
                                            )
     notes = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    consultant = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    room_type = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    attendant_name = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    attendant_phno = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    admitted_date = serializers.DateField(required=False, allow_null=True)
-    discharged_date = serializers.DateField(required=False, allow_null=True)
-    care_type = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     def to_internal_value(self, data):
         for field in ['admitted_date', 'discharged_date']:
