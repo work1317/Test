@@ -112,7 +112,6 @@ class LabInvoice(models.Model):
         IN_PROGRESS = 'in Progress', 'In Progress'
         COMPLETED =  'Completed', 'Completed'
 
-    lab_id = models.CharField(max_length=20, unique=True, editable=False)
  
     patient = models.ForeignKey(
     Patient,
@@ -144,7 +143,6 @@ class LabInvoice(models.Model):
         help_text="Date of invoice creation"
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
 
     
     def clean(self):
@@ -152,15 +150,6 @@ class LabInvoice(models.Model):
         if self.date < today:
             raise ValidationError({'date': "Invoice date cannot be in the past."})
         
-    def save(self,*args,**kwargs):
-        if not self.lab_id:
-            last_lab = LabInvoice.objects.order_by('-id').first()
-            if last_lab and last_lab.lab_id:
-                last_id=int(last_lab.lab_id[3:])+1
-            else:
-                last_id=1
-            self.lab_id = f'LAB{last_id :03d}'
-        super().save(*args,**kwargs)
  
     def __str__(self):
         return f"Invoice for {self.patient.patient_name} - {self.testname}"
