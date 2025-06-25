@@ -86,14 +86,6 @@ const payload = {
   notes: note,
   concession: Number(concession).toFixed(2),
 
-  consultant: insuranceFields.consultant,
-  room_type: insuranceFields.roomType,
-  care_type: insuranceFields.careType,
-  attendant_name: insuranceFields.attendantName,
-  attendant_phno: insuranceFields.attendantMobile,
-  admitted_date: insuranceFields.admittedDate,
-  discharged_date: insuranceFields.dischargedDate,
-
   service_charges: store.map((item) => ({
     service_name: item.service,
     days: Number(item.days),

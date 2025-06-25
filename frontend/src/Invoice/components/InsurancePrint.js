@@ -88,7 +88,7 @@ const handleDownload = async () => {
         return canvas.toDataURL("image/png");
       })
     );
-    
+
     const printWindow = window.open("", "_blank", "width=900,height=650");
 
     printWindow.document.write(`
@@ -107,7 +107,7 @@ const handleDownload = async () => {
             .page {
               width: 210mm;
               height: 297mm;
-              padding: 0.8rem;
+              padding: 20mm;
               box-sizing: border-box;
               page-break-after: always;
               position: relative;
@@ -123,7 +123,7 @@ const handleDownload = async () => {
             }
 
             .logo {
-              width: 130px;
+              width: 100px;
               height: auto;
             }
 
@@ -136,26 +136,26 @@ const handleDownload = async () => {
             .hospitalName {
               font-family: Poppins;
               font-weight: 500;
-              font-size: 2.5rem;
+              font-size: 2rem;
               line-height: 100%;
               letter-spacing: 0%;
               color: #a32451;
               margin: 0;
-              margin-left: 1.5rem
+              margin-left: 1rem
             }
 
             .unit {
               background-color: #24a1f5;
               color: #ffffff;
-              font-size: 1.3rem;
+              font-size: 1.rem;
               text-align: center;
               margin: 0;
               padding: 6px 0;
-              width: 100%;
+              width: 83%;
               display: block;
               font-weight:500;
               margin-top:10px;
-              margin-left: 1.5rem
+              margin-left:20px;
             }
 
 
@@ -167,7 +167,6 @@ const handleDownload = async () => {
               letter-spacing: 0%;
               margin: 0;
               margin-top:10px;
-              margin-left: 1.5rem
             }
 
             .footer {
@@ -180,12 +179,6 @@ const handleDownload = async () => {
               font-size: 16px;
               padding: 6px 0;
             }
-              .user{
-              display: flex;
-              justify-content: flex-start;
-              align-items: flex-start;
-              flex-direction: column
-              }
 
             img.print-img {
               width: 100%;
@@ -204,7 +197,7 @@ const handleDownload = async () => {
             <div class="header">
               <div class="img">
                 <img class="logo" src="${logos}" alt="Site Logo" />
-                <div class="user">
+                <div>
                   <h4 class="hospitalName">Sai Teja Multi Speciality Hospital</h4>
                   <h4 class="unit">(A UNIT OF SAVITHA HEALTH CARE PVT.LTD)</h4>
                   <p class="address">
@@ -215,12 +208,12 @@ const handleDownload = async () => {
               </div>
             </div>
             <img class="print-img" src="${img}" />
-           
+            <div class="footer">ROUND THE CLOCK EMERGENCY SERVICES</div>
           </div>
         `
           )
           .join("")}
- <div class="footer">ROUND THE CLOCK EMERGENCY SERVICES</div>
+
           <script>
           window.onload = () => {
             alert("👉 Please enable 'Background graphics' under 'More settings' in Print for accurate colors.");
