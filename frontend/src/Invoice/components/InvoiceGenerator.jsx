@@ -44,7 +44,7 @@ export default function InvoiceGenerator() {
   const [invoiceData, setInvoiceData] = useState(null); //State for patient data
   const [invoiceId, setInvoiceId] = useState("");
   const [insuranceFields, setInsuranceFields] = useState({
-    referralDoctor: "",
+    consultant: "",
     roomType: "",
     careType: "",
     attendantName: "",
@@ -79,42 +79,51 @@ export default function InvoiceGenerator() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+const payload = {
+  patient: patientId,
+  due_on_receipt: dueOnReceipt,
+  payment_method: paymentMethod,
+  notes: note,
+  concession: Number(concession).toFixed(2),
 
-    const payload = {
-      patient: patientId,
-      due_on_receipt: dueOnReceipt,
-      payment_method: paymentMethod,
-      notes: note,
-      concession: Number(concession).toFixed(2),
-      service_charges: store.map((item) => ({
-        service_name: item.service,
-        days: Number(item.days),
-        amount: Number(item.amount).toFixed(2),
-      })),
-      investigation_charges: {
-        from_date: investigationDates.from,
-        to_date: investigationDates.to,
-        amount:
-          investigationCharges === ""
-            ? "0.00"
-            : Number(investigationCharges).toFixed(2),
-      },
+  consultant: insuranceFields.consultant,
+  room_type: insuranceFields.roomType,
+  care_type: insuranceFields.careType,
+  attendant_name: insuranceFields.attendantName,
+  attendant_phno: insuranceFields.attendantMobile,
+  admitted_date: insuranceFields.admittedDate,
+  discharged_date: insuranceFields.dischargedDate,
 
-      pharmacy_charges: {
-        from_date: pharmacyDates.from,
-        to_date: pharmacyDates.to,
-        amount:
-          pharmacyCharges === "" ? "0.00" : Number(pharmacyCharges).toFixed(2),
-      },
+  service_charges: store.map((item) => ({
+    service_name: item.service,
+    days: Number(item.days),
+    amount: Number(item.amount).toFixed(2),
+  })),
 
-      consultation_charges: {
-        no_of_visits: Number(consultationCharges.visits || 0),
-        amount_per_visit: Number(
-          consultationCharges.amountPerVisit || 0
-        ).toFixed(2),
-      },
-    };
+  investigation_charges: {
+    from_date: investigationDates.from,
+    to_date: investigationDates.to,
+    amount:
+      investigationCharges === ""
+        ? "0.00"
+        : Number(investigationCharges).toFixed(2),
+  },
+
+  pharmacy_charges: {
+    from_date: pharmacyDates.from,
+    to_date: pharmacyDates.to,
+    amount:
+      pharmacyCharges === "" ? "0.00" : Number(pharmacyCharges).toFixed(2),
+  },
+
+  consultation_charges: {
+    no_of_visits: Number(consultationCharges.visits || 0),
+    amount_per_visit: Number(consultationCharges.amountPerVisit || 0).toFixed(2),
+  },
+};
+
     try {
+      console.log(payload)
       const response = await api.post("invoice/create-invoice/", payload);
 
       const invoice = response.data.data;
@@ -214,34 +223,6 @@ export default function InvoiceGenerator() {
                 <Icon icon="material-symbols-light:print-outline-rounded" />{" "}
                 Print
               </button>
-              {/* {showPrintModal && (
-                <InvoicePrint
-                  show={showPrintModal}
-                  handlePrintClose={() => setShowPrintModal(false)}
-                  invoiceData={invoiceData}
-                  patientId={patientId}
-                  invoiceId={invoiceId}
-                />
-              )} */}
-
-              {/* {showPrintModal &&
-                (showInsuranceComponent ? (
-                  <InsurancePrint
-                    show={showPrintModal}
-                    handlePrintClose={handlePrintClose}
-                    invoiceData={invoiceData}
-                    patientId={patientId}
-                    invoiceId={invoiceId}
-                  />
-                ) : (
-                  <InvoicePrint
-                    show={showPrintModal}
-                    handlePrintClose={() => setShowPrintModal(false)}
-                    invoiceData={invoiceData}
-                    patientId={patientId}
-                    invoiceId={invoiceId}
-                  />
-                ))} */}
               {showPrintModal && showInsuranceComponent && (
                 <InsurancePrint
                   show={showPrintModal}
@@ -336,11 +317,11 @@ export default function InvoiceGenerator() {
                         <Form.Label>Consultant</Form.Label>
                         <Form.Control
                           placeholder="Consultant"
-                          value={insuranceFields.referralDoctor}
+                          value={insuranceFields.consultant}
                           onChange={(e) =>
                             setInsuranceFields({
                               ...insuranceFields,
-                              referralDoctor: e.target.value,
+                              consultant: e.target.value,
                             })
                           }
                         />
@@ -445,11 +426,11 @@ export default function InvoiceGenerator() {
                         <Form.Control
                           type="text"
                           placeholder="Referral Doctor"
-                          value={insuranceFields.referralDoctor}
+                          value={patientData?.doctor_name || ""}
                           onChange={(e) =>
                             setInsuranceFields({
                               ...insuranceFields,
-                              referralDoctor: e.target.value,
+                              doctor_name: e.target.value,
                             })
                           }
                         />

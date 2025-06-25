@@ -165,6 +165,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
             service_obj = ServiceCharge.objects.create(**service_data)
             InvoiceServiceCharge.objects.create(invoice=invoice, service_charge=service_obj)
 
+        print("Validated data : ", validated_data)
+
         return invoice
 
     def update(self, instance, validated_data):

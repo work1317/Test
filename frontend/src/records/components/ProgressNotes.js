@@ -5,15 +5,21 @@ import styles from "../css/ProgressNotes.module.css";
 
 const ProgressNotes = ({ handleClose,patientId }) => {
   const [status, setStatus] = useState(""); 
+  const [notes, setNotes] = useState(""); 
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
+  };
+
+  const handleNotesChange = (e) => {
+    setNotes(e.target.value);
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
     console.log("Patient ID:", patientId); // Debug patient ID
     console.log("Status:", status);
+    
 
     if (!patientId) {
       alert ("Patient ID is missing.");
@@ -22,7 +28,7 @@ const ProgressNotes = ({ handleClose,patientId }) => {
 
     try {
       const response = await api.post("/records/create-progress-note/", {
-        patient_id: patientId, status: status.toLocaleLowerCase(),
+        patient_id: patientId, status: status.toLocaleLowerCase(),notes: notes.trim() === "" ? null : notes.trim()
        
       },
       { headers: { "Content-Type": "application/json" } }
@@ -61,6 +67,16 @@ const ProgressNotes = ({ handleClose,patientId }) => {
             )
           )}
         </Row>
+        <div>
+         <Form.Label>Notes</Form.Label>
+          <Form.Control className="w-75"
+          as="textarea"
+            placeholder="Enter description...."
+            name="notes"
+            value={notes}
+            onChange={handleNotesChange}
+          />
+        </div>
         <Row>
           <div className={`d-flex justify-content-end gap-4 ps-5 ${styles.sumbit}`}>
             <button type="button" className={`px-2 ${styles.cancel}`} onClick={handleClose}>

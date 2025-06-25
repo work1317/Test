@@ -371,7 +371,7 @@ class AllInvoiceListAPIView(APIView):
             status=status.HTTP_200_OK
         )
     
-
+from rec_app.models import ProgressNote
 
 
 class InvoicePrintAPIView(APIView):
@@ -443,7 +443,8 @@ class InvoicePrintAPIView(APIView):
             words = words.replace(',', '')  # Removes commas if any
             words_in_rupees = words.title() + " Rupees Only"
 
-            print(words_in_rupees)
+
+            progress = ProgressNote.objects.get(patient=invoice.patient)
 
             patient_info = {
                 "patient_name": invoice.patient.patient_name,
@@ -476,6 +477,8 @@ class InvoicePrintAPIView(APIView):
                         "care_type":invoice.care_type,
                         "date":invoice.created_at.date(),
                         "time":invoice.created_at.time(),
+                        "progress_status":progress.status,
+                        "progress_notes":progress.notes,
                         "service_charges": service_charges_data,
                         "investigation_charges": investigation_data,
                         "pharmacy_charges": pharmacy_data,

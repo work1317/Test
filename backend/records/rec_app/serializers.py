@@ -127,13 +127,16 @@ class NursingNotesSerializer(serializers.ModelSerializer):
 
 class ProgressNoteSerializer(serializers.ModelSerializer):
     patient_id = serializers.CharField(source='patient.patient_id', write_only=True)
+    notes = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    
 
     class Meta:
         model = ProgressNote
-        fields = ['patient_id', 'status', 'created_at', 'updated_at', 'patient']
+        fields = ['patient_id', 'status', 'notes', 'created_at', 'updated_at', 'patient']
         extra_kwargs = {
             'patient': {'write_only': True}
         }
+
 
 # Treatment Chart
 

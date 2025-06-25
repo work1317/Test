@@ -124,6 +124,7 @@ class NursingNotesValidator(serializers.Serializer):
 class ProgressNoteValidator(serializers.Serializer):
     patient_id = serializers.CharField(max_length=20)
     status = serializers.ChoiceField(choices=ProgressNote.STATUS_CHOICES)
+    notes = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     def validate_patient_id(self, value):
         if not Patient.objects.filter(patient_id=value).exists():

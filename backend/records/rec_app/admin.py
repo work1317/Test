@@ -24,7 +24,7 @@ class NursingNotesAdmin(admin.ModelAdmin):
 
 @admin.register(ProgressNote)
 class ProgressNoteAdmin(admin.ModelAdmin):
-    list_display = ['patient','status','created_at','updated_at']
+    list_display = ['patient','status','notes','created_at','updated_at']
 
 @admin.register(TreatmentChart)
 class TreatmentChartAdmin(admin.ModelAdmin):

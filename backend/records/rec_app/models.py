@@ -98,6 +98,7 @@ class ProgressNote(models.Model):
 
     patient = models.OneToOneField(Patient, on_delete=models.CASCADE, related_name='progress_notes')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    notes = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

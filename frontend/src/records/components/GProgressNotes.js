@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import api from "../../utils/axiosInstance";
-import { Row, Col, Alert } from 'react-bootstrap';
-import styles from '../css/GProgressNotes.module.css';
-import { Icon } from '@iconify/react';
+import { Row, Col, Alert,Form } from "react-bootstrap";
+import styles from "../css/GProgressNotes.module.css";
+import { Icon } from "@iconify/react";
 
 function GProgressNotes({ patient }) {
   const [progress, setProgress] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const fetchProgressNotes = async (patientId) => {
     if (!patientId) return;
@@ -15,14 +15,18 @@ function GProgressNotes({ patient }) {
       const response = await api.get(`/records/get-progress-note/${patientId}`);
       if (response.data.success === 1) {
         setProgress(response.data.data || []);
-        setErrorMessage('');
+        setErrorMessage("");
       } else {
         setProgress([]);
-        setErrorMessage(response.data.message || 'No progress notes available.');
+        setErrorMessage(
+          response.data.message || "No progress notes available."
+        );
       }
     } catch (error) {
       setProgress([]);
-      setErrorMessage(error.response?.data?.message || 'Error fetching progress notes.');
+      setErrorMessage(
+        error.response?.data?.message || "Error fetching progress notes."
+      );
     }
   };
 
@@ -38,28 +42,28 @@ function GProgressNotes({ patient }) {
     };
 
     window.addEventListener("refreshProgressNotes", handleRefresh);
-    return () => window.removeEventListener("refreshProgressNotes", handleRefresh);
+    return () =>
+      window.removeEventListener("refreshProgressNotes", handleRefresh);
   }, [patient?.patient_id]); // tightly scoped
 
   return (
-    <div className='mb-4'>
+    <div className="mb-4">
       {errorMessage ? (
         <Alert variant="warning">{errorMessage}</Alert>
       ) : (
         progress.map((note, index) => {
-          const [date, timeWithZone] = note.created_at.split('T');
-          const time = timeWithZone.split('.')[0].slice(0, 5); // HH:MM format
+          const [date, timeWithZone] = note.created_at.split("T");
+          const time = timeWithZone.split(".")[0].slice(0, 5); // HH:MM format
 
           return (
             <div key={index} className="mx-4 mb-4">
               <Row>
-                <h5>Dr. {patient?.doctor_name || 'Unknown Doctor'}</h5>
+                <h5>Dr. {patient?.doctor_name || "Unknown Doctor"}</h5>
               </Row>
               <Row>
                 <Col>
                   <span>
-                    <Icon icon="weui:time-outlined" width="16" />{' '}
-                      {date} {time}
+                    <Icon icon="weui:time-outlined" width="16" /> {date} {time}
                   </span>
                 </Col>
               </Row>
@@ -68,13 +72,21 @@ function GProgressNotes({ patient }) {
                   <strong>{note.status}</strong>
                 </p>
               </Row>
+              <div>
+                <Form.Label>Notes</Form.Label>
+                <Form.Control
+                  className="w-75"
+                  as="textarea"
+                  placeholder="Enter description...."
+                  readOnly
+                />
+              </div>
             </div>
           );
         })
       )}
     </div>
   );
-
 }
 
 export default GProgressNotes;

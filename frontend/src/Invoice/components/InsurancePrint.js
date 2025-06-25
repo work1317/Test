@@ -1,106 +1,80 @@
-import React, { useRef } from "react";
-import { Modal, Button,Col,Row } from "react-bootstrap";
+import React, { useEffect, useState, useRef } from "react";
+import { Modal, Button, Col, Row } from "react-bootstrap";
 import styles from "../css/InsurancePrint.module.css";
 import logos from "../../../src/assets/images/sitelogo.svg";
 import html2canvas from "html2canvas";
+import api from "../../utils/axiosInstance";
+import jsPDF from 'jspdf';
+import { Icon } from '@iconify/react';
 
-function InsurancePrint({ show, handlePrintClose, invoiceData }) {
+function InsurancePrint({ show, handlePrintClose, invoiceId }) {
   const pageRef1 = useRef();
   const pageRef2 = useRef();
   const pageRef3 = useRef();
   const pageRef4 = useRef();
   const pageRef5 = useRef();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [invoiceData, setInvoiceData] = useState(null);
 
-  // const handlePrint = async () => {
-  //   const refs = [pageRef1, pageRef2, pageRef3,pageRef4 ];
+  useEffect(() => {
+    if (!show || !invoiceId) return;
 
-  //   const images = await Promise.all(
-  //     refs.map(async (ref) => {
-  //       const canvas = await html2canvas(ref.current, {
-  //         scale: 2,
-  //         useCORS: true,
-  //         backgroundColor: "#ffffff",
-  //       });
-  //       return canvas.toDataURL("image/png");
-  //     })
-  //   );
+    const fetchInvoice = async () => {
+      setLoading(true);
+      try {
+        const response = await api.get(
+          `invoice/get-invoice-by-id/${invoiceId}/`
+        );
+        if (response.data.success === 1) {
+          setInvoiceData(response.data.data);
+          setError(null);
+          console.log("Response = ", response.data);
+        } else {
+          setError("Failed to fetch invoice data");
+          setInvoiceData(null);
+        }
+      } catch (err) {
+        setError("Error fetching invoice: " + err.message);
+        setInvoiceData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   const printWindow = window.open("", "_blank", "width=800,height=600");
+    fetchInvoice();
+  }, [show, invoiceId]);
 
-  //   printWindow.document.write(`
-  //     <html>
-  //       <head>
-  //         <title>Print Invoice</title>
-  //         <style>
-  //           @media print {
-  //             .page {
-  //               width: 248mm;
-  //               height: 210mm;
-  //               page-break-after: always;
-  //               margin: auto;
-  //             }
+const handleDownload = async () => {
+  const refs = [pageRef1, pageRef2, pageRef3, pageRef4, pageRef5];
+  const pdf = new jsPDF();
 
-  //               .user{
-  //               breakInside: avoid ,
-  //               pageBreakInside: avoid
-  //               }
-  //                table {
-  //     page-break-inside: auto;
-  //   }
-  //   tr {
-  //     page-break-inside: avoid;
-  //     page-break-after: auto;
-  //   }
+  const images = await Promise.all(
+    refs.map(async (ref) => {
+      if (!ref.current) return null;
+      const canvas = await html2canvas(ref.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+      return canvas.toDataURL("image/png");
+    })
+  );
 
-  //             img {
-  //               width: 100%;
-  //               height: auto;
-  //             }
+  images
+    .filter(Boolean)
+    .forEach((imgData, index) => {
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      if (index !== 0) pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    });
 
-  //             body {
-  //               margin: 0;
-  //               padding: 0;
-  //               background: white;
-  //             }
-  //           }
+  pdf.save("invoice.pdf");
+};
 
-  //           .footerNote {
-  //             position: fixed;
-  //             bottom: 0;
-  //             width: 100%;
-  //             background: #A62855;
-  //             color: white;
-  //             text-align: center;
-  //             font-size: 16px;
-  //             padding: 6px 0;
-  //           }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         ${images
-  //           .map(
-  //             (img, i) => `
-  //             <div class="page">
-  //               <img src="${img}" alt="Page ${i + 1}" />
-  //             </div>
-  //           `
-  //           )
-  //           .join("")}
 
-  //         <div class="footerNote">
-  //           ROUND THE CLOCK EMERGENCY SERVICES
-  //         </div>
-  //       </body>
-  //     </html>
-  //   `);
-
-  //   printWindow.document.close();
-
-  //   printWindow.onload = () => {
-  //     printWindow.focus();
-  //     printWindow.print();
-  //   };
-  // };
   const handlePrint = async () => {
     const refs = [pageRef1, pageRef2, pageRef3, pageRef4, pageRef5]; // Add pageRef4 if needed
 
@@ -114,7 +88,7 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
         return canvas.toDataURL("image/png");
       })
     );
-
+    
     const printWindow = window.open("", "_blank", "width=900,height=650");
 
     printWindow.document.write(`
@@ -133,7 +107,7 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
             .page {
               width: 210mm;
               height: 297mm;
-              padding: 20mm;
+              padding: 0.8rem;
               box-sizing: border-box;
               page-break-after: always;
               position: relative;
@@ -149,7 +123,7 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
             }
 
             .logo {
-              width: 100px;
+              width: 130px;
               height: auto;
             }
 
@@ -162,26 +136,26 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
             .hospitalName {
               font-family: Poppins;
               font-weight: 500;
-              font-size: 2rem;
+              font-size: 2.5rem;
               line-height: 100%;
               letter-spacing: 0%;
               color: #a32451;
               margin: 0;
-              margin-left: 1rem
+              margin-left: 1.5rem
             }
 
             .unit {
               background-color: #24a1f5;
               color: #ffffff;
-              font-size: 1.rem;
+              font-size: 1.3rem;
               text-align: center;
               margin: 0;
               padding: 6px 0;
-              width: 83%;
+              width: 100%;
               display: block;
               font-weight:500;
               margin-top:10px;
-              margin-left:20px;
+              margin-left: 1.5rem
             }
 
 
@@ -193,6 +167,7 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
               letter-spacing: 0%;
               margin: 0;
               margin-top:10px;
+              margin-left: 1.5rem
             }
 
             .footer {
@@ -205,6 +180,12 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
               font-size: 16px;
               padding: 6px 0;
             }
+              .user{
+              display: flex;
+              justify-content: flex-start;
+              align-items: flex-start;
+              flex-direction: column
+              }
 
             img.print-img {
               width: 100%;
@@ -223,7 +204,7 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
             <div class="header">
               <div class="img">
                 <img class="logo" src="${logos}" alt="Site Logo" />
-                <div>
+                <div class="user">
                   <h4 class="hospitalName">Sai Teja Multi Speciality Hospital</h4>
                   <h4 class="unit">(A UNIT OF SAVITHA HEALTH CARE PVT.LTD)</h4>
                   <p class="address">
@@ -234,12 +215,12 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
               </div>
             </div>
             <img class="print-img" src="${img}" />
-            <div class="footer">ROUND THE CLOCK EMERGENCY SERVICES</div>
+           
           </div>
         `
           )
           .join("")}
-
+ <div class="footer">ROUND THE CLOCK EMERGENCY SERVICES</div>
           <script>
           window.onload = () => {
             alert("👉 Please enable 'Background graphics' under 'More settings' in Print for accurate colors.");
@@ -300,118 +281,145 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
                     IP Detailed Bill
                   </Button>
                 </div>
+
+                {/* Patient & Invoice Info */}
                 <div className={styles.infoGrid}>
                   <div>
                     <span className={styles.label}>Patient ID</span>
-                    <span className={styles.value}>:PID-2025-001</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.patient || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Consultant</span>
-                    <span className={styles.value}>:Dr.smith</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.consultant|| "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Patient Name</span>
-                    <span className={styles.value}>:John Doe</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.patient_info?.patient_name || "-"}
+                    </span>
                   </div>
                   <div>
-                    <span className={styles.label}>Case Type</span>
-                    <span className={styles.value}>:Cardiac Care</span>
+                    <span className={styles.label}>Care Type</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.care_type ?? "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Appointment Type</span>
-                    <span className={styles.value}>:Inpatient</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.patient_info?.appointment_type || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Invoice Date</span>
-                    <span className={styles.value}>:2025-06-18</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.date || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Age</span>
-                    <span className={styles.value}>:45</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.patient_info?.age || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Invoice Number</span>
-                    <span className={styles.value}>:IN2025-001</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.invoice_id || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Gender</span>
-                    <span className={styles.value}>:Male</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.patient_info?.gender || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Admitted Date</span>
-                    <span className={styles.value}>:2025-06-10</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.admitted_date || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Attendant Name</span>
-                    <span className={styles.value}>:Jane Doe</span>
+                    <span className={styles.value}>
+  : {invoiceData?.invoice?.attendant_name ?? "-"}
+</span>
                   </div>
                   <div>
                     <span className={styles.label}>Discharge Date</span>
-                    <span className={styles.value}>:2025-06-17</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.discharged_date || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Attendant Mobile</span>
-                    <span className={styles.value}>:888877666</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.attendant_phno || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Room Type</span>
-                    <span className={styles.value}>:Private</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.invoice?.room_type ?? "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Referral Doctor</span>
-                    <span className={styles.value}>:Dr.Johnson</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.patient_info?.doctor_name || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Room No</span>
-                    <span className={styles.value}>:305</span>
+                    <span className={styles.value}>
+                      : {invoiceData?.patient_info?.ward || "-"}
+                    </span>
                   </div>
                 </div>
               </div>
-
               <div className={styles.servicesBox}>
-                <div className={styles.sectionTitle}>Services Charges</div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <table className={` table  table-bordered ${styles.table}`}>
-                    <thead>
-                      <tr>
-                        <th>Service Name</th>
-                        <th>Days</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Room Charges</td>
-                        <td>7</td>
-                        <td>2100</td>
-                      </tr>
-                      <tr>
-                        <td>Nursing Care</td>
-                        <td>7</td>
-                        <td>700</td>
-                      </tr>
-                      <tr>
-                        <td>Medical Supplies</td>
-                        <td>-</td>
-                        <td>300</td>
-                      </tr>
-                      <tr>
-                        <td colSpan="2">
-                          <strong>Total</strong>
-                        </td>
-                        <td>
-                          <strong>=3100</strong>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <div className={styles.sectionTitle}>Service Charges</div>
+                <table className={`table table-bordered ${styles.table}`}>
+                  <thead>
+                    <tr>
+                      <th>Service Name</th>
+                      <th>Days</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoiceData?.invoice?.service_charges?.map(
+                      (item, index) => (
+                        <tr key={index}>
+                          <td>{item.service_name}</td>
+                          <td>{item.days}</td>
+                          <td>{item.amount}</td>
+                        </tr>
+                      )
+                    )}
+                    <tr>
+                      <td colSpan="2">
+                        <strong>Total</strong>
+                      </td>
+                      <td>
+                        <strong>
+                          ₹
+                          {invoiceData?.invoice?.service_charges
+                            ?.reduce(
+                              (total, item) => total + parseFloat(item.amount),
+                              0
+                            )
+                            .toFixed(2)}
+                        </strong>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
@@ -423,7 +431,7 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
                   <p>Investigation/Lab Charges</p>
                 </div>
                 <div className={styles.modules2}>
-                  <table className={` table  table-bordered ${styles.table1}`}>
+                  <table className={`table table-bordered ${styles.table1}`}>
                     <thead>
                       <tr>
                         <th>From Date</th>
@@ -433,77 +441,72 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>2005-09-23</td>
-                        <td>2025-08-30</td>
-                        <td>2100</td>
-                      </tr>
-                      <tr>
-                        <td>005-09-23</td>
-                        <td>2025-08-30</td>
-                        <td>700</td>
+                        <td>
+                          {invoiceData?.invoice?.investigation_charges
+                            ?.from_date || "-"}
+                        </td>
+                        <td>
+                          {invoiceData?.invoice?.investigation_charges
+                            ?.to_date || "-"}
+                        </td>
+                        <td>
+                          {invoiceData?.invoice?.investigation_charges
+                            ?.amount || "0.00"}
+                        </td>
                       </tr>
                       <tr>
                         <td colSpan="2">
                           <strong>Total</strong>
                         </td>
                         <td>
-                          <strong>=3100</strong>
+                          <strong>
+                            ={" "}
+                            {invoiceData?.invoice?.investigation_charges
+                              ?.amount || "0.00"}
+                          </strong>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
+
                 <div className={styles.moduls1}>
                   <p>Pharmacy Charges</p>
-                </div>
-                <div className={styles.modules2}>
-                  <table className={` table  table-bordered ${styles.table1}`}>
-                    <thead>
-                      <tr>
-                        <th>From Date</th>
-                        <th>To Date</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>2005-09-23</td>
-                        <td>2025-08-30</td>
-                        <td>2100</td>
-                      </tr>
-                      <tr>
-                        <td colSpan="2">
-                          <strong>Total</strong>
-                        </td>
-                        <td>
-                          <strong>=3100</strong>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div className={styles.moduls1}>
-                  <p>Consultantion Charges</p>
                 </div>
                 <div className={styles.modules2}>
                   <table className={`table table-bordered ${styles.table1}`}>
                     <thead>
                       <tr>
-                        <th>No of Visits</th>
+                        <th>From Date</th>
+                        <th>To Date</th>
                         <th>Amount</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>3</td>
-                        <td>2100</td>
+                        <td>
+                          {invoiceData?.invoice?.pharmacy_charges?.from_date ||
+                            "-"}
+                        </td>
+                        <td>
+                          {invoiceData?.invoice?.pharmacy_charges?.to_date ||
+                            "-"}
+                        </td>
+                        <td>
+                          {invoiceData?.invoice?.pharmacy_charges?.amount ||
+                            "0.00"}
+                        </td>
                       </tr>
                       <tr>
-                        <td colSpan="1">
+                        <td colSpan="2">
                           <strong>Total</strong>
                         </td>
                         <td>
-                          <strong>=2100</strong>
+                          <strong>
+                            ={" "}
+                            {invoiceData?.invoice?.pharmacy_charges?.amount ||
+                              "0.00"}
+                          </strong>
                         </td>
                       </tr>
                     </tbody>
@@ -526,36 +529,26 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
                     <tbody>
                       <tr>
                         <td>Payment Mode</td>
-                        <td>Insurance + Cash</td>
+                        <td>{invoiceData?.invoice?.payment_method || "-"}</td>
                       </tr>
                       <tr>
                         <td>Concession</td>
-                        <td>200</td>
+                        <td>{invoiceData?.invoice?.concession || "0.00"}</td>
                       </tr>
                       <tr>
                         <td>Settlement Amount</td>
-                        <td>2000</td>
+                        <td>{invoiceData?.totals?.final_total || "0.00"}</td>
                       </tr>
-                      <tr>
-                        <td>Settlement Amount</td>
-                        <td>2000</td>
-                      </tr>
-
                       <tr>
                         <td>Received Amount</td>
-                        <td>4000</td>
-                      </tr>
-
-                      <tr>
-                        <td>Received Amount</td>
-                        <td>8000</td>
+                        <td>{invoiceData?.totals?.final_total || "0.00"}</td>
                       </tr>
                       <tr>
-                        <td colSpan="1">
-                          <strong>Total</strong>
-                        </td>
+                        <td>Total</td>
                         <td>
-                          <strong>=2100</strong>
+                          <strong>
+                            ₹{invoiceData?.totals?.final_total || "0.00"}
+                          </strong>
                         </td>
                       </tr>
                     </tbody>
@@ -570,54 +563,77 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
                 <div className={styles.sectionTitle}>Bills Summary</div>
                 <div className={styles.infoGrid}>
                   <div>
-                    <span className={styles.label}>appointment Type</span>
-                    <span className={styles.value}>:Inpatient</span>
+                    <span className={styles.label}>Appointment Type</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.patient_info?.appointment_type || "-"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Lab Details Discount</span>
-                    <span className={styles.value}>:50</span>
+                    <span className={styles.value}>:0</span>{" "}
+                    {/* Replace if discount logic available */}
                   </div>
                   <div>
                     <span className={styles.label}>Pharmacy Sales Totals</span>
-                    <span className={styles.value}>:800</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.totals?.pharmacy || "0.00"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Lab Details Net</span>
-                    <span className={styles.value}>:600</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.totals?.investigation || "0.00"}
+                    </span>
                   </div>
-
                   <div>
                     <span className={styles.label}>Pharmacy</span>
-                    <span className={styles.value}>:50</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.totals?.pharmacy || "0.00"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Paid</span>
-                    <span className={styles.value}>:400</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.totals?.final_total || "0.00"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Discount</span>
-                    <span className={styles.value}>:</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.totals?.concession || "0.00"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Refunded</span>
-                    <span className={styles.value}>:</span>
+                    <span className={styles.value}>:0</span>{" "}
+                    {/* Replace if available */}
                   </div>
-
                   <div>
                     <span className={styles.label}>Pharmacy Sales Net</span>
-                    <span className={styles.value}>:750</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.totals?.pharmacy || "0.00"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Concession/Adjustment</span>
-                    <span className={styles.value}>:200</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.invoice?.concession || "0.00"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Lab Details Total</span>
-                    <span className={styles.value}>:650</span>
+                    <span className={styles.value}>
+                      :{invoiceData?.totals?.investigation || "0.00"}
+                    </span>
                   </div>
                   <div>
                     <span className={styles.label}>Due Amount</span>
-                    <span className={styles.value}>:800</span>
+                    <span className={styles.value}>
+                      :
+                      {invoiceData?.invoice?.due_on_receipt === "yes"
+                        ? invoiceData?.totals?.final_total || "0.00"
+                        : "0.00"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -654,16 +670,18 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>599</td>
-                        <td>CP-2223-104-75</td>
-                        <td>17/05/2025</td>
-                        <td>6685.69</td>
-                        <td>0.00</td>
-                        <td>6685.69</td>
-                        <td>6685.69</td>
-                        <td>0.00</td>
-                      </tr>
+                      {invoiceData?.pharmacy_info?.map((entry, index) => (
+                        <tr key={index}>
+                          <td>{invoiceData?.invoice?.patient || "-"}</td>
+                          <td>{entry.Bill_No || "-"}</td>
+                          <td>{entry.created_date || "-"}</td>
+                          <td>{entry.total_amount || "0.00"}</td>
+                          <td>{entry.discount_amount || "0.00"}</td>
+                          <td>{entry.net_amount || "0.00"}</td>
+                          <td>{entry.paid_amount || "0.00"}</td>
+                          <td>{entry.due || "0.00"}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -700,76 +718,160 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>599</td>
-                        <td>CP-2223-104-75</td>
-                        <td>17/05/2025</td>
-                        <td>6685.69</td>
-                        <td>0.00</td>
-                        <td>6685.69</td>
-                        <td>6685.69</td>
-                        <td>0.00</td>
-                      </tr>
+                      {invoiceData?.lab_info?.length > 0 ? (
+                        invoiceData.lab_info.map((lab, index) => (
+                          <tr key={index}>
+                            <td>{invoiceData?.invoice?.patient || "-"}</td>
+                            <td>{lab.bill_no || "-"}</td>
+                            <td>{lab.created_at || "-"}</td>
+                            <td>{lab.total_amount || "0.00"}</td>
+                            <td>{lab.discount || "0.00"}</td>
+                            <td>{lab.total_amount || "0.00"}</td>
+                            <td>{lab.total_amount || "0.00"}</td>
+                            <td>{lab.due || "0.00"}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="8" style={{ textAlign: "center" }}>
+                            No Lab Details Available
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-
-
-
             <div ref={pageRef5}>
-            <div className='border  rounded p-3'>
-                <div className={`rounded-top mb-2 ${styles.heading}`}>IP Settlement Receipts
-                    </div>
-          <Row>  
-            <Col>
-            <p><b>Patient ID : </b>PID-2025-001</p>
-            <p><b>Type of Appointment : </b>inpatient</p>
-            <p><b>Name : </b>john Doe</p>
-            <p><b>Age : </b>45</p>
-            <p><b>Gender : </b>male</p>
-            <p><b>Received Amount : </b>4000.00</p>
-            </Col>
-            <Col>
-            <p><b>Due Amount : </b>800</p>
-            <p><b>Bill Date : </b>2025-06-18</p>
-            <p><b>Bill Date : </b>INV-001</p>
-            <p><b>Amount in words : </b>Four thousand rupees Only</p>
-            <p><b>Print Date and Time : </b>2025-06-18 at 9:12</p>
-            </Col>
-            <h5>Reception Authorized Signatory : __________________________</h5>
-          </Row>
-          </div>
-         
-                 <div className='border  rounded p-3 mt-4'>
-                <div className={`rounded-top mb-2 ${styles.heading}`}>IP Checkout Slip
-                    </div>
-          <Row>  
-            <Col>
-            <p><b>Patient ID : </b>PID-2025-001</p>
-            <p><b>Type of Appointment : </b>inpatient</p>
-            <p><b>Name : </b>john Doe</p>
-            <p><b>Age : </b>45</p>
-            <p><b>Gender : </b>male</p>
-            <p><b>Room Number : </b>405</p>
-            </Col>
-            <Col>
-            <p><b>Room Type : </b>private</p>
-            <p><b>Consultant Doctor : </b>Dr.jhonson</p>
-            <p><b>Date of Arrival : </b>2025-06-16</p>
-            <p><b>Date Of Departure : </b> 2025-06-18</p>
-            <p><b>Patient’s Condition : </b> Stable, Recommended Follow-up in 2 weeks</p>
-            </Col>
-            <h5>Reception Authorized Signatory : ___________________________</h5>
-          </Row>
-          </div>
+              {/* IP Settlement Receipt */}
+              <div className="border rounded p-3">
+                <div className={`rounded-top mb-2 ${styles.heading}`}>
+                  IP Settlement Receipts
+                </div>
+                <Row>
+                  <Col>
+                    <p>
+                      <b>Patient ID : </b>
+                      {invoiceData?.invoice?.patient || "-"}
+                    </p>
+                    <p>
+                      <b>Type of Appointment : </b>
+                      {invoiceData?.patient_info?.appointment_type || "-"}
+                    </p>
+                    <p>
+                      <b>Name : </b>
+                      {invoiceData?.patient_info?.patient_name || "-"}
+                    </p>
+                    <p>
+                      <b>Age : </b>
+                      {invoiceData?.patient_info?.age || "-"}
+                    </p>
+                    <p>
+                      <b>Gender : </b>
+                      {invoiceData?.patient_info?.gender || "-"}
+                    </p>
+                    <p>
+                      <b>Received Amount : </b>
+                      {invoiceData?.totals?.final_total || "0.00"}
+                    </p>
+                  </Col>
+                  <Col>
+                    <p>
+                      <b>Due Amount : </b>
+                      {invoiceData?.totals?.due || "0.00"}
+                    </p>
+                    <p>
+                      <b>Bill Date : </b>
+                      {invoiceData?.invoice?.date || "-"}
+                    </p>
+                    <p>
+                      <b>Invoice Number : </b>
+                      {invoiceData?.invoice?.invoice_id || "-"}
+                    </p>
+                    <p>
+                      <b>Amount in words : </b>
+                      {invoiceData?.totals?.words_in_rupees || "-"}
+                    </p>
+                    <p>
+                      <b>Print Date and Time : </b>
+                      {new Date().toLocaleString("en-IN")}
+                    </p>
+                  </Col>
+                  <h5>
+                    Reception Authorized Signatory : __________________________
+                  </h5>
+                </Row>
+              </div>
 
+              {/* IP Checkout Slip */}
+              <div className="border rounded p-3 mt-4">
+                <div className={`rounded-top mb-2 ${styles.heading}`}>
+                  IP Checkout Slip
+                </div>
+                <Row>
+                  <Col>
+                    <p>
+                      <b>Patient ID : </b>
+                      {invoiceData?.invoice?.patient || "-"}
+                    </p>
+                    <p>
+                      <b>Type of Appointment : </b>
+                      {invoiceData?.patient_info?.appointment_type || "-"}
+                    </p>
+                    <p>
+                      <b>Name : </b>
+                      {invoiceData?.patient_info?.patient_name || "-"}
+                    </p>
+                    <p>
+                      <b>Age : </b>
+                      {invoiceData?.patient_info?.age || "-"}
+                    </p>
+                    <p>
+                      <b>Gender : </b>
+                      {invoiceData?.patient_info?.gender || "-"}
+                    </p>
+                    <p>
+                      <b>Room Number : </b>
+                      {invoiceData?.patient_info?.ward || "-"}
+                    </p>
+                  </Col>
+                  <Col>
+                    <p>
+                      <b>Room Type : </b>
+                      {invoiceData?.invoice?.room_type || "-"}
+                    </p>
+                    <p>
+                      <b>Consultant Doctor : </b>
+                      {invoiceData?.invoice?.consultant || "-"}
+                    </p>
+                    <p>
+                      <b>Date of Arrival : </b>
+                      {invoiceData?.invoice?.admitted_date || "-"}
+                    </p>
+                    <p>
+                      <b>Date Of Departure : </b>
+                      {invoiceData?.invoice?.discharged_date || "-"}
+                    </p>
+                    <p>
+                     
+                      <b>Patient’s Condition : </b>  {invoiceData?.invoice?.progress_status || "-"}, {invoiceData?.invoice?.progress_notes || "-"}
+                    </p>
+                  </Col>
+                  <h5>
+                    Reception Authorized Signatory : ___________________________
+                  </h5>
+                </Row>
+              </div>
             </div>
 
             <Modal.Footer className="down no-print">
               <div className="text-center mt-3">
-                <Button onClick={handlePrint} variant="success">
+                  <Button variant="success " className="me-2" onClick={handleDownload}>
+                          <Icon icon="mdi:download" /> Download PDF
+                        </Button>
+
+                <Button onClick={handlePrint} variant="outline-primary">
                   Print
                 </Button>
                 <Button variant="secondary ms-2" onClick={handlePrintClose}>
@@ -783,8 +885,6 @@ function InsurancePrint({ show, handlePrintClose, invoiceData }) {
             </Modal.Footer>
           </div>
         </Modal>
-
-        {/* payment method */}
       </div>
     </>
   );

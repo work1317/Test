@@ -41,21 +41,19 @@ class PatientValidator(serializers.Serializer):
         }
     )
     email = serializers.EmailField(
-        required=True,
+        required=False,
+        allow_null=True,
+        allow_blank=True,
         validators=[EmailValidator(message="Invalid email format"), email_com_validator],
-        error_messages={
-            "required": "Email is a required field.",
-            "blank": "Email cannot be empty.",
-            "invalid": "Enter a valid email address."
-        }
     )
 
     BLOOD_GROUP_CHOICES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
     blood_group = serializers.ChoiceField(
         choices=BLOOD_GROUP_CHOICES,
-        required=True,
+        required=False,
+        allow_null=True,
+        allow_blank=True,
         error_messages={
-            "required": "Blood group is required.",
             "invalid_choice": "Invalid blood group. Choose from A+, A-, B+, B-, AB+, AB-, O+, O-."
         }
     )

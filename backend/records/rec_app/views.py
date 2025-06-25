@@ -666,6 +666,7 @@ class CreateProgressNoteAPIView(APIView):
                 raise ValidationError(serializer.errors)
 
             serializer.save()
+            print(serializer.data)
             context['data'] = serializer.data
 
         except ValidationError as e:
